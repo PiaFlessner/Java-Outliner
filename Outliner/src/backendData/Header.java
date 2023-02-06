@@ -122,8 +122,9 @@ public class Header {
     private void refreshSubHeaderNumbers(){
         //artificial index to spare runtime;
         int listIndex = 0;
-        for (Header subheader : this.subheaders)
+        for (Header subheader : this.subheaders){
             subheader.setOwnNr(listIndex+1);
             listIndex++;
+        }
     }
 }
