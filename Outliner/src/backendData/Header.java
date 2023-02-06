@@ -53,6 +53,8 @@ public class Header {
     }
 
     public void setParentElement(Header parent) {
+        //TODO: remove self from old parent element
+        //TODO: set self to new parentElement in List
         this.parentElement = parent;
     }
 
