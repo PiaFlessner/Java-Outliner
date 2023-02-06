@@ -78,6 +78,7 @@ public class Header {
      */
     public void deleteSubheader(Header head){
         this.subheaders.remove(head);
+        this.refreshSubHeaderNumbers();
     }
     /**
      * Insert a new Subheader on the start of the list
@@ -85,6 +86,7 @@ public class Header {
      */
     public void insertNewSubheaderStart(Header head){
         this.subheaders.add(0, head);
+        this.refreshSubHeaderNumbers();
     }
     /**
      * Insert a new Subheader at the end of the list
@@ -103,6 +105,7 @@ public class Header {
     public void insertNewSubheaderInBetween(int index, Header head){
         try{
             this.subheaders.add(index, head);
+            this.refreshSubHeaderNumbers();
         } catch (UnsupportedOperationException | ClassCastException | NullPointerException | IllegalArgumentException e){
         } catch (IndexOutOfBoundsException e){
             this.insertNewSubheaderEnd(head);
