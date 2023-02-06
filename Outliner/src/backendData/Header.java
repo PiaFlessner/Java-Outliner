@@ -1,7 +1,6 @@
 package backendData;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 
 public class Header {
@@ -13,6 +12,7 @@ public class Header {
     private int ownNr;
     private HashMap columns;
     private List<Header> subheaders;
+    private Header parentElement;
 
     public String getTitle() {
         return title;
@@ -55,11 +55,32 @@ public class Header {
         this.refreshSubheaderParentNumbers();
     }
 
+    public Header getParentElement() {
+        return this.parentElement;
+    }
 
-    public Header(String title, int parentNr, int ownNr){
+    public void setParentElement(Header parent) {
+        this.parentElement = parent;
+        this.setParentNr(parent.getParentNr());
+    }
+
+    /**
+     * Get the Label Nr for displaying right sequence, for example 1.1.2
+     * @return Stringlabel representation of Number in this outliner.
+     */
+    public String getLabelNr(){
+        if(this.parentElement != null){
+            return this.parentElement.getLabelNr() + "." + Integer.toString(this.ownNr);
+        }
+        else return Integer.toString(this.ownNr);
+    }
+
+
+    public Header(String title, int parentNr, int ownNr, Header parentElement){
         this.title = title;
         this.parentNr = parentNr;
         this.ownNr = ownNr;
+        this.parentElement = parentElement;
     }  
     /**
      * Rearranges the subheader into the new index
