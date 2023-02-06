@@ -14,7 +14,6 @@ public class Header {
     private HashMap columns;
     private List<Header> subheaders;
 
-
     public String getTitle() {
         return title;
     }
@@ -123,10 +122,8 @@ public class Header {
     private void refreshSubHeaderNumbers(){
         //artificial index to spare runtime;
         int listIndex = 0;
-        this.subheaders.forEach((subheader) -> { 
-            if(subheader.ownNr != listIndex+1){
-                subheader.setOwnNr(listIndex+1);
-            } 
-        });
+        for (Header subheader : this.subheaders)
+            subheader.setOwnNr(listIndex+1);
+            listIndex++;
     }
 }
