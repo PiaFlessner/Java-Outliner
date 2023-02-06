@@ -1,6 +1,7 @@
 package backendData;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 
 public class Header {
@@ -8,11 +9,11 @@ public class Header {
     private String title;
     private String description;
     private String text;
-    private int parentNr;
     private int ownNr;
     private HashMap columns;
     private List<Header> subheaders;
     private Header parentElement;
+    private final boolean isRoot;
 
     public String getTitle() {
         return title;
@@ -46,14 +47,6 @@ public class Header {
         this.ownNr = ownNr;
         this.refreshSubHeaderNumbers();
     }
-    public int getParentNr(){
-        return this.parentNr;
-    }
-
-    public void setParentNr(int parentNr){
-        this.parentNr = parentNr;
-        this.refreshSubheaderParentNumbers();
-    }
 
     public Header getParentElement() {
         return this.parentElement;
@@ -61,7 +54,6 @@ public class Header {
 
     public void setParentElement(Header parent) {
         this.parentElement = parent;
-        this.setParentNr(parent.getParentNr());
     }
 
     /**
@@ -69,18 +61,19 @@ public class Header {
      * @return Stringlabel representation of Number in this outliner.
      */
     public String getLabelNr(){
-        if(this.parentElement != null){
+        if(this.parentElement != null && !this.isRoot){
             return this.parentElement.getLabelNr() + "." + Integer.toString(this.ownNr);
-        }
-        else return Integer.toString(this.ownNr);
+        }       
+        else return Integer.toString(this.getOwnNr());
     }
 
 
-    public Header(String title, int parentNr, int ownNr, Header parentElement){
+    public Header(String title, int ownNr, Header parentElement, boolean isRoot){
         this.title = title;
-        this.parentNr = parentNr;
         this.ownNr = ownNr;
         this.parentElement = parentElement;
+        subheaders = new LinkedList<>();
+        this.isRoot = isRoot;
     }  
     /**
      * Rearranges the subheader into the new index
@@ -114,7 +107,7 @@ public class Header {
      * @param head Header which should be inserted
      */
     public void insertNewSubheaderEnd(Header head){
-        head.ownNr = this.subheaders.size();
+        head.ownNr = this.subheaders.size()+1;
         this.subheaders.add(head);
     }
 
@@ -132,14 +125,6 @@ public class Header {
             this.insertNewSubheaderEnd(head);
         }
     }
-
-    /** 
-    * Refreshes all ParentNumbers of subheaders
-    */
-    private void refreshSubheaderParentNumbers(){
-        this.subheaders.forEach((subheader) -> subheader.setParentNr(ownNr));
-    }
-
     /**
      * Refreshes all assigned Numbers
      */
