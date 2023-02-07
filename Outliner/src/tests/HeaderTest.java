@@ -7,8 +7,11 @@ import backendData.Header;
 
 public class HeaderTest {
     
-    @Before
-    void setup(){
+    
+
+
+    @Test
+    public void testDeleteSubheader() {
         Header h0 = new Header("Root",0,null, true);
         Header h1 = new Header("second",1,null, false);
         Header h2 = new Header("third",2,null,false);
@@ -16,11 +19,6 @@ public class HeaderTest {
         h0.insertNewSubheaderEnd(h2);
         Header h11 = new Header("test",1,h1,false);
         h1.insertNewSubheaderEnd(h11);
-    }
-
-    @Test
-    public void testDeleteSubheader() {
-        
     }
 
     @Test
