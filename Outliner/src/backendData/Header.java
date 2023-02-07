@@ -52,10 +52,14 @@ public class Header {
         return this.parentElement;
     }
 
+    /**
+     * Remove self from old Parent element and then insert self into new Parent Element.
+     * @param parent
+     */
     public void setParentElement(Header parent) {
-        //TODO: remove self from old parent element
-        //TODO: set self to new parentElement in List
+        this.parentElement.deleteSubheader(this);
         this.parentElement = parent;
+        this.parentElement.insertNewSubheaderEnd(this);
     }
 
     /**
