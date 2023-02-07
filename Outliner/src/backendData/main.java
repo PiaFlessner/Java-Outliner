@@ -22,6 +22,7 @@ public class main {
         System.out.println(h11.getLabelNr());
 
         h11.setParentElement(h2);
+        System.out.println(h11.getLabelNr());
         
 
 

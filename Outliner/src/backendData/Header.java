@@ -14,6 +14,7 @@ public class Header {
     private List<Header> subheaders;
     private Header parentElement;
     private final boolean isRoot;
+    private static final String DISPLAYDIVIDER = ".";
 
     public String getTitle() {
         return title;
@@ -56,10 +57,12 @@ public class Header {
      * Remove self from old Parent element and then insert self into new Parent Element.
      * @param parent
      */
-    public void setParentElement(Header parent) {
-        this.parentElement.deleteSubheader(this);
-        this.parentElement = parent;
-        this.parentElement.insertNewSubheaderEnd(this);
+    public void setParentElement(Header parent, int index) {
+        if(this.parentElement != null) {
+            this.parentElement.deleteSubheader(this);
+            this.parentElement = parent;
+            this.parentElement.insertNewSubheaderInBetween(index, parent);
+        }
     }
 
     /**
@@ -68,7 +71,7 @@ public class Header {
      */
     public String getLabelNr(){
         if(this.parentElement != null && !this.isRoot){
-            return this.parentElement.getLabelNr() + "." + Integer.toString(this.ownNr);
+            return this.parentElement.getLabelNr() + DISPLAYDIVIDER + Integer.toString(this.ownNr);
         }       
         else return Integer.toString(this.getOwnNr());
     }
@@ -77,7 +80,7 @@ public class Header {
     public Header(String title, int ownNr, Header parentElement, boolean isRoot){
         this.title = title;
         this.ownNr = ownNr;
-        this.parentElement = parentElement;
+        this.setParentElement(parentElement, this.ownNr);
         subheaders = new LinkedList<>();
         this.isRoot = isRoot;
     }  
