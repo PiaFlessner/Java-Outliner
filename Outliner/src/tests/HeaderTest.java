@@ -1,11 +1,9 @@
 package tests;
 import static org.junit.Assert.assertEquals;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-
 import backendData.Header;
 
 public class HeaderTest {
