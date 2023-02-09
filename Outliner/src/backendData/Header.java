@@ -85,7 +85,7 @@ public class Header {
      * @param head Subheader, which should be rearranged.
      */
     public void rearrangeSubHeader(int newIndex, Header head){
-        if(newIndex != this.subheaders.indexOf(head)){
+        if(this.subheaders.contains(head) && newIndex != this.subheaders.indexOf(head)){
             this.subheaders.remove(head);
             this.insertNewSubheaderInBetween(newIndex, head);
         }
@@ -104,18 +104,22 @@ public class Header {
      * @param head Header which should be inserted
      */
     public void insertNewSubheaderStart(Header head){
-        this.subheaders.add(0, head);
-        head.parentElement = this;
-        this.refreshSubHeaderNumbers();
+        if(!this.subheaders.contains(head)){
+            this.subheaders.add(0, head);
+            head.parentElement = this;
+            this.refreshSubHeaderNumbers();
+        }
     }
     /**
      * Insert a new Subheader at the end of the list
      * @param head Header which should be inserted
      */
     public void insertNewSubheaderEnd(Header head){
-        head.ownNr = this.subheaders.size()+1;
-        this.subheaders.add(head);
-        head.parentElement = this;
+        if(!this.subheaders.contains(head)){
+            head.ownNr = this.subheaders.size()+1;
+            this.subheaders.add(head);
+            head.parentElement = this;
+        }
     }
 
     /**
@@ -125,9 +129,11 @@ public class Header {
      */
     public void insertNewSubheaderInBetween(int index, Header head){
         try{
-            this.subheaders.add(index, head);
-            head.parentElement = this;
-            this.refreshSubHeaderNumbers();
+            if(!this.subheaders.contains(head)){
+                this.subheaders.add(index, head);
+                head.parentElement = this;
+                this.refreshSubHeaderNumbers();
+            }
         } catch (UnsupportedOperationException | ClassCastException | NullPointerException | IllegalArgumentException e){
             log.warning("Unexpected Error in insertNewSubheaderInBetween");
 
@@ -147,7 +153,13 @@ public class Header {
         }
     }
 
+    /**
+     * Empty the Subheader
+     */
     public void emptySubHeaders(){
-        this.subheaders = new LinkedList<>();
+        for (Header subheader : this.subheaders){
+            subheader.parentElement = null;
+        }
+        this.subheaders.clear();
     }
 }

@@ -25,7 +25,6 @@ public class HeaderTest {
         h1.emptySubHeaders();
         h2.emptySubHeaders();
         h11.emptySubHeaders();
-
         h11.setParentElement(h1, 1);
     }
 
@@ -69,6 +68,14 @@ public class HeaderTest {
         h2.insertNewSubheaderEnd(h22);
         assertEquals("2.2", h22.getLabelNr());
         assertEquals(h2, h22.getParentElement());
+    }
+
+    @Test
+    public void testInsertNewSubHeaderDouble(){
+        Header h12 = new Header("test",1,null,false);
+        h1.insertNewSubheaderEnd(h12);
+        h1.insertNewSubheaderEnd(h12);
+        assertEquals(2, h1.getSubheaderSize());
     }
 
     @Test
