@@ -3,18 +3,19 @@ package backendData;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class Header {
     
     private String title;
-    private String description;
     private String text;
     private int ownNr;
-    private HashMap columns;
+    private HashMap<String, String> columns;
     private List<Header> subheaders;
     private Header parentElement;
     private final boolean isRoot;
     private static final String DISPLAYDIVIDER = ".";
+    private Logger log = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
     public String getTitle() {
         return title;
@@ -22,14 +23,6 @@ public class Header {
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     public String getText() {
@@ -53,16 +46,18 @@ public class Header {
         return this.parentElement;
     }
 
+    public int getSubheaderSize(){
+        return this.subheaders.size();
+    }
+
     /**
      * Remove self from old Parent element and then insert self into new Parent Element.
      * @param parent
      */
     public void setParentElement(Header parent, int index) {
-        if(this.parentElement != null) {
-            this.parentElement.deleteSubheader(this);
-            this.parentElement = parent;
-            this.parentElement.insertNewSubheaderInBetween(index, parent);
-        }
+        if(this.parentElement != null) this.parentElement.deleteSubheader(this);
+        this.parentElement = parent;
+        if(parent != null) this.parentElement.insertNewSubheaderInBetween(index, this);
     }
 
     /**
@@ -80,8 +75,8 @@ public class Header {
     public Header(String title, int ownNr, Header parentElement, boolean isRoot){
         this.title = title;
         this.ownNr = ownNr;
-        this.setParentElement(parentElement, this.ownNr);
         subheaders = new LinkedList<>();
+        this.setParentElement(parentElement, this.ownNr-1);
         this.isRoot = isRoot;
     }  
     /**
@@ -101,6 +96,7 @@ public class Header {
      */
     public void deleteSubheader(Header head){
         this.subheaders.remove(head);
+        head.parentElement = null;
         this.refreshSubHeaderNumbers();
     }
     /**
@@ -109,6 +105,7 @@ public class Header {
      */
     public void insertNewSubheaderStart(Header head){
         this.subheaders.add(0, head);
+        head.parentElement = this;
         this.refreshSubHeaderNumbers();
     }
     /**
@@ -118,6 +115,7 @@ public class Header {
     public void insertNewSubheaderEnd(Header head){
         head.ownNr = this.subheaders.size()+1;
         this.subheaders.add(head);
+        head.parentElement = this;
     }
 
     /**
@@ -128,8 +126,11 @@ public class Header {
     public void insertNewSubheaderInBetween(int index, Header head){
         try{
             this.subheaders.add(index, head);
+            head.parentElement = this;
             this.refreshSubHeaderNumbers();
         } catch (UnsupportedOperationException | ClassCastException | NullPointerException | IllegalArgumentException e){
+            log.warning("Unexpected Error in insertNewSubheaderInBetween");
+
         } catch (IndexOutOfBoundsException e){
             this.insertNewSubheaderEnd(head);
         }
@@ -141,8 +142,12 @@ public class Header {
         //artificial index to spare runtime;
         int listIndex = 0;
         for (Header subheader : this.subheaders){
-            subheader.setOwnNr(listIndex+1);
+            subheader.ownNr = listIndex+1;
             listIndex++;
         }
+    }
+
+    public void emptySubHeaders(){
+        this.subheaders = new LinkedList<>();
     }
 }
