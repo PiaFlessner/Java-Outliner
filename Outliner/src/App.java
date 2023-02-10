@@ -17,7 +17,7 @@ public class App {
 
                 fenster.add(new ToolBoxComponent(), BorderLayout.NORTH);
                 fenster.add(new JLabel("hi"), BorderLayout.CENTER);
-                                
+
                 try {
                     for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                         if ("Nimbus".equals(info.getName())) {
@@ -40,5 +40,4 @@ public class App {
 
         SwingUtilities.invokeLater(guiCreator);
     }
-
 }
