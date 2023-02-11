@@ -3,8 +3,6 @@ package visualComponents;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
-
-
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.Color;
@@ -22,14 +20,12 @@ public class ToolBoxComponent extends JPanel{
      private JButton newFileButton;
      private JPanel rightTooltipContainer;
      private JButton saveFileButton;        
-     private JButton scrollToolboxOutButton;
-     private JPanel scrollToolboxOutPanel;
-     private final Color BACKGROUND_COLOR = new Color(165, 165, 165);
-     private final Color FOREGROUND_COLOR = new Color(255 , 255, 255);
-
-     private Dimension MAXIMUM_SIZE = (new Dimension(32767, 50));
-     private Dimension MINIMUM_SIZE = (new Dimension(100, 10));
-     private Dimension PREFERRED_SIZE= (new Dimension(636, 50));
+     
+     private static final Color BACKGROUND_COLOR = new Color(165, 165, 165);
+     private static final Color FOREGROUND_COLOR = new Color(255 , 255, 255);
+     private static final Dimension MAXIMUM_SIZE = (new Dimension(32767, 50));
+     private static final Dimension MINIMUM_SIZE = (new Dimension(100, 10));
+     private static final Dimension PREFERRED_SIZE= (new Dimension(636, 50));
      
     
     @SuppressWarnings("unchecked")                       
@@ -42,8 +38,7 @@ public class ToolBoxComponent extends JPanel{
         rightTooltipContainer = new ToolBoxOuterContainer(BACKGROUND_COLOR);
         exportMDButton = new ToolBoxButton("Export MD", BACKGROUND_COLOR, FOREGROUND_COLOR, rightTooltipContainer);
         detachToolTipButton = new ToolBoxButton("Detach", BACKGROUND_COLOR, FOREGROUND_COLOR, rightTooltipContainer);
-
-
+   
         newFileButton.addActionListener(new ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 newFileButtonActionPerformed(evt);
@@ -93,7 +88,6 @@ public class ToolBoxComponent extends JPanel{
         
     }
     
-    
     //START ACTION PERFORMED SECTION
     private void newFileButtonActionPerformed(ActionEvent evt) {                                              
         // TODO add your handling code here:
@@ -107,12 +101,8 @@ public class ToolBoxComponent extends JPanel{
         // TODO add your handling code here:
     }                                              
 
-    private void detachToolTipButtonActionPerformed(ActionEvent evt) {                                                    
-        leftTooltipContainer.setVisible(false);
-        middleTooltipContainer.setVisible(false);
-        rightTooltipContainer.setVisible(false);
-
-        this.setPreferredSize(new java.awt.Dimension(this.getWidth(), 15));
+    private void detachToolTipButtonActionPerformed(ActionEvent evt) {
+        this.setVisible(false);
         revalidate();
         
     }    
@@ -127,9 +117,9 @@ public class ToolBoxComponent extends JPanel{
         this.setMaximumSize(MAXIMUM_SIZE);
         this.setMinimumSize(MINIMUM_SIZE);
         this.setPreferredSize(PREFERRED_SIZE);
-
         this.initComponents();
+
     }
 
-    
+
 }

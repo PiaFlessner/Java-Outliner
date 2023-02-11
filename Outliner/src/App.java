@@ -9,15 +9,25 @@ public class App {
             public void run(){
                 JFrame fenster = new JFrame("Java Outliner");
                 JPanel headerContainer = new JPanel();
-                fenster.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                JPanel masterContainer = new JPanel();
+                JPopupMenu popupMenue;
 
+                fenster.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 fenster.setSize(300,200);
                 fenster.setVisible(true);
-                fenster.setLayout(new BorderLayout());
+                fenster.add(masterContainer);
+                //fenster.setLayout(new BorderLayout());
 
-                fenster.add(new ToolBoxComponent(), BorderLayout.NORTH);
-                fenster.add(headerContainer, BorderLayout.CENTER);
-
+                masterContainer.setLayout(new BorderLayout());
+                masterContainer.add(new ToolBoxComponent(), BorderLayout.NORTH);
+                masterContainer.add(headerContainer, BorderLayout.CENTER);
+                
+                popupMenue = new JPopupMenu();
+                popupMenue.add(new JMenuItem("Klick mich!"));
+                masterContainer.setComponentPopupMenu(popupMenue);
+                headerContainer.setInheritsPopupMenu(true);
+                
+                
                 try {
                     for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                         if ("Nimbus".equals(info.getName())) {
