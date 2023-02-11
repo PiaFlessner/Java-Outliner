@@ -9,6 +9,7 @@ public class App {
         Runnable guiCreator = new Runnable(){
             public void run(){
                 JFrame fenster = new JFrame("Java Outliner");
+                JPanel headerContainer = new JPanel();
                 fenster.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
                 fenster.setSize(300,200);
@@ -16,7 +17,7 @@ public class App {
                 fenster.setLayout(new BorderLayout());
 
                 fenster.add(new ToolBoxComponent(), BorderLayout.NORTH);
-                fenster.add(new JLabel("hi"), BorderLayout.CENTER);
+                fenster.add(headerContainer, BorderLayout.CENTER);
 
                 try {
                     for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {

@@ -1,114 +1,127 @@
 package visualComponents;
 
+import javax.swing.JButton;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
+
+
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.BorderLayout;
+
 
 public class ToolBoxComponent extends JPanel{
                  
-     private javax.swing.JTextField FileNameTextField;
-     private javax.swing.JButton detachToolTipButton;
-     private javax.swing.JButton exportMDButton;
-     private javax.swing.JPanel leftTooltipContainer;
-     private javax.swing.JPanel middleTooltipContainer;
-     private javax.swing.JButton newFileButton;
-     private javax.swing.JPanel rightTooltipContainer;
-     private javax.swing.JButton saveFileButton;        
+     private JTextField FileNameTextField;
+     private JButton detachToolTipButton;
+     private JButton exportMDButton;
+     private JPanel leftTooltipContainer;
+     private JPanel middleTooltipContainer;
+     private JButton newFileButton;
+     private JPanel rightTooltipContainer;
+     private JButton saveFileButton;        
+     private JButton scrollToolbarOutButton;
+     private final Color BACKGROUND_COLOR = new Color(165, 165, 165);
+     private final Color FOREGROUND_COLOR = new Color(255 , 255, 255);
+
+     private Dimension MAXIMUM_SIZE = (new Dimension(32767, 50));
+     private Dimension MINIMUM_SIZE = (new Dimension(100, 10));
+     private Dimension PREFERRED_SIZE= (new Dimension(636, 50));
      
-     private void FileNameTextFieldActionPerformed(java.awt.event.ActionEvent evt) {                                                  
+
+     //START ACTION PERFORMED SECTION
+     private void FileNameTextFieldActionPerformed(ActionEvent evt) {                                                  
         // TODO add your handling code here:
     }                                                 
 
-    private void newFileButtonActionPerformed(java.awt.event.ActionEvent evt) {                                              
+    private void newFileButtonActionPerformed(ActionEvent evt) {                                              
         // TODO add your handling code here:
     }                                             
 
-    private void saveFileButtonActionPerformed(java.awt.event.ActionEvent evt) {                                               
+    private void saveFileButtonActionPerformed(ActionEvent evt) {                                               
         // TODO add your handling code here:
     }                                              
+
+    private void scrollToolbarOutButtonActionPerformed(ActionEvent evt) {                                               
+        // TODO add your handling code here:
+    }                                              
+
+    private void detachToolTipButtonActionPerformed(ActionEvent evt) {                                                    
+        leftTooltipContainer.setVisible(false);
+        middleTooltipContainer.setVisible(false);
+        rightTooltipContainer.setVisible(false);
+
+        this.setPreferredSize(new java.awt.Dimension(this.getWidth(), 15));
+        revalidate();
+        
+    }    
 
     private void exportMDButtonActionPerformed(java.awt.event.ActionEvent evt) {                                               
         // TODO add your handling code here:
-    }                                              
+    } 
 
-    private void detachToolTipButtonActionPerformed(java.awt.event.ActionEvent evt) {                                                    
-        // TODO add your handling code here:
-    }    
-
+    //Constructor
     public ToolBoxComponent(){
+        this.setBackground(BACKGROUND_COLOR);
+        this.setMaximumSize(MAXIMUM_SIZE);
+        this.setMinimumSize(MINIMUM_SIZE);
+        this.setPreferredSize(PREFERRED_SIZE);
+
         this.initComponents();
     }
-
     
-    @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">                          
+    @SuppressWarnings("unchecked")                       
     private void initComponents() {
 
-        leftTooltipContainer = new javax.swing.JPanel();
-        newFileButton = new javax.swing.JButton();
-        saveFileButton = new javax.swing.JButton();
-        middleTooltipContainer = new javax.swing.JPanel();
-        FileNameTextField = new javax.swing.JTextField();
-        rightTooltipContainer = new javax.swing.JPanel();
-        exportMDButton = new javax.swing.JButton();
-        detachToolTipButton = new javax.swing.JButton();
+        leftTooltipContainer = new ToolBoxOuterContainer(BACKGROUND_COLOR);
+        newFileButton = new ToolBoxButton("New File", BACKGROUND_COLOR,FOREGROUND_COLOR,leftTooltipContainer);
+        saveFileButton = new ToolBoxButton("Save",BACKGROUND_COLOR,FOREGROUND_COLOR,leftTooltipContainer);
+        middleTooltipContainer = new JPanel();
+        FileNameTextField = new JTextField();
+        rightTooltipContainer = new ToolBoxOuterContainer(BACKGROUND_COLOR);
+        exportMDButton = new ToolBoxButton("Export MD", BACKGROUND_COLOR, FOREGROUND_COLOR, rightTooltipContainer);
+        detachToolTipButton = new ToolBoxButton("Detach", BACKGROUND_COLOR, FOREGROUND_COLOR, rightTooltipContainer);
 
-        this.setBackground(new java.awt.Color(165, 165, 165));
-        this.setMaximumSize(new java.awt.Dimension(32767, 50));
-        this.setMinimumSize(new java.awt.Dimension(100, 50));
-        this.setPreferredSize(new java.awt.Dimension(636, 50));
+        middleTooltipContainer.setBackground(BACKGROUND_COLOR);
+        middleTooltipContainer.setMinimumSize(new Dimension(10, 40));
+        middleTooltipContainer.setLayout(new BorderLayout());
 
-        leftTooltipContainer.setBackground(new java.awt.Color(165, 165, 165));
-        leftTooltipContainer.setMaximumSize(new java.awt.Dimension(62, 38));
-        leftTooltipContainer.setLayout(new java.awt.GridLayout(1, 0));
+        FileNameTextField.setText("Project Name");
+        FileNameTextField.setPreferredSize(new Dimension(150, 22));
+        FileNameTextField.setBackground(BACKGROUND_COLOR);
+        FileNameTextField.setForeground(FOREGROUND_COLOR);
 
-        newFileButton.setText("New File");
-        newFileButton.addActionListener(new java.awt.event.ActionListener() {
+        middleTooltipContainer.add(FileNameTextField, BorderLayout.CENTER);
+
+        newFileButton.addActionListener(new ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 newFileButtonActionPerformed(evt);
             }
         });
-        leftTooltipContainer.add(newFileButton);
-
-        saveFileButton.setText("Save");
-        saveFileButton.addActionListener(new java.awt.event.ActionListener() {
+        saveFileButton.addActionListener(new ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 saveFileButtonActionPerformed(evt);
             }
         });
-        leftTooltipContainer.add(saveFileButton);
 
-        middleTooltipContainer.setBackground(new java.awt.Color(165, 165, 165));
-        middleTooltipContainer.setMinimumSize(new java.awt.Dimension(10, 40));
-        middleTooltipContainer.setLayout(new java.awt.BorderLayout());
-
-        FileNameTextField.setText("Project Name");
-        FileNameTextField.setPreferredSize(new java.awt.Dimension(150, 22));
-        FileNameTextField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
+        FileNameTextField.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent evt) {
                 FileNameTextFieldActionPerformed(evt);
             }
         });
-        middleTooltipContainer.add(FileNameTextField, java.awt.BorderLayout.CENTER);
 
-        rightTooltipContainer.setBackground(new java.awt.Color(165, 165, 165));
-        rightTooltipContainer.setMaximumSize(new java.awt.Dimension(196, 40));
-        rightTooltipContainer.setPreferredSize(new java.awt.Dimension(196, 40));
-        rightTooltipContainer.setLayout(new java.awt.GridLayout(1, 0));
-
-        exportMDButton.setText("Export MD");
-        exportMDButton.addActionListener(new java.awt.event.ActionListener() {
+        exportMDButton.addActionListener(new ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 exportMDButtonActionPerformed(evt);
             }
         });
-        rightTooltipContainer.add(exportMDButton);
-
-        detachToolTipButton.setText("Detach");
-        detachToolTipButton.addActionListener(new java.awt.event.ActionListener() {
+        detachToolTipButton.addActionListener(new ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 detachToolTipButtonActionPerformed(evt);
             }
         });
-        rightTooltipContainer.add(detachToolTipButton);
 
         javax.swing.GroupLayout tooltipContainerLayout = new javax.swing.GroupLayout(this);
         this.setLayout(tooltipContainerLayout);
