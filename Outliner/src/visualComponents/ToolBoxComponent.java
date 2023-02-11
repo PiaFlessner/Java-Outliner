@@ -3,13 +3,10 @@ package visualComponents;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
-import visualComponents.ActionListener.ToolBoxActionListener;
+import visualComponents.ActionListener.ToolBoxDetachActionListener;
 import visualComponents.ActionListener.ToolBoxExportMDActionListener;
 import visualComponents.ActionListener.ToolBoxNewFileActionListener;
 import visualComponents.ActionListener.ToolBoxSaveFileActionListener;
-
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 import java.awt.Color;
 import java.awt.Dimension;
 
@@ -44,13 +41,13 @@ public class ToolBoxComponent extends JPanel{
         JPanel middleTooltipContainer = new ToolBoxInnerContainer(BACKGROUND_COLOR, FOREGROUND_COLOR);
         JPanel rightTooltipContainer = new ToolBoxOuterContainer(BACKGROUND_COLOR);
         JButton exportMDButton = new ToolBoxButton("Export MD", BACKGROUND_COLOR, FOREGROUND_COLOR, rightTooltipContainer);
-        JButton detachToolTipButton = new ToolBoxButton("Detach", BACKGROUND_COLOR, FOREGROUND_COLOR, rightTooltipContainer);
+        //JButton detachToolTipButton = new ToolBoxButton("Detach", BACKGROUND_COLOR, FOREGROUND_COLOR, rightTooltipContainer);
 
         //Add Action Listeners
         newFileButton.addActionListener(new ToolBoxNewFileActionListener());
         saveFileButton.addActionListener(new ToolBoxSaveFileActionListener());
         exportMDButton.addActionListener(new ToolBoxExportMDActionListener());
-        detachToolTipButton.addActionListener(new ToolBoxActionListener(this));
+        //detachToolTipButton.addActionListener(new ToolBoxDetachActionListener(this));
 
         //Group Layouting - NetBeans Generated Code
         javax.swing.GroupLayout tooltipContainerLayout = new javax.swing.GroupLayout(this);

@@ -1,15 +1,17 @@
 import java.awt.BorderLayout;
 import javax.swing.*;
+import javax.tools.Tool;
 
 import javafx.scene.control.Tooltip;
 import visualComponents.ToolBoxComponent;
+import visualComponents.ActionListener.MenuItemToolboxShowActionListener;
 public class App {
     JFrame fenster;
     JPanel headerContainer;
     JPanel masterContainer;
     JPopupMenu popupMenue;
-    JPanel toolboxComponent;
-    JMenuItem subMenue;
+    ToolBoxComponent toolboxComponent;
+    JRadioButtonMenuItem subMenue;
 
     public App(){
         initComponents();
@@ -34,7 +36,10 @@ public class App {
 
                 
                 popupMenue = new JPopupMenu();
-                subMenue = new JMenuItem("Klick mich!");
+                subMenue = new JRadioButtonMenuItem("Show Toolbox");
+                subMenue.setActionCommand("hide");
+                subMenue.setSelected(true);
+                subMenue.addActionListener(new MenuItemToolboxShowActionListener(toolboxComponent, subMenue));
                 popupMenue.add(subMenue);
 
 
