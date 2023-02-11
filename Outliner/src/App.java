@@ -4,29 +4,41 @@ import javax.swing.*;
 import javafx.scene.control.Tooltip;
 import visualComponents.ToolBoxComponent;
 public class App {
-    public static void main(String[] args) throws Exception {
-        Runnable guiCreator = new Runnable(){
-            public void run(){
-                JFrame fenster = new JFrame("Java Outliner");
-                JPanel headerContainer = new JPanel();
-                JPanel masterContainer = new JPanel();
-                JPopupMenu popupMenue;
+    JFrame fenster;
+    JPanel headerContainer;
+    JPanel masterContainer;
+    JPopupMenu popupMenue;
+    JPanel toolboxComponent;
+    JMenuItem subMenue;
+
+    public App(){
+        initComponents();
+    }
+
+    private void initComponents(){
+
+            fenster = new JFrame("Java Outliner");
+            headerContainer = new JPanel();
+                masterContainer = new JPanel();
 
                 fenster.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 fenster.setSize(300,200);
                 fenster.setVisible(true);
                 fenster.add(masterContainer);
-                //fenster.setLayout(new BorderLayout());
+
+                toolboxComponent = new ToolBoxComponent();
 
                 masterContainer.setLayout(new BorderLayout());
-                masterContainer.add(new ToolBoxComponent(), BorderLayout.NORTH);
+                masterContainer.add(toolboxComponent, BorderLayout.NORTH);
                 masterContainer.add(headerContainer, BorderLayout.CENTER);
+
                 
                 popupMenue = new JPopupMenu();
-                popupMenue.add(new JMenuItem("Klick mich!"));
+                subMenue = new JMenuItem("Klick mich!");
+                popupMenue.add(subMenue);
+
+
                 masterContainer.setComponentPopupMenu(popupMenue);
-                headerContainer.setInheritsPopupMenu(true);
-                
                 
                 try {
                     for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
@@ -44,9 +56,24 @@ public class App {
                 } catch (javax.swing.UnsupportedLookAndFeelException ex) {
                     java.util.logging.Logger.getLogger(App.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
                 }
-               
+
+    }
+
+    private void subMenueMouseClicked(java.awt.event.MouseEvent evt) {                                         
+        toolboxComponent.setVisible(true);
+        toolboxComponent.revalidate();
+        fenster.revalidate();
+    }      
+
+
+    public static void main(String[] args) throws Exception {   
+        Runnable guiCreator = new Runnable(){
+            public void run(){
+                new App();
             }
         };
+
+
 
         SwingUtilities.invokeLater(guiCreator);
     }
