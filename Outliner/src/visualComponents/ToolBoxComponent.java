@@ -3,7 +3,6 @@ package visualComponents;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
-import visualComponents.ActionListener.ToolBoxDetachActionListener;
 import visualComponents.ActionListener.ToolBoxExportMDActionListener;
 import visualComponents.ActionListener.ToolBoxNewFileActionListener;
 import visualComponents.ActionListener.ToolBoxSaveFileActionListener;
