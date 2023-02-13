@@ -1,21 +1,25 @@
 import java.awt.BorderLayout;
 import javax.swing.*;
-import javax.tools.Tool;
 import java.awt.event.*;
-import javafx.scene.control.Tooltip;
 import visualComponents.ToolBoxComponent;
 import visualComponents.Actions.ShowHideToolBarAction;
-import javax.swing.JScrollPane;
+
 import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Color;
 public class App {
     JFrame fenster;
-    JPanel headerContainer;
+    JPanel headerElementContainer;
     JPanel masterContainer;
     JPopupMenu contextMenu;
-    ToolBoxComponent toolboxComponent = new ToolBoxComponent();;
+    ToolBoxComponent toolboxComponent = new ToolBoxComponent();
     JRadioButtonMenuItem showToolbarMenuItem;
     JScrollPane headerElementScroller;
     KeyStroke keyStrokeForToolbarVisibility = KeyStroke.getKeyStroke(KeyEvent.VK_0,KeyEvent.VK_ALT);
+    JPanel headerContainer;
+    JPanel columnContainer;
+    JLabel topicLabel;
+    final Color WINDOW_BACKGROUND_COLOR = new Color(255,255,255);
 
     public App(){
         initComponents();
@@ -28,7 +32,8 @@ public class App {
             setUpHeaderContainer();
             masterContainer.add(toolboxComponent, BorderLayout.NORTH);
             setUpContextMenue();            
-            setUpGlobalKeystrokes();            
+            setUpGlobalKeystrokes();        
+                
             
             try {
                 for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
@@ -47,22 +52,54 @@ public class App {
                 java.util.logging.Logger.getLogger(App.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
             }
     }
-    /**
-     * Set up the Header Container with a Scroller Element and adds it to the master Container.
-     */
+
     private void setUpHeaderContainer(){
+        headerContainer = new JPanel();
+        headerContainer.setBackground(WINDOW_BACKGROUND_COLOR);
+        headerContainer.setLayout(new BorderLayout());
+
+        setUpColumnContainer();
+        setUpHeaderElementContainer();
+
+        masterContainer.add(headerContainer,BorderLayout.CENTER);
+    }
+
+    private void setUpColumnContainer(){
+        columnContainer = new JPanel();
+        columnContainer.setBackground(new Color(230, 230, 230));
+        columnContainer.setMaximumSize(new Dimension(32767, 40));
+        columnContainer.setMinimumSize(new Dimension(10, 40));
+        columnContainer.setPreferredSize(new Dimension(100, 40));
+        FlowLayout columnContainerFlowLayout = new FlowLayout(FlowLayout.LEFT, 10, 10);
+        columnContainerFlowLayout.setAlignOnBaseline(true);
+        columnContainer.setLayout(columnContainerFlowLayout);
+
+        topicLabel = new JLabel();
+        topicLabel.setText("Topic");
+        columnContainer.add(topicLabel);
+
+        headerContainer.add(columnContainer, BorderLayout.NORTH);
+    }
+
+    /**
+     * Set up the HeaderElement Container with a Scroller Element and adds it to the headerContainer
+     */
+    private void setUpHeaderElementContainer(){
 
         //Configure Header Container
-        headerContainer = new JPanel();
-        headerContainer.setLayout(new BoxLayout(headerContainer, BoxLayout.Y_AXIS));
-        headerContainer.setMaximumSize(new java.awt.Dimension(32767, 200));
-        headerContainer.setPreferredSize(new java.awt.Dimension(1024, 768));
-
+        headerElementContainer = new JPanel();
+        headerElementContainer.setLayout(new BoxLayout(headerElementContainer, BoxLayout.Y_AXIS));
+        headerElementContainer.setMaximumSize(new Dimension(32767, 200));
+        headerElementContainer.setMinimumSize(new java.awt.Dimension(1024, 768));
+        headerElementContainer.setPreferredSize(new Dimension(1024, 768));
+        headerElementContainer.setBackground(WINDOW_BACKGROUND_COLOR);
+        
         //Configure Scroller Element
         headerElementScroller = new JScrollPane();
-        headerElementScroller.setViewportView(headerContainer);
-
-        masterContainer.add(headerElementScroller, BorderLayout.CENTER);             
+        headerElementScroller.setViewportView(headerElementContainer);
+        headerElementScroller.setBackground(WINDOW_BACKGROUND_COLOR);
+        
+        headerContainer.add(headerElementScroller, BorderLayout.CENTER);
     }
     /**
      * Set up the Master Container an adds it to the Window
@@ -81,6 +118,7 @@ public class App {
         fenster.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         fenster.setSize(300,200);
         fenster.setVisible(true);
+        fenster.setBackground(WINDOW_BACKGROUND_COLOR);
     }
 
     /**
@@ -105,8 +143,12 @@ public class App {
         showToolbarMenuItem.setSelected(true);
         contextMenu.add(showToolbarMenuItem);
         masterContainer.setComponentPopupMenu(contextMenu);
-        headerElementScroller.setInheritsPopupMenu(true);
+
+
         headerContainer.setInheritsPopupMenu(true);
+        columnContainer.setInheritsPopupMenu(true);
+        headerElementScroller.setInheritsPopupMenu(true);
+        headerElementContainer.setInheritsPopupMenu(true);
         
     }
 
