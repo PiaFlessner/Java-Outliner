@@ -1,10 +1,12 @@
 import java.awt.BorderLayout;
 import javax.swing.*;
 import javax.tools.Tool;
-
+import java.awt.event.*;
 import javafx.scene.control.Tooltip;
 import visualComponents.ToolBoxComponent;
 import visualComponents.ActionListener.MenuItemToolboxShowActionListener;
+import visualComponents.Actions.ShowHideToolBarAction;
+
 public class App {
     JFrame fenster;
     JPanel headerContainer;
@@ -39,10 +41,17 @@ public class App {
                 subMenue = new JRadioButtonMenuItem("Show Toolbox");
                 subMenue.setActionCommand("hide");
                 subMenue.setSelected(true);
-                subMenue.addActionListener(new MenuItemToolboxShowActionListener(toolboxComponent, subMenue));
                 popupMenue.add(subMenue);
+                
+                //Bind an Action globally for the whole window, and give action menue item.
+                KeyStroke keyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_0,KeyEvent.VK_ALT);
+                ShowHideToolBarAction showHideAction = new ShowHideToolBarAction(toolboxComponent, subMenue, "Show Toolbox", keyStroke);
+                
+                masterContainer.getInputMap(masterContainer.WHEN_IN_FOCUSED_WINDOW).put(keyStroke, "show or Hide Toolbox");
+                masterContainer.getActionMap().put("show or Hide Toolbox", showHideAction);
+                subMenue.setAction(showHideAction);
 
-
+                //Make Popupmenue visible
                 masterContainer.setComponentPopupMenu(popupMenue);
                 
                 try {
