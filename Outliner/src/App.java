@@ -105,6 +105,9 @@ public class App {
         showToolbarMenuItem.setSelected(true);
         contextMenu.add(showToolbarMenuItem);
         masterContainer.setComponentPopupMenu(contextMenu);
+        headerElementScroller.setInheritsPopupMenu(true);
+        headerContainer.setInheritsPopupMenu(true);
+        
     }
 
 
@@ -114,9 +117,6 @@ public class App {
                 new App();
             }
         };
-
-
-
         SwingUtilities.invokeLater(guiCreator);
     }
 }
