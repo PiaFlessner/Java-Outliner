@@ -1,10 +1,17 @@
 package main.java.visualComponents;
 
 import javax.swing.JLabel;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.KeyStroke;
+
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 import main.java.backendData.Header;
 
@@ -13,9 +20,11 @@ import java.awt.FlowLayout;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import javax.swing.SwingConstants;
-import javax.swing.plaf.DimensionUIResource;
 
 import java.awt.Cursor;
+
+import javax.swing.Action;
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 
 import java.io.File;
@@ -82,6 +91,27 @@ public class HeaderComponent extends JPanel{
         icon.setCursor(new Cursor(Cursor.HAND_CURSOR));
         icon.setHorizontalTextPosition(SwingConstants.CENTER);
         icon.setPreferredSize(new Dimension(20, 20));
+        icon.setFocusable(true);
+
+        icon.addFocusListener(new FocusAdapter(){
+            @Override
+                public void focusGained(FocusEvent e) {
+                    icon.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY));
+                } 
+
+                @Override
+                public void focusLost(FocusEvent e) {
+                    icon.setBorder(null);
+                }
+        });
+
+        //TODO : keystrokes mit enter für focus
+        //TODO: auslagern, da es doch sehr viel wird
+        //TODO: rausfinden, ob Listener und Actions immer ne eigene Klasse brauchen sollten.
+        //https://docs.oracle.com/javase/tutorial/uiswing/misc/keybinding.html
+
+        
+
         headerTitle.add(icon);
     }
 
@@ -99,7 +129,25 @@ public class HeaderComponent extends JPanel{
         displayedHeaderTitle.setMaximumSize(new Dimension(500, 16));
         displayedHeaderTitle.setMinimumSize(new Dimension(500, 16));
         displayedHeaderTitle.setPreferredSize(new Dimension(500, 16));
+
+        displayedHeaderTitle.setFocusable(true);
+        displayedHeaderTitle.addFocusListener(new FocusAdapter(){
+            @Override
+                public void focusGained(FocusEvent e) {
+                    displayedHeaderTitle.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY));
+                } 
+
+                @Override
+                public void focusLost(FocusEvent e) {
+                    displayedHeaderTitle.setBorder(null);
+                }
+        });
+
         headerTitle.add(displayedHeaderTitle);
+
+
+
+        JMenuItem editHeaderTitle = new JMenuItem("Edit Menue Item");
 
     }
 
