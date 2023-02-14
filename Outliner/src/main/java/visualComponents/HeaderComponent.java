@@ -13,6 +13,8 @@ import java.awt.FlowLayout;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import javax.swing.SwingConstants;
+import javax.swing.plaf.DimensionUIResource;
+
 import java.awt.Cursor;
 import javax.swing.ImageIcon;
 
@@ -34,17 +36,19 @@ public class HeaderComponent extends JPanel{
     JTextField displayedHeaderTitleEdit;
 
 
-    JPanel HeaderContent;
+    JPanel headerContent;
     JScrollPane headerContentScrollPane;
     JTextArea headerContentTextArea;
 
     Color backgroundColor;
+    final int HEADERCONTAINER_FOLDED_HEIGHT = 40;
+    final int HEADERCONTAINER_UNFOLDED_HEIGHT = 200;
 
 
     
     public HeaderComponent(Color backgroundColor){
         this.setMaximumSize(new Dimension(2147483647, 200));
-        this.setMinimumSize(new Dimension(275, 200));
+        this.setMinimumSize(new Dimension(275, 40));
         this.setLayout(new BorderLayout());
         this.backgroundColor = backgroundColor;
         
@@ -100,6 +104,37 @@ public class HeaderComponent extends JPanel{
     }
 
     private void setUpContent(){
+        headerContent = new JPanel();
+        headerContentTextArea = new JTextArea(); 
+        headerContentScrollPane = new JScrollPane();
 
+        //TextContent of the Header
+        headerContent.setBackground(backgroundColor);
+        headerContent.setMaximumSize(new Dimension(32767, 160));
+        headerContent.setMinimumSize(new Dimension(100, 160));
+        headerContent.setPreferredSize(new Dimension(712, 160));
+        headerContent.setLayout(new BorderLayout());
+
+        headerContentTextArea.setEditable(false);
+        headerContentTextArea.setBackground(backgroundColor);
+        headerContentTextArea.setColumns(20);
+        headerContentTextArea.setLineWrap(true);
+        headerContentTextArea.setRows(5);
+        headerContentTextArea.setText("Text of the Header");
+        headerContentTextArea.setMaximumSize(new Dimension(2147483647, 150));
+
+        headerContentScrollPane.setViewportView(headerContentTextArea);
+
+        headerContent.add(headerContentScrollPane, BorderLayout.CENTER);
+        this.add(headerContent,BorderLayout.CENTER);
+
+    }
+
+    public void foldContainer(){
+        this.setMaximumSize(new Dimension(2147483647,HEADERCONTAINER_FOLDED_HEIGHT));
+    }
+
+    public void unfoldContainer(){
+        this.setMaximumSize(new Dimension(2147483647, HEADERCONTAINER_UNFOLDED_HEIGHT));
     }
 }
