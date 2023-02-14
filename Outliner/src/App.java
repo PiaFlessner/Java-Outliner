@@ -1,9 +1,12 @@
 import java.awt.BorderLayout;
 import javax.swing.*;
-import java.awt.event.*;
-import visualComponents.ToolBoxComponent;
-import visualComponents.Actions.ShowHideToolBarAction;
 
+import main.java.visualComponents.HeaderComponent;
+import main.java.visualComponents.ToolBoxComponent;
+import main.java.visualComponents.Actions.AddNewHeaderAction;
+import main.java.visualComponents.Actions.ShowHideToolBarAction;
+
+import java.awt.event.*;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Color;
@@ -16,9 +19,11 @@ public class App {
     JRadioButtonMenuItem showToolbarMenuItem;
     JScrollPane headerElementScroller;
     KeyStroke keyStrokeForToolbarVisibility = KeyStroke.getKeyStroke(KeyEvent.VK_0,KeyEvent.VK_ALT);
+    KeyStroke keyStrokeForAddNewHeader = KeyStroke.getKeyStroke(KeyEvent.VK_ADD,KeyEvent.VK_ALT);
     JPanel headerContainer;
     JPanel columnContainer;
     JLabel topicLabel;
+    JMenuItem addNewHeaderItem;
     final Color WINDOW_BACKGROUND_COLOR = new Color(255,255,255);
 
     public App(){
@@ -32,7 +37,11 @@ public class App {
             setUpHeaderContainer();
             masterContainer.add(toolboxComponent, BorderLayout.NORTH);
             setUpContextMenue();            
-            setUpGlobalKeystrokes();        
+            setUpGlobalKeystrokes();  
+            
+            HeaderComponent hc = new HeaderComponent(WINDOW_BACKGROUND_COLOR);
+            headerElementContainer.add(hc);
+
                 
             
             try {
@@ -126,11 +135,17 @@ public class App {
      */
     public void setUpGlobalKeystrokes(){
         //Bind an Action globally for the whole window, and give action menue item.
+        ////Show Hide Toolbar
         ShowHideToolBarAction showHideAction = new ShowHideToolBarAction(toolboxComponent, showToolbarMenuItem, "Show Toolbox", keyStrokeForToolbarVisibility);
-            
         masterContainer.getInputMap(masterContainer.WHEN_IN_FOCUSED_WINDOW).put(keyStrokeForToolbarVisibility, "show or Hide Toolbox");
         masterContainer.getActionMap().put("show or Hide Toolbox", showHideAction);
         showToolbarMenuItem.setAction(showHideAction);
+        
+        //Add A new Header
+        AddNewHeaderAction addNewHeaderAction = new AddNewHeaderAction("Add new Header", keyStrokeForAddNewHeader);
+        masterContainer.getInputMap(masterContainer.WHEN_IN_FOCUSED_WINDOW).put(keyStrokeForAddNewHeader, "addNewHeader");
+        masterContainer.getActionMap().put("addNewHeader", addNewHeaderAction);
+        addNewHeaderItem.setAction(addNewHeaderAction);
     }
 
     /**
@@ -138,10 +153,18 @@ public class App {
      */
     public void setUpContextMenue(){
         contextMenu = new JPopupMenu();
-        showToolbarMenuItem = new JRadioButtonMenuItem("Show Toolbox");
+
+        //Show Hide Toolbar
+        showToolbarMenuItem = new JRadioButtonMenuItem();
         showToolbarMenuItem.setActionCommand("hide");
         showToolbarMenuItem.setSelected(true);
         contextMenu.add(showToolbarMenuItem);
+
+        //Add new Header
+        addNewHeaderItem = new JMenuItem();
+        contextMenu.add(addNewHeaderItem);
+
+
         masterContainer.setComponentPopupMenu(contextMenu);
 
 

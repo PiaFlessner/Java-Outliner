@@ -4,7 +4,8 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import backendData.Header;
+
+import main.java.backendData.Header;
 
 public class HeaderTest {
 
