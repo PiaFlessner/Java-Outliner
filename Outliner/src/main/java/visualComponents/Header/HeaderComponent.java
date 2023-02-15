@@ -3,8 +3,6 @@ package main.java.visualComponents.Header;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
@@ -28,10 +26,9 @@ public class HeaderComponent extends JPanel{
     TextArea textArea;
 
     Color backgroundColor;
+    final Color EDIT_COLOR = new Color(242,242,242);
     final int HEADERCONTAINER_FOLDED_HEIGHT = 40;
     final int HEADERCONTAINER_UNFOLDED_HEIGHT = 200;
-
-
 
     boolean isOpen;
     
@@ -75,26 +72,7 @@ public class HeaderComponent extends JPanel{
     }
 
     private void setUpDisplayedTitle(){
-        displayedHeaderTitle = new JLabel();
-        displayedHeaderTitle.setFont(displayedHeaderTitle.getFont());
-        displayedHeaderTitle.setText("DisplayedHeaderTitle");
-        displayedHeaderTitle.setMaximumSize(new Dimension(500, 16));
-        displayedHeaderTitle.setMinimumSize(new Dimension(500, 16));
-        displayedHeaderTitle.setPreferredSize(new Dimension(500, 16));
-
-        displayedHeaderTitle.setFocusable(true);
-        displayedHeaderTitle.addFocusListener(new FocusAdapter(){
-            @Override
-                public void focusGained(FocusEvent e) {
-                    displayedHeaderTitle.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY));
-                } 
-
-                @Override
-                public void focusLost(FocusEvent e) {
-                    displayedHeaderTitle.setBorder(null);
-                }
-        });
-
+        Title displayedHeaderTitle = new Title(this);
         headerTitle.add(displayedHeaderTitle);
         JMenuItem editHeaderTitle = new JMenuItem("Edit Menue Item");
 
@@ -108,9 +86,10 @@ public class HeaderComponent extends JPanel{
         headerContent.setMinimumSize(new Dimension(100, 160));
         headerContent.setPreferredSize(new Dimension(712, 160));
         headerContent.setLayout(new BorderLayout());
+       
         textArea = new TextArea(this);
-
         headerContent.add(textArea, BorderLayout.CENTER);
+
         this.add(headerContent,BorderLayout.CENTER);
 
     }

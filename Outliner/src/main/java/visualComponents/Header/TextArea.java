@@ -11,7 +11,6 @@ import javax.swing.event.MouseInputAdapter;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.Color;
-import javafx.event.ActionEvent;
 
 public class TextArea extends JScrollPane {
     JTextArea textArea;
