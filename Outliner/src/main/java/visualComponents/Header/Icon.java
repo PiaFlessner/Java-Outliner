@@ -9,10 +9,17 @@ import java.awt.event.FocusEvent;
 import java.awt.Dimension;
 import java.awt.Color;
 import javax.swing.SwingConstants;
+import javax.swing.event.MouseInputAdapter;
+import javax.swing.event.MouseInputListener;
+
+import javafx.scene.input.MouseEvent;
+
 import java.awt.Cursor;
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
+import java.awt.event.MouseAdapter;
+
 
 import java.io.File;
 public class Icon extends JLabel{
@@ -69,12 +76,21 @@ public class Icon extends JLabel{
     }
 
     private void setUpOpenHeaderFunction(){
+        //KeyStroke Function
         this.getInputMap().put(KeyStroke.getKeyStroke("SPACE"), "OpenCloseHeader");
         this.getActionMap().put("OpenCloseHeader", new AbstractAction(){
             @Override
             public void actionPerformed(ActionEvent e) {
                 openClose();
             }
+        });
+
+        //Button Click Function
+        this.addMouseListener(new MouseInputAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent e) {
+                openClose();
+            }           
         });
     }
 }

@@ -15,9 +15,7 @@ import java.awt.Color;
 import javax.swing.BorderFactory;
 public class HeaderComponent extends JPanel{
 
-
     JPanel headerTitle;
-
     JLabel arrowIcon;
 
     JLabel displayedNumber;
