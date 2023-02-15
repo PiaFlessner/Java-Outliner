@@ -53,12 +53,15 @@ public class HeaderComponent extends JPanel{
         titleContainerFlowLayout.setAlignOnBaseline(true);
         headerTitle.setLayout(titleContainerFlowLayout);
 
+        //Icon adding
         Icon icon = new Icon(this);
         headerTitle.add(icon);
 
-        
         setUpDisplayedNumber();
-        setUpDisplayedTitle();
+        
+        //Title adding
+        Title displayedHeaderTitle = new Title(this);
+        headerTitle.add(displayedHeaderTitle);
 
         this.add(headerTitle, BorderLayout.NORTH);
 
@@ -69,13 +72,6 @@ public class HeaderComponent extends JPanel{
         displayedNumber.setFont(displayedNumber.getFont());
         displayedNumber.setText("Displayed Number");
         headerTitle.add(displayedNumber);
-    }
-
-    private void setUpDisplayedTitle(){
-        Title displayedHeaderTitle = new Title(this);
-        headerTitle.add(displayedHeaderTitle);
-        JMenuItem editHeaderTitle = new JMenuItem("Edit Menue Item");
-
     }
 
     private void setUpContent(){
