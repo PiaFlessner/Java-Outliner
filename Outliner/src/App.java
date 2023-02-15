@@ -1,10 +1,10 @@
 import java.awt.BorderLayout;
 import javax.swing.*;
 
-import main.java.visualComponents.HeaderComponent;
-import main.java.visualComponents.ToolBoxComponent;
 import main.java.visualComponents.Actions.AddNewHeaderAction;
 import main.java.visualComponents.Actions.ShowHideToolBarAction;
+import main.java.visualComponents.Header.HeaderComponent;
+import main.java.visualComponents.ToolBox.ToolBoxComponent;
 
 import java.awt.event.*;
 import java.awt.Dimension;
@@ -39,7 +39,7 @@ public class App {
             setUpContextMenue();            
             setUpGlobalKeystrokes();  
             
-            HeaderComponent hc = new HeaderComponent(WINDOW_BACKGROUND_COLOR, true);
+            HeaderComponent hc = new HeaderComponent(WINDOW_BACKGROUND_COLOR, false);
             headerElementContainer.add(hc);
 
                 
