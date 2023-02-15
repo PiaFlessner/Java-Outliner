@@ -65,10 +65,8 @@ public class Header {
      * @return Stringlabel representation of Number in this outliner.
      */
     public String getLabelNr(){
-        if(this.parentElement != null && !this.isRoot){
-            return this.parentElement.getLabelNr() + DISPLAYDIVIDER + Integer.toString(this.ownNr);
-        }       
-        else return Integer.toString(this.getOwnNr());
+        if (this.parentElement.isRoot) return Integer.toString(ownNr);
+        else return this.parentElement.getLabelNr() + DISPLAYDIVIDER + Integer.toString(this.ownNr);
     }
 
 

@@ -1,16 +1,20 @@
 import java.awt.BorderLayout;
 import javax.swing.*;
 
+import main.java.backendData.Header;
 import main.java.visualComponents.Actions.AddNewHeaderAction;
 import main.java.visualComponents.Actions.ShowHideToolBarAction;
 import main.java.visualComponents.Header.HeaderComponent;
 import main.java.visualComponents.ToolBox.ToolBoxComponent;
 
 import java.awt.event.*;
+import java.util.LinkedList;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Color;
 public class App {
+    Header headerRoot = new Header("Root", 1, null, true);
+
     JFrame fenster;
     JPanel headerElementContainer;
     JPanel masterContainer;
@@ -38,9 +42,19 @@ public class App {
             masterContainer.add(toolboxComponent, BorderLayout.NORTH);
             setUpContextMenue();            
             setUpGlobalKeystrokes();  
+
+            Header h1 = new Header("first", 1,headerRoot,false);
+            Header h11 = new Header("first", 1,h1,false);
+            Header h111 = new Header("first", 1,h1,false);
+
+            //TODO Denkfehler beim adden von Headern.
             
-            HeaderComponent hc = new HeaderComponent(WINDOW_BACKGROUND_COLOR, false);
+            HeaderComponent hc = new HeaderComponent(WINDOW_BACKGROUND_COLOR, false, h1);
+            HeaderComponent h2c = new HeaderComponent(WINDOW_BACKGROUND_COLOR, false, h11);
+            HeaderComponent h3c = new HeaderComponent(WINDOW_BACKGROUND_COLOR, false, h111);
             headerElementContainer.add(hc);
+            headerElementContainer.add(h2c);
+            headerElementContainer.add(h3c);
 
                 
             
@@ -142,7 +156,7 @@ public class App {
         showToolbarMenuItem.setAction(showHideAction);
         
         //Add A new Header
-        AddNewHeaderAction addNewHeaderAction = new AddNewHeaderAction("Add new Header", keyStrokeForAddNewHeader);
+        AddNewHeaderAction addNewHeaderAction = new AddNewHeaderAction("Add new Header", keyStrokeForAddNewHeader, headerRoot);
         masterContainer.getInputMap(masterContainer.WHEN_IN_FOCUSED_WINDOW).put(keyStrokeForAddNewHeader, "addNewHeader");
         masterContainer.getActionMap().put("addNewHeader", addNewHeaderAction);
         addNewHeaderItem.setAction(addNewHeaderAction);
@@ -164,9 +178,7 @@ public class App {
         addNewHeaderItem = new JMenuItem();
         contextMenu.add(addNewHeaderItem);
 
-
         masterContainer.setComponentPopupMenu(contextMenu);
-
 
         headerContainer.setInheritsPopupMenu(true);
         columnContainer.setInheritsPopupMenu(true);

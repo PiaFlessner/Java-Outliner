@@ -4,6 +4,9 @@ import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+
+import main.java.backendData.Header;
+
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.Dimension;
@@ -31,13 +34,15 @@ public class HeaderComponent extends JPanel{
     final int HEADERCONTAINER_UNFOLDED_HEIGHT = 200;
 
     boolean isOpen;
+    Header connectedHeader;
     
-    public HeaderComponent(Color backgroundColor, boolean isOpen){
+    public HeaderComponent(Color backgroundColor, boolean isOpen, Header connectedHeader){
         this.setMaximumSize(new Dimension(2147483647, HEADERCONTAINER_FOLDED_HEIGHT));
         this.setMinimumSize(new Dimension(275, HEADERCONTAINER_FOLDED_HEIGHT));
         this.setLayout(new BorderLayout());
         this.backgroundColor = backgroundColor;
         this.isOpen = isOpen;
+        this.connectedHeader = connectedHeader;
         
         setUpHeaderTitle();
         setUpContent();
@@ -68,7 +73,7 @@ public class HeaderComponent extends JPanel{
     private void setUpDisplayedNumber(){
         displayedNumber = new JLabel();
         displayedNumber.setFont(displayedNumber.getFont());
-        displayedNumber.setText("Displayed Number");
+        displayedNumber.setText(this.connectedHeader.getLabelNr());
         headerTitle.add(displayedNumber);
     }
 
