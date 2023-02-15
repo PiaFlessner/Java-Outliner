@@ -25,12 +25,13 @@ public class HeaderComponent extends JPanel{
     JTextField displayedHeaderTitleEdit;
 
     JPanel headerContent;
-    JScrollPane headerContentScrollPane;
-    JTextArea headerContentTextArea;
+    TextArea textArea;
 
     Color backgroundColor;
     final int HEADERCONTAINER_FOLDED_HEIGHT = 40;
     final int HEADERCONTAINER_UNFOLDED_HEIGHT = 200;
+
+
 
     boolean isOpen;
     
@@ -56,6 +57,9 @@ public class HeaderComponent extends JPanel{
         headerTitle.setLayout(titleContainerFlowLayout);
 
         Icon icon = new Icon(this);
+        headerTitle.add(icon);
+
+        
         setUpDisplayedNumber();
         setUpDisplayedTitle();
 
@@ -98,27 +102,15 @@ public class HeaderComponent extends JPanel{
 
     private void setUpContent(){
         headerContent = new JPanel();
-        headerContentTextArea = new JTextArea(); 
-        headerContentScrollPane = new JScrollPane();
-
         //TextContent of the Header
         headerContent.setBackground(backgroundColor);
         headerContent.setMaximumSize(new Dimension(32767, 160));
         headerContent.setMinimumSize(new Dimension(100, 160));
         headerContent.setPreferredSize(new Dimension(712, 160));
         headerContent.setLayout(new BorderLayout());
+        textArea = new TextArea(this);
 
-        headerContentTextArea.setEditable(false);
-        headerContentTextArea.setBackground(backgroundColor);
-        headerContentTextArea.setColumns(20);
-        headerContentTextArea.setLineWrap(true);
-        headerContentTextArea.setRows(5);
-        headerContentTextArea.setText("Text of the Header");
-        headerContentTextArea.setMaximumSize(new Dimension(2147483647, 150));
-
-        headerContentScrollPane.setViewportView(headerContentTextArea);
-
-        headerContent.add(headerContentScrollPane, BorderLayout.CENTER);
+        headerContent.add(textArea, BorderLayout.CENTER);
         this.add(headerContent,BorderLayout.CENTER);
 
     }

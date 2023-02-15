@@ -10,15 +10,12 @@ import java.awt.Dimension;
 import java.awt.Color;
 import javax.swing.SwingConstants;
 import javax.swing.event.MouseInputAdapter;
-import javax.swing.event.MouseInputListener;
 
-import javafx.scene.input.MouseEvent;
 
 import java.awt.Cursor;
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
-import java.awt.event.MouseAdapter;
 
 
 import java.io.File;
@@ -42,8 +39,6 @@ public class Icon extends JLabel{
         this.parent = parent;
         addFocusingFunction();
         setUpOpenHeaderFunction();
-       
-        parent.headerTitle.add(this);
     }
 
     private void openClose(){
@@ -52,12 +47,16 @@ public class Icon extends JLabel{
             this.setIcon(new ImageIcon(ARROW_ICON));
             parent.isOpen = false;
             parent.setMaximumSize(new Dimension(2147483647,parent.HEADERCONTAINER_FOLDED_HEIGHT));
+            parent.textArea.setVisible(false);
+            parent.textArea.textArea.setFocusable(false);
         }
         else{
             //Open Header
             this.setIcon(new ImageIcon(ARROW_ICON_DOWN));
             parent.isOpen = true;
             parent.setMaximumSize(new Dimension(2147483647, parent.HEADERCONTAINER_UNFOLDED_HEIGHT));
+            parent.textArea.setVisible(true);
+            parent.textArea.textArea.setFocusable(true);
         }
     }
 
