@@ -1,4 +1,4 @@
-package main.java.visualComponents;
+package main.java.visualComponents.Header;
 
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
@@ -15,7 +15,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 import main.java.backendData.Header;
-import main.java.visualComponents.Actions.OpenHeaderAction;
 
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -118,29 +117,28 @@ public class HeaderComponent extends JPanel{
         arrowIcon.getInputMap().put(KeyStroke.getKeyStroke("SPACE"), "OpenCloseHeader");
         arrowIcon.getActionMap().put("OpenCloseHeader", new AbstractAction(){
 
+            //Manages the Open and Close Action of the Header
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(isOpen){
-                    System.out.print("Closing the Header now");
-                    isOpen = false;
-                }
-                else{
-                    System.out.print("Opening the Header now");
-                    isOpen = true;
-                
-                }
+                openClose();
             }
             
         });
-
-        //TODO : keystrokes mit enter für focus
-        //TODO: auslagern, da es doch sehr viel wird
-        //TODO: rausfinden, ob Listener und Actions immer ne eigene Klasse brauchen sollten.
-        //https://docs.oracle.com/javase/tutorial/uiswing/misc/keybinding.html
-
-        
-
         headerTitle.add(arrowIcon);
+    }
+
+    private void openClose(){
+        if(isOpen){
+            //Close Header
+            arrowIcon.setIcon(new ImageIcon(ARROW_ICON));
+            isOpen = false;
+        }
+        else{
+            //Open Header
+            arrowIcon.setIcon(new ImageIcon(ARROW_ICON_DOWN));
+            isOpen = true;
+        
+        }
     }
 
     private void setUpDisplayedNumber(){
@@ -212,13 +210,5 @@ public class HeaderComponent extends JPanel{
 
     public void unfoldContainer(){
         this.setMaximumSize(new Dimension(2147483647, HEADERCONTAINER_UNFOLDED_HEIGHT));
-    }
-
-    public boolean getIsOpen() {
-        return this.isOpen;
-    }
-
-    public void setIsOpen(boolean b) {
-        this.isOpen = isOpen;
     }
 }

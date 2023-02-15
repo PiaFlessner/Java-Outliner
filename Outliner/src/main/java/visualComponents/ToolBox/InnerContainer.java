@@ -1,4 +1,4 @@
-package main.java.visualComponents;
+package main.java.visualComponents.ToolBox;
 import java.awt.Color;
 
 import javax.swing.JPanel;
@@ -8,13 +8,13 @@ import javax.swing.JTextField;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-public class ToolBoxInnerContainer extends JPanel{
+public class InnerContainer extends JPanel{
     private JTextField FileNameTextField;
     private final Dimension MINIMUM_SIZE = new Dimension(10, 40);
     private final Dimension BUTTON_PREFFERED_SIZE = new Dimension(150, 22);
     
 
-    public ToolBoxInnerContainer(Color backgroundColor, Color foregroundColor){
+    public InnerContainer(Color backgroundColor, Color foregroundColor){
 
         this.setBackground(backgroundColor);
         this.setMinimumSize(MINIMUM_SIZE);

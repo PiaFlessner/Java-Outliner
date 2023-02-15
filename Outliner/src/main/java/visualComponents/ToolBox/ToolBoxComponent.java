@@ -1,4 +1,4 @@
-package main.java.visualComponents;
+package main.java.visualComponents.ToolBox;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -35,12 +35,12 @@ public class ToolBoxComponent extends JPanel{
     private void initComponents() {
 
         //Create all neccessary Elements of Toolbox
-        JPanel leftTooltipContainer = new ToolBoxOuterContainer(BACKGROUND_COLOR);
-        JButton newFileButton = new ToolBoxButton("New File", BACKGROUND_COLOR,FOREGROUND_COLOR,leftTooltipContainer);
-        JButton saveFileButton = new ToolBoxButton("Save",BACKGROUND_COLOR,FOREGROUND_COLOR,leftTooltipContainer);
-        JPanel middleTooltipContainer = new ToolBoxInnerContainer(BACKGROUND_COLOR, FOREGROUND_COLOR);
-        JPanel rightTooltipContainer = new ToolBoxOuterContainer(BACKGROUND_COLOR);
-        JButton exportMDButton = new ToolBoxButton("Export MD", BACKGROUND_COLOR, FOREGROUND_COLOR, rightTooltipContainer);
+        JPanel leftTooltipContainer = new OuterContainer(BACKGROUND_COLOR);
+        JButton newFileButton = new Button("New File", BACKGROUND_COLOR,FOREGROUND_COLOR,leftTooltipContainer);
+        JButton saveFileButton = new Button("Save",BACKGROUND_COLOR,FOREGROUND_COLOR,leftTooltipContainer);
+        JPanel middleTooltipContainer = new InnerContainer(BACKGROUND_COLOR, FOREGROUND_COLOR);
+        JPanel rightTooltipContainer = new OuterContainer(BACKGROUND_COLOR);
+        JButton exportMDButton = new Button("Export MD", BACKGROUND_COLOR, FOREGROUND_COLOR, rightTooltipContainer);
         //JButton detachToolTipButton = new ToolBoxButton("Detach", BACKGROUND_COLOR, FOREGROUND_COLOR, rightTooltipContainer);
 
         //Add Action Listeners

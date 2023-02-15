@@ -5,7 +5,7 @@ import javax.swing.AbstractAction;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.KeyStroke;
 
-import main.java.visualComponents.ToolBoxComponent;
+import main.java.visualComponents.ToolBox.ToolBoxComponent;
 
 public class ShowHideToolBarAction extends AbstractAction{
 

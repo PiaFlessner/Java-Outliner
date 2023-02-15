@@ -1,12 +1,12 @@
-package main.java.visualComponents;
+package main.java.visualComponents.ToolBox;
 
 import java.awt.Color;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
-public class ToolBoxButton extends JButton{
+public class Button extends JButton{
 
-    public ToolBoxButton(String text, Color backgroundColor, Color foregroundColor, JPanel parent){
+    public Button(String text, Color backgroundColor, Color foregroundColor, JPanel parent){
         this.setText(text);
         this.setBackground(backgroundColor);
         this.setForeground(foregroundColor);
