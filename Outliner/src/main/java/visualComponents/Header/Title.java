@@ -80,7 +80,6 @@ public class Title extends JTextField{
             //Cange to not editable
             this.setEditable(false);
             this.isEditable = false;
-            this.isEditable = false;
             this.setBackground(parent.backgroundColor);
               
         }else {
