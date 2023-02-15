@@ -58,13 +58,11 @@ public class HeaderComponent extends JPanel{
         headerTitle.add(icon);
 
         setUpDisplayedNumber();
-        
+
         //Title adding
         Title displayedHeaderTitle = new Title(this);
         headerTitle.add(displayedHeaderTitle);
-
         this.add(headerTitle, BorderLayout.NORTH);
-
     }
 
     private void setUpDisplayedNumber(){
