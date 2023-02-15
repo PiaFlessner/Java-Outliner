@@ -5,6 +5,7 @@ import javax.swing.KeyStroke;
 import javax.swing.event.MouseInputAdapter;
 
 import javafx.scene.input.KeyEvent;
+import javafx.util.converter.CurrencyStringConverter;
 
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
@@ -17,6 +18,8 @@ import java.awt.Cursor;
 public class Title extends JTextField{
     boolean isEditable;
     HeaderComponent parent;
+    Cursor NORMAL_CURSOR = new Cursor(Cursor.DEFAULT_CURSOR);
+    Cursor EDIT_CURSOR = new Cursor(Cursor.TEXT_CURSOR);
 
     public Title(HeaderComponent parent){
         this.parent = parent;
@@ -29,7 +32,7 @@ public class Title extends JTextField{
         this.setPreferredSize(new Dimension(500, 16));
         this.setFocusable(true);
         this.setEditable(false);
-        this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+        this.setCursor(this.NORMAL_CURSOR);
         this.setBackground(parent.backgroundColor);
         addFocusingFunction();
         setUpEditableFunction();
@@ -77,17 +80,18 @@ public class Title extends JTextField{
       private void editAbleChange(){
   
         if(this.isEditable){
-            //Cange to not editable
+            //Change to not editable
             this.setEditable(false);
             this.isEditable = false;
             this.setBackground(parent.backgroundColor);
+            this.setCursor(this.NORMAL_CURSOR);
               
         }else {
             //change to editable
-                this.setEditable(true);
-                this.isEditable = true;
-                this.setBackground(parent.EDIT_COLOR);
-
+            this.setEditable(true);
+            this.isEditable = true;
+            this.setBackground(parent.EDIT_COLOR);
+            this.setCursor(this.EDIT_CURSOR);
           }
   
       }
