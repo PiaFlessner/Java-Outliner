@@ -1,38 +1,20 @@
 package main.java.visualComponents.Header;
 
 import javax.swing.JLabel;
-import javax.swing.JMenuItem;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-
-import main.java.backendData.Header;
-
 import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.BorderLayout;
 import java.awt.Color;
 import javax.swing.SwingConstants;
-
 import java.awt.Cursor;
-
-import javax.management.openmbean.OpenDataException;
 import javax.swing.AbstractAction;
-import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 
 import java.io.File;
-import java.security.Key;
-
 public class Icon extends JLabel{
     
 
