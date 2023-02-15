@@ -55,17 +55,11 @@ public class HeaderComponent extends JPanel{
     final int HEADERCONTAINER_FOLDED_HEIGHT = 40;
     final int HEADERCONTAINER_UNFOLDED_HEIGHT = 200;
 
-    final String ARROW_ICON = "src"+File.separator+"main"+File.separator+"resources"+File.separator+"arrow.png";
-    final String ARROW_ICON_DOWN = "src"+File.separator+"main"+File.separator+"resources"+File.separator+"arrowDown.png";
     boolean isOpen;
     
-
-    
-    
-    
     public HeaderComponent(Color backgroundColor, boolean isOpen){
-        this.setMaximumSize(new Dimension(2147483647, 200));
-        this.setMinimumSize(new Dimension(275, 40));
+        this.setMaximumSize(new Dimension(2147483647, HEADERCONTAINER_FOLDED_HEIGHT));
+        this.setMinimumSize(new Dimension(275, HEADERCONTAINER_FOLDED_HEIGHT));
         this.setLayout(new BorderLayout());
         this.backgroundColor = backgroundColor;
         this.isOpen = isOpen;
@@ -84,61 +78,12 @@ public class HeaderComponent extends JPanel{
         titleContainerFlowLayout.setAlignOnBaseline(true);
         headerTitle.setLayout(titleContainerFlowLayout);
 
-        setUpIcon();
+        Icon icon = new Icon(this);
         setUpDisplayedNumber();
         setUpDisplayedTitle();
 
         this.add(headerTitle, BorderLayout.NORTH);
 
-    }
-
-    private void setUpIcon(){
-        arrowIcon = new JLabel();
-        arrowIcon.setHorizontalAlignment(SwingConstants.CENTER);
-        arrowIcon.setIcon(new ImageIcon(ARROW_ICON));
-        arrowIcon.setToolTipText("");
-        arrowIcon.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        arrowIcon.setHorizontalTextPosition(SwingConstants.CENTER);
-        arrowIcon.setPreferredSize(new Dimension(20, 20));
-        arrowIcon.setFocusable(true);
-        
-        //Adding, so Element can be visible focused.
-        arrowIcon.addFocusListener(new FocusAdapter(){
-            @Override
-            public void focusGained(FocusEvent e) {
-                arrowIcon.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY));
-            } 
-            
-            @Override
-            public void focusLost(FocusEvent e) {
-                arrowIcon.setBorder(null);
-            }
-        });
-        arrowIcon.getInputMap().put(KeyStroke.getKeyStroke("SPACE"), "OpenCloseHeader");
-        arrowIcon.getActionMap().put("OpenCloseHeader", new AbstractAction(){
-
-            //Manages the Open and Close Action of the Header
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                openClose();
-            }
-            
-        });
-        headerTitle.add(arrowIcon);
-    }
-
-    private void openClose(){
-        if(isOpen){
-            //Close Header
-            arrowIcon.setIcon(new ImageIcon(ARROW_ICON));
-            isOpen = false;
-        }
-        else{
-            //Open Header
-            arrowIcon.setIcon(new ImageIcon(ARROW_ICON_DOWN));
-            isOpen = true;
-        
-        }
     }
 
     private void setUpDisplayedNumber(){
@@ -170,9 +115,6 @@ public class HeaderComponent extends JPanel{
         });
 
         headerTitle.add(displayedHeaderTitle);
-
-
-
         JMenuItem editHeaderTitle = new JMenuItem("Edit Menue Item");
 
     }
@@ -202,13 +144,5 @@ public class HeaderComponent extends JPanel{
         headerContent.add(headerContentScrollPane, BorderLayout.CENTER);
         this.add(headerContent,BorderLayout.CENTER);
 
-    }
-
-    public void foldContainer(){
-        this.setMaximumSize(new Dimension(2147483647,HEADERCONTAINER_FOLDED_HEIGHT));
-    }
-
-    public void unfoldContainer(){
-        this.setMaximumSize(new Dimension(2147483647, HEADERCONTAINER_UNFOLDED_HEIGHT));
     }
 }
