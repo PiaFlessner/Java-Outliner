@@ -8,12 +8,14 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 
+import java.awt.event.ActionEvent;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 import main.java.backendData.Header;
+import main.java.visualComponents.Actions.OpenHeaderAction;
 
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -23,20 +25,21 @@ import javax.swing.SwingConstants;
 
 import java.awt.Cursor;
 
+import javax.management.openmbean.OpenDataException;
+import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 
 import java.io.File;
+import java.security.Key;
 
 public class HeaderComponent extends JPanel{
 
-    JLabel icon;
 
     JPanel headerTitle;
 
     JLabel arrowIcon;
-    JLabel arrowIconDown;
 
     JLabel displayedNumber;
     JTextField displayedNumberEdit;
@@ -53,13 +56,20 @@ public class HeaderComponent extends JPanel{
     final int HEADERCONTAINER_FOLDED_HEIGHT = 40;
     final int HEADERCONTAINER_UNFOLDED_HEIGHT = 200;
 
+    final String ARROW_ICON = "src"+File.separator+"main"+File.separator+"resources"+File.separator+"arrow.png";
+    final String ARROW_ICON_DOWN = "src"+File.separator+"main"+File.separator+"resources"+File.separator+"arrowDown.png";
+    boolean isOpen;
+    
 
     
-    public HeaderComponent(Color backgroundColor){
+    
+    
+    public HeaderComponent(Color backgroundColor, boolean isOpen){
         this.setMaximumSize(new Dimension(2147483647, 200));
         this.setMinimumSize(new Dimension(275, 40));
         this.setLayout(new BorderLayout());
         this.backgroundColor = backgroundColor;
+        this.isOpen = isOpen;
         
         setUpHeaderTitle();
         setUpContent();
@@ -84,25 +94,43 @@ public class HeaderComponent extends JPanel{
     }
 
     private void setUpIcon(){
-        icon = new JLabel();
-        icon.setHorizontalAlignment(SwingConstants.CENTER);
-        icon.setIcon(new ImageIcon("src"+File.separator+"main"+File.separator+"resources"+File.separator+"arrow.png"));
-        icon.setToolTipText("");
-        icon.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        icon.setHorizontalTextPosition(SwingConstants.CENTER);
-        icon.setPreferredSize(new Dimension(20, 20));
-        icon.setFocusable(true);
-
-        icon.addFocusListener(new FocusAdapter(){
+        arrowIcon = new JLabel();
+        arrowIcon.setHorizontalAlignment(SwingConstants.CENTER);
+        arrowIcon.setIcon(new ImageIcon(ARROW_ICON));
+        arrowIcon.setToolTipText("");
+        arrowIcon.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        arrowIcon.setHorizontalTextPosition(SwingConstants.CENTER);
+        arrowIcon.setPreferredSize(new Dimension(20, 20));
+        arrowIcon.setFocusable(true);
+        
+        //Adding, so Element can be visible focused.
+        arrowIcon.addFocusListener(new FocusAdapter(){
             @Override
-                public void focusGained(FocusEvent e) {
-                    icon.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY));
-                } 
+            public void focusGained(FocusEvent e) {
+                arrowIcon.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY));
+            } 
+            
+            @Override
+            public void focusLost(FocusEvent e) {
+                arrowIcon.setBorder(null);
+            }
+        });
+        arrowIcon.getInputMap().put(KeyStroke.getKeyStroke("SPACE"), "OpenCloseHeader");
+        arrowIcon.getActionMap().put("OpenCloseHeader", new AbstractAction(){
 
-                @Override
-                public void focusLost(FocusEvent e) {
-                    icon.setBorder(null);
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(isOpen){
+                    System.out.print("Closing the Header now");
+                    isOpen = false;
                 }
+                else{
+                    System.out.print("Opening the Header now");
+                    isOpen = true;
+                
+                }
+            }
+            
         });
 
         //TODO : keystrokes mit enter für focus
@@ -112,7 +140,7 @@ public class HeaderComponent extends JPanel{
 
         
 
-        headerTitle.add(icon);
+        headerTitle.add(arrowIcon);
     }
 
     private void setUpDisplayedNumber(){
@@ -184,5 +212,13 @@ public class HeaderComponent extends JPanel{
 
     public void unfoldContainer(){
         this.setMaximumSize(new Dimension(2147483647, HEADERCONTAINER_UNFOLDED_HEIGHT));
+    }
+
+    public boolean getIsOpen() {
+        return this.isOpen;
+    }
+
+    public void setIsOpen(boolean b) {
+        this.isOpen = isOpen;
     }
 }

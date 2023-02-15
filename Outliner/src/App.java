@@ -39,7 +39,7 @@ public class App {
             setUpContextMenue();            
             setUpGlobalKeystrokes();  
             
-            HeaderComponent hc = new HeaderComponent(WINDOW_BACKGROUND_COLOR);
+            HeaderComponent hc = new HeaderComponent(WINDOW_BACKGROUND_COLOR, true);
             headerElementContainer.add(hc);
 
                 
