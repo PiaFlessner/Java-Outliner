@@ -101,7 +101,7 @@ public class HeaderComponent extends JPanel{
      */
     private void setUpDisplayedNumber(){
         displayedNumber = new JLabel();
-        displayedNumber.setFont(displayedNumber.getFont());
+        //displayedNumber.setFont(displayedNumber.getFont());
         displayedNumber.setText(this.connectedHeader.getLabelNr());
         headerTitle.add(displayedNumber);
     }
@@ -162,6 +162,7 @@ public class HeaderComponent extends JPanel{
             this.isOpen = true;
             this.setMaximumSize(new Dimension(2147483647, this.HEADERCONTAINER_UNFOLDED_HEIGHT));
             this.textArea.setVisible(true);
+            this.headerContent.setVisible(true);
             this.textArea.textArea.setFocusable(true);
     }
 
@@ -172,6 +173,7 @@ public class HeaderComponent extends JPanel{
         icon.setArrowClose();
         this.isOpen = false;
         this.setMaximumSize(new Dimension(2147483647,this.HEADERCONTAINER_FOLDED_HEIGHT));
+        this.headerContent.setVisible(false);
         this.textArea.setVisible(false);
         this.textArea.textArea.setFocusable(false);
     }
