@@ -14,6 +14,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.KeyStroke;
 import javax.swing.event.MouseInputAdapter;
+import java.awt.event.MouseEvent;
 
 public class HeaderComponent extends JPanel{
 
@@ -51,6 +52,7 @@ public class HeaderComponent extends JPanel{
         this.setFocusable(true);
         addFocusingFunction();
         setUpOpenHeaderFunction();
+        setUpHoverColorChangeFunction();
    
     }
 
@@ -124,17 +126,24 @@ public class HeaderComponent extends JPanel{
             @Override
             public void actionPerformed(ActionEvent e) {
                 openClose();
-                System.out.println("HallO");
             }
         });
 
         //Button Click Function
         this.addMouseListener(new MouseInputAdapter() {
             @Override
-            public void mouseClicked(java.awt.event.MouseEvent e) {
+            public void mouseClicked(MouseEvent e) {
                 openClose();
-                System.out.println("HallO");
             }           
+        });
+    }
+
+    private void setUpHoverColorChangeFunction(){
+        this.addMouseListener(new MouseInputAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e){
+                grabFocus();
+            }
         });
     }
 

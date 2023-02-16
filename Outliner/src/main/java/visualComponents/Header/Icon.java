@@ -18,7 +18,6 @@ public class Icon extends JLabel{
         this.setHorizontalAlignment(SwingConstants.CENTER);
         this.setIcon(new ImageIcon(ARROW_ICON));
         this.setToolTipText("");
-        this.setCursor(new Cursor(Cursor.HAND_CURSOR));
         this.setHorizontalTextPosition(SwingConstants.CENTER);
         this.setPreferredSize(new Dimension(20, 20));
     }

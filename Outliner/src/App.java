@@ -48,12 +48,8 @@ public class App {
             Header h111 = new Header("third", 2,h1,false);
             
             HeaderComponent hc = new HeaderComponent(WINDOW_BACKGROUND_COLOR, false, h1);
-            HeaderComponent h2c = new HeaderComponent(WINDOW_BACKGROUND_COLOR, false, h11);
-            HeaderComponent h3c = new HeaderComponent(WINDOW_BACKGROUND_COLOR, false, h111);
-            
             headerElementContainer.add(hc);
-            headerElementContainer.add(h2c);
-            headerElementContainer.add(h3c);
+
 
             
 
