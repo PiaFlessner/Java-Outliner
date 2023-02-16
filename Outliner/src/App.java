@@ -44,18 +44,8 @@ public class App {
             setUpGlobalKeystrokes();  
 
             Header h1 = new Header("first", 1,headerRoot,false);
-            Header h2 = new Header("first", 1,h1,false);
-            Header h3 = new Header("first", 1,h2,false);
-            Header h4 = new Header("first", 1,h3,false);
-            
             HeaderComponent hc = new HeaderComponent(WINDOW_BACKGROUND_COLOR, false, h1, headerElementContainer );
-            HeaderComponent h2c = new HeaderComponent(WINDOW_BACKGROUND_COLOR, false, h2, headerElementContainer );
-            HeaderComponent h3c = new HeaderComponent(WINDOW_BACKGROUND_COLOR, false, h3, headerElementContainer );
-            HeaderComponent h4c = new HeaderComponent(WINDOW_BACKGROUND_COLOR, false, h4, headerElementContainer );
             headerElementContainer.add(hc);
-            headerElementContainer.add(h2c);
-            headerElementContainer.add(h3c);
-            headerElementContainer.add(h4c);
 
             try {
                 for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {

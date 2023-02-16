@@ -17,6 +17,14 @@ public class Header {
     private static final String DISPLAYDIVIDER = ".";
     private Logger log = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
+    public Header(String title, int ownNr, Header parentElement, boolean isRoot){
+        this.title = title;
+        this.ownNr = ownNr;
+        subheaders = new LinkedList<>();
+        this.setParentElement(parentElement, this.ownNr-1);
+        this.isRoot = isRoot;
+    }  
+
     public String getTitle() {
         return title;
     }
@@ -50,6 +58,10 @@ public class Header {
         return this.subheaders.size();
     }
 
+    public boolean isRoot() {
+        return isRoot;
+    }
+
     /**
      * Remove self from old Parent element and then insert self into new Parent Element.
      * @param parent
@@ -69,14 +81,6 @@ public class Header {
         else return this.parentElement.getLabelNr() + DISPLAYDIVIDER + Integer.toString(this.ownNr);
     }
 
-
-    public Header(String title, int ownNr, Header parentElement, boolean isRoot){
-        this.title = title;
-        this.ownNr = ownNr;
-        subheaders = new LinkedList<>();
-        this.setParentElement(parentElement, this.ownNr-1);
-        this.isRoot = isRoot;
-    }  
     /**
      * Rearranges the subheader into the new index
      * @param newIndex new Index for the subheader
