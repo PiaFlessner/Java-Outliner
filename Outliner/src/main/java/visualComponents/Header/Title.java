@@ -50,6 +50,8 @@ public class Title extends JTextField{
             @Override
             public void focusLost(FocusEvent e) {
                 setBorder(null);
+                isEditable = true;
+                editAbleChange();
             }
         });
     }

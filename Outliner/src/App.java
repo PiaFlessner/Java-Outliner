@@ -45,13 +45,12 @@ public class App {
 
             Header h1 = new Header("first", 1,headerRoot,false);
             Header h11 = new Header("first", 1,h1,false);
-            Header h111 = new Header("first", 1,h1,false);
-
-            //TODO Denkfehler beim adden von Headern.
+            Header h111 = new Header("first", 2,h1,false);
             
             HeaderComponent hc = new HeaderComponent(WINDOW_BACKGROUND_COLOR, false, h1);
             HeaderComponent h2c = new HeaderComponent(WINDOW_BACKGROUND_COLOR, false, h11);
             HeaderComponent h3c = new HeaderComponent(WINDOW_BACKGROUND_COLOR, false, h111);
+            
             headerElementContainer.add(hc);
             headerElementContainer.add(h2c);
             headerElementContainer.add(h3c);
