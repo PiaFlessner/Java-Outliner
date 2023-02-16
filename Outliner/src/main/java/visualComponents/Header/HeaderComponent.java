@@ -63,11 +63,12 @@ public class HeaderComponent extends JPanel {
         setUpOpenHeaderFunction();
         setUpHoverColorChangeFunction();
 
+        //add subheader adding function
         addingHeaderActions(-1, "Add subheader", connectedHeader,
                 KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, KeyEvent.CTRL_DOWN_MASK), "addSubHeader");
+        //add subheader to parent add function
         addingHeaderActions(-1, "Add Subheader to Parent", connectedHeader.getParentElement(),
                 KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_UP, KeyEvent.CTRL_DOWN_MASK), "addSubheaderToParent");
-
         // adjust open or not open size
         if (isOpen) {
             openHeader();
