@@ -52,28 +52,29 @@ public class HeaderComponent extends JPanel{
         this.connectedHeader = connectedHeader;
         this.backgroundColor = backgroundColor;
         this.setLayout(new BorderLayout());
-        //adjust open or not open size
-        if(isOpen){
-            this.setMaximumSize(new Dimension(2147483647, HEADERCONTAINER_UNFOLDED_HEIGHT));
-            this.setMinimumSize(new Dimension(275, HEADERCONTAINER_UNFOLDED_HEIGHT));
-        } else {
-            this.setMaximumSize(new Dimension(2147483647, HEADERCONTAINER_FOLDED_HEIGHT));
-            this.setMinimumSize(new Dimension(275, HEADERCONTAINER_FOLDED_HEIGHT));
-        }
-
         this.popupMenu = new JPopupMenu();
         this.setComponentPopupMenu(popupMenu);
+        this.setFocusable(true);
         
         setUpHeaderTitle();
         setUpContent();
-        this.setFocusable(true);
         addFocusingFunction();
         setUpOpenHeaderFunction();
         setUpHoverColorChangeFunction();
         setUpAddsubHeader();
+        
+        //adjust open or not open size
+        if(isOpen){
+            openHeader();
+        } else {
+            closeHeader();
+        }
    
     }
 
+    /**
+     * sets up the header title with an icon and the actual title.
+     */
     private void setUpHeaderTitle(){
         headerTitle = new JPanel();
         headerTitle.setBackground(backgroundColor);
@@ -95,6 +96,9 @@ public class HeaderComponent extends JPanel{
         this.add(headerTitle, BorderLayout.NORTH);
     }
 
+    /**
+     * sets up the Displayed number
+     */
     private void setUpDisplayedNumber(){
         displayedNumber = new JLabel();
         displayedNumber.setFont(displayedNumber.getFont());
@@ -102,6 +106,9 @@ public class HeaderComponent extends JPanel{
         headerTitle.add(displayedNumber);
     }
 
+    /**
+     * Sets up the Content Panel, which inherits a textfield.
+     */
     private void setUpContent(){
         headerContent = new JPanel();
         //TextContent of the Header
@@ -118,8 +125,12 @@ public class HeaderComponent extends JPanel{
 
     }
 
+    /**
+     * Makes Adding a Subheader to focused Element possible. Via contextmenue and via keystroke.
+     */
     private void setUpAddsubHeader(){
 
+        //Action definition
         Action addSubHeaderAction = new AbstractAction("Add Subheader"){
             @Override
                 public void actionPerformed(ActionEvent e) {
@@ -130,6 +141,7 @@ public class HeaderComponent extends JPanel{
             }
         };
 
+        //Contextmenue Item configuration
         JMenuItem addSubHeaderMenuItem;
         addSubHeaderMenuItem = new JMenuItem("Add Subheader");
         addSubHeaderMenuItem.setAction(addSubHeaderAction);
@@ -137,29 +149,48 @@ public class HeaderComponent extends JPanel{
         addSubHeaderMenuItem.setAccelerator(keystroke);
         this.popupMenu.add(addSubHeaderMenuItem);
 
+        //makes keystroke possible without opening the contextmenue.
         this.getInputMap(this.WHEN_FOCUSED).put(keystroke, "addSubHeader");
         this.getActionMap().put("addSubHeader", addSubHeaderAction);
     }
 
-    private void openClose(){
-        if(this.isOpen){
-            //Close Header
-            icon.setArrowClose();
-            this.isOpen = false;
-            this.setMaximumSize(new Dimension(2147483647,this.HEADERCONTAINER_FOLDED_HEIGHT));
-            this.textArea.setVisible(false);
-            this.textArea.textArea.setFocusable(false);
-        }
-        else{
-            //Open Header
-            icon.setArrowOpen();
+    /**
+     * Visibly opens the header.
+     */
+    private void openHeader(){
+        icon.setArrowOpen();
             this.isOpen = true;
             this.setMaximumSize(new Dimension(2147483647, this.HEADERCONTAINER_UNFOLDED_HEIGHT));
             this.textArea.setVisible(true);
             this.textArea.textArea.setFocusable(true);
+    }
+
+    /**
+     * Visibly closes the header.
+     */
+    private void closeHeader(){
+        icon.setArrowClose();
+        this.isOpen = false;
+        this.setMaximumSize(new Dimension(2147483647,this.HEADERCONTAINER_FOLDED_HEIGHT));
+        this.textArea.setVisible(false);
+        this.textArea.textArea.setFocusable(false);
+    }
+
+    /**
+     * Inherits the logic to open and close a subeader
+     */
+    private void openClose(){
+        if(this.isOpen){
+            closeHeader();
+        }
+        else{
+            openHeader();        
         }
     }
 
+    /**
+     * Sets up the open Header function via keystrokes and via mouse click.
+     */
     private void setUpOpenHeaderFunction(){
         //KeyStroke Function
         this.getInputMap().put(KeyStroke.getKeyStroke("SPACE"), "OpenCloseHeader");
@@ -179,6 +210,10 @@ public class HeaderComponent extends JPanel{
         });
     }
 
+    /**
+     * Sets up the Color change, when the user hovers over the element by setting the focus.
+     * Meaning: hover == focus.
+     */
     private void setUpHoverColorChangeFunction(){
         this.addMouseListener(new MouseInputAdapter() {
             @Override
