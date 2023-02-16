@@ -25,7 +25,7 @@ public class Title extends JTextField{
         this.parent = parent;
 
         this.setHorizontalAlignment(JTextField.LEFT);
-        this.setText("Enter Title Here");
+        this.setText(parent.connectedHeader.getTitle());
         this.setBorder(null);
         this.setMaximumSize(new Dimension(500, 16));
         this.setMinimumSize(new Dimension(500, 16));

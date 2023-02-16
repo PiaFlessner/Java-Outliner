@@ -44,8 +44,8 @@ public class App {
             setUpGlobalKeystrokes();  
 
             Header h1 = new Header("first", 1,headerRoot,false);
-            Header h11 = new Header("first", 1,h1,false);
-            Header h111 = new Header("first", 2,h1,false);
+            Header h11 = new Header("second", 1,h1,false);
+            Header h111 = new Header("third", 2,h1,false);
             
             HeaderComponent hc = new HeaderComponent(WINDOW_BACKGROUND_COLOR, false, h1);
             HeaderComponent h2c = new HeaderComponent(WINDOW_BACKGROUND_COLOR, false, h11);
@@ -54,6 +54,8 @@ public class App {
             headerElementContainer.add(hc);
             headerElementContainer.add(h2c);
             headerElementContainer.add(h3c);
+
+            
 
                 
             
@@ -153,12 +155,6 @@ public class App {
         masterContainer.getInputMap(masterContainer.WHEN_IN_FOCUSED_WINDOW).put(keyStrokeForToolbarVisibility, "show or Hide Toolbox");
         masterContainer.getActionMap().put("show or Hide Toolbox", showHideAction);
         showToolbarMenuItem.setAction(showHideAction);
-        
-        //Add A new Header
-        AddNewHeaderAction addNewHeaderAction = new AddNewHeaderAction("Add new Header", keyStrokeForAddNewHeader, headerRoot);
-        masterContainer.getInputMap(masterContainer.WHEN_IN_FOCUSED_WINDOW).put(keyStrokeForAddNewHeader, "addNewHeader");
-        masterContainer.getActionMap().put("addNewHeader", addNewHeaderAction);
-        addNewHeaderItem.setAction(addNewHeaderAction);
     }
 
     /**
@@ -172,10 +168,6 @@ public class App {
         showToolbarMenuItem.setActionCommand("hide");
         showToolbarMenuItem.setSelected(true);
         contextMenu.add(showToolbarMenuItem);
-
-        //Add new Header
-        addNewHeaderItem = new JMenuItem();
-        contextMenu.add(addNewHeaderItem);
 
         masterContainer.setComponentPopupMenu(contextMenu);
 
