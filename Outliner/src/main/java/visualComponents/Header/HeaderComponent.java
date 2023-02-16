@@ -145,7 +145,7 @@ public class HeaderComponent extends JPanel {
 
                     Header h = new Header("Add Title Here", index, parentElement, false);
                     HeaderComponent hc = new HeaderComponent(backgroundColor, false, h, parentContainer);
-                    parentContainer.add(hc);
+                    parentContainer.add(hc, h.getOwnNr());
                     parentContainer.revalidate();
 
                 }

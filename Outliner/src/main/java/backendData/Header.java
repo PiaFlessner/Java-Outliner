@@ -164,4 +164,16 @@ public class Header {
         }
         this.subheaders.clear();
     }
+
+    /**
+     * Gets the overall index of the header in the whole list construct.
+     * For example the overall construct inherits 1, 1.1, 1.2
+     * so 1.2 would have the overall index of 3.
+     * @return overall index
+     */
+    public int getOverallIndex(int overallIndex){
+        if(this.parentElement.isRoot){return overallIndex + 1;}
+        else{overallIndex = overallIndex + parentElement.subheaders.size();}
+        return parentElement.getOverallIndex(overallIndex);
+    }
 }

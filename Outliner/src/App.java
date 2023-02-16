@@ -14,7 +14,6 @@ import java.awt.FlowLayout;
 import java.awt.Color;
 public class App {
     Header headerRoot = new Header("Root", 1, null, true);
-
     JFrame fenster;
     JPanel headerElementContainer;
     JPanel masterContainer;
@@ -44,8 +43,12 @@ public class App {
             setUpGlobalKeystrokes();  
 
             Header h1 = new Header("first", 1,headerRoot,false);
+            Header h11 = new Header("first", 1,h1,false);
+            Header h111 = new Header("first", 1,h11,false);
+            Header h12 = new Header("first", 1,h1,false);
             HeaderComponent hc = new HeaderComponent(WINDOW_BACKGROUND_COLOR, false, h1, headerElementContainer );
             headerElementContainer.add(hc);
+            System.out.println( h111.getOverallIndex(0));  
 
             try {
                 for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
