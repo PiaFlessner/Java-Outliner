@@ -6,9 +6,6 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.MouseInputAdapter;
 
-import javafx.scene.input.KeyEvent;
-import javafx.util.converter.CurrencyStringConverter;
-
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import javax.swing.AbstractAction;
