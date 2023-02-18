@@ -124,4 +124,34 @@ public class HeaderTest {
         assertEquals(h1, h12.getParentElement());
     }
 
+    @Test
+    public void testGetOverallIndex() {
+        assertEquals(1, h1.getIndex(h0));
+        assertEquals(2, h11.getIndex(h0));
+        assertEquals(3, h2.getIndex(h0));
+    }
+
+    @Test
+    public void testGetOverallIndexComplicatedStructure(){
+        Header h111 = new Header("1.1.1", 1,h11,false);
+        Header h112 = new Header("1.1.2", 2,h11,false);
+        Header h2 = new Header("2", 2,h0,false);
+        Header h21 = new Header("2.1", 1,h2,false);
+        Header h22 = new Header("2.2", 2,h2,false);
+        Header h3 = new Header("3", 3,h0,false);
+        Header h4 = new Header("4", 4,h0,false);
+        Header h41 = new Header("4.1", 1,h4,false);
+
+        assertEquals(1, h1.getIndex(h0));
+        assertEquals(2, h11.getIndex(h0));
+        assertEquals(3, h111.getIndex(h0));
+        assertEquals(4, h112.getIndex(h0));
+        assertEquals(5, h2.getIndex(h0));
+        assertEquals(6, h21.getIndex(h0));
+        assertEquals(7, h22.getIndex(h0));
+        assertEquals(8, h3.getIndex(h0));
+        assertEquals(9, h4.getIndex(h0));
+        assertEquals(10, h41.getIndex(h0));
+    }
+
 }
