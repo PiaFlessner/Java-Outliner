@@ -69,23 +69,23 @@ public class HeaderComponent extends JPanel {
         setUpOpenHeaderFunction();
         setUpHoverColorChangeFunction();
 
+        //add header to same level
+        addingHeaderActions(-1, "Add Header on same level", connectedHeader.getParentElement(),
+                KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, KeyEvent.CTRL_DOWN_MASK), "addSubheaderToParent");
+
         //add subheader adding function
         addingHeaderActions(-1, "Add subheader", connectedHeader,
                 KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, KeyEvent.CTRL_DOWN_MASK), "addSubHeader");
-        //add header to same level
-        //addingHeaderActions(-1, "Add Header on same level", connectedHeader.getParentElement(),
-        //        KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, KeyEvent.CTRL_DOWN_MASK), "addSubheaderToParent");
-        
+        //add header to level above
+        //addingHeaderActions(-1, "Add Header to level above", connectedHeader.getParentElement().getParentElement(),
+        //KeyStroke.getKeyStroke(KeyEvent.VK_UP, KeyEvent.CTRL_DOWN_MASK), "addHeaderToParentParent");
         // adjust open or not open size
         if (isOpen) {
             openHeader();
         } else {
             closeHeader();
         }
-        allHeaderComponents.add(this);
     }
-
-
 
     /**
      * sets up the header title with an icon and the actual title.
@@ -116,6 +116,7 @@ public class HeaderComponent extends JPanel {
      */
     private void setUpDisplayedNumber() {
         displayedNumber = new JLabel();
+        // displayedNumber.setFont(displayedNumber.getFont());
         displayedNumber.setText(this.connectedHeader.getLabelNr());
         headerTitle.add(displayedNumber);
     }
@@ -145,7 +146,7 @@ public class HeaderComponent extends JPanel {
     private void addingHeaderActions(int index, String actionText, Header parentElement, KeyStroke keystroke,
             String actionMapKey ) {
 
-        if (!parentElement.isRoot()) {
+        //if (!parentElement.isRoot()) {
             // Action definition
             Action action = new AbstractAction(actionText) {
                 @Override
@@ -153,7 +154,7 @@ public class HeaderComponent extends JPanel {
 
                     Header h = new Header("Add Title Here", index, parentElement, false);
                     HeaderComponent hc = new HeaderComponent(backgroundColor, false, h, parentContainer);
-                    //parentContainer.add(hc,h.getOwnTreeIndex()-1);
+                    parentContainer.add(hc, h.getIndex(Header.root)-1);
                     parentContainer.revalidate();
                 }
             };
@@ -169,7 +170,7 @@ public class HeaderComponent extends JPanel {
             this.getInputMap(this.WHEN_FOCUSED).put(keystroke, actionMapKey);
             this.getActionMap().put(actionMapKey, action);
 
-        }
+        //}
 
     }
     /**
