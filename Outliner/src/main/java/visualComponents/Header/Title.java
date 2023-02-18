@@ -2,6 +2,8 @@ package main.java.visualComponents.Header;
 import javax.swing.JTextField;
 
 import javax.swing.KeyStroke;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.event.MouseInputAdapter;
 
 import javafx.scene.input.KeyEvent;
@@ -36,7 +38,7 @@ public class Title extends JTextField{
         this.setBackground(parent.backgroundColor);
         addFocusingFunction();
         setUpEditableFunction();
-
+        setUpChangedFunction();
 
     }
 
@@ -64,9 +66,7 @@ public class Title extends JTextField{
           public void actionPerformed(java.awt.event.ActionEvent e) {
               editAbleChange();
           }
-        });
-
-  
+        });  
         //Button Click Function
         this.addMouseListener(new MouseInputAdapter() {
             @Override
@@ -78,6 +78,27 @@ public class Title extends JTextField{
             }           
         });
       }
+
+      private void setUpChangedFunction(){
+        this.getDocument().addDocumentListener(new DocumentListener() {
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                parent.connectedHeader.setTitle(getText());     
+            }
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                parent.connectedHeader.setTitle(getText()); 
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                parent.connectedHeader.setTitle(getText());      
+            }
+            
+            
+        });     
+    }
   
       private void editAbleChange(){
   
