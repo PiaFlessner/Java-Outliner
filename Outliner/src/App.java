@@ -1,6 +1,5 @@
 import java.awt.BorderLayout;
 import javax.swing.*;
-import javax.swing.plaf.synth.SynthSpinnerUI;
 
 import main.java.backendData.Header;
 import main.java.visualComponents.Actions.ShowHideToolBarAction;

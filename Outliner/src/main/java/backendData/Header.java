@@ -5,8 +5,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
 
-import org.omg.PortableServer.ServantLocatorOperations;
-
 public class Header {
 
     private String title;

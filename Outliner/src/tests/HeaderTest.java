@@ -10,8 +10,8 @@ import main.java.backendData.Header;
 public class HeaderTest {
 
     Header h0 = new Header("Root",0,null, true);
-    Header h1 = new Header("second",1,null, false);
-    Header h2 = new Header("third",2,null,false);
+    Header h1 = new Header("second",1,h0, false);
+    Header h2 = new Header("third",2,h0,false);
     Header h11 = new Header("test",1,h1,false);
 
     @BeforeEach

@@ -2,7 +2,6 @@ package main.java.visualComponents.Header;
 
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import main.java.backendData.Header;
@@ -18,9 +17,6 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.KeyStroke;
 import javax.swing.event.MouseInputAdapter;
-
-import org.omg.IOP.ComponentIdHelper;
-
 import java.awt.event.MouseEvent;
 import java.util.LinkedList;
 

@@ -3,7 +3,6 @@ package main.java.visualComponents.Header;
 import javax.swing.JLabel;
 import java.awt.Dimension;
 import javax.swing.SwingConstants;
-import java.awt.Cursor;
 import javax.swing.ImageIcon;
 import java.io.File;
 public class Icon extends JLabel{
