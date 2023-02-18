@@ -18,7 +18,12 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.KeyStroke;
 import javax.swing.event.MouseInputAdapter;
+
+import org.omg.IOP.ComponentIdHelper;
+
 import java.awt.event.MouseEvent;
+import java.util.LinkedList;
+
 import javax.swing.JPopupMenu;
 
 public class HeaderComponent extends JPanel {
@@ -45,6 +50,7 @@ public class HeaderComponent extends JPanel {
 
     boolean isOpen;
     Header connectedHeader;
+    static LinkedList<HeaderComponent> allHeaderComponents = new LinkedList<>();
     JPanel parentContainer;
 
     public HeaderComponent(Color backgroundColor, boolean isOpen, Header connectedHeader, JPanel parentContainer) {
@@ -66,17 +72,20 @@ public class HeaderComponent extends JPanel {
         //add subheader adding function
         addingHeaderActions(-1, "Add subheader", connectedHeader,
                 KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, KeyEvent.CTRL_DOWN_MASK), "addSubHeader");
-        //add subheader to parent add function
-        addingHeaderActions(-1, "Add Subheader to Parent", connectedHeader.getParentElement(),
-                KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_UP, KeyEvent.CTRL_DOWN_MASK), "addSubheaderToParent");
+        //add header to same level
+        //addingHeaderActions(-1, "Add Header on same level", connectedHeader.getParentElement(),
+        //        KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, KeyEvent.CTRL_DOWN_MASK), "addSubheaderToParent");
+        
         // adjust open or not open size
         if (isOpen) {
             openHeader();
         } else {
             closeHeader();
         }
-
+        allHeaderComponents.add(this);
     }
+
+
 
     /**
      * sets up the header title with an icon and the actual title.
@@ -107,7 +116,6 @@ public class HeaderComponent extends JPanel {
      */
     private void setUpDisplayedNumber() {
         displayedNumber = new JLabel();
-        // displayedNumber.setFont(displayedNumber.getFont());
         displayedNumber.setText(this.connectedHeader.getLabelNr());
         headerTitle.add(displayedNumber);
     }
@@ -135,7 +143,7 @@ public class HeaderComponent extends JPanel {
      * Adds an add Header Action from the Focused Header.
      */
     private void addingHeaderActions(int index, String actionText, Header parentElement, KeyStroke keystroke,
-            String actionMapKey) {
+            String actionMapKey ) {
 
         if (!parentElement.isRoot()) {
             // Action definition
@@ -145,9 +153,8 @@ public class HeaderComponent extends JPanel {
 
                     Header h = new Header("Add Title Here", index, parentElement, false);
                     HeaderComponent hc = new HeaderComponent(backgroundColor, false, h, parentContainer);
-                    parentContainer.add(hc, h.getOwnNr());
+                    //parentContainer.add(hc,h.getOwnTreeIndex()-1);
                     parentContainer.revalidate();
-
                 }
             };
 
@@ -165,7 +172,6 @@ public class HeaderComponent extends JPanel {
         }
 
     }
-
     /**
      * Visibly opens the header.
      */

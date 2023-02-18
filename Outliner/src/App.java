@@ -1,8 +1,8 @@
 import java.awt.BorderLayout;
 import javax.swing.*;
+import javax.swing.plaf.synth.SynthSpinnerUI;
 
 import main.java.backendData.Header;
-import main.java.visualComponents.Actions.AddNewHeaderAction;
 import main.java.visualComponents.Actions.ShowHideToolBarAction;
 import main.java.visualComponents.Header.HeaderComponent;
 import main.java.visualComponents.ToolBox.ToolBoxComponent;
@@ -14,6 +14,7 @@ import java.awt.FlowLayout;
 import java.awt.Color;
 public class App {
     Header headerRoot = new Header("Root", 1, null, true);
+    
     JFrame fenster;
     JPanel headerElementContainer;
     JPanel masterContainer;
@@ -42,13 +43,37 @@ public class App {
             setUpContextMenue();            
             setUpGlobalKeystrokes();  
 
-            Header h1 = new Header("first", 1,headerRoot,false);
-            Header h11 = new Header("first", 1,h1,false);
-            Header h111 = new Header("first", 1,h11,false);
-            Header h12 = new Header("first", 1,h1,false);
+            Header h1 = new Header("1", 1,headerRoot,false);
+            Header h2 = new Header("2", 2,headerRoot,false);
+            //Header h3 = new Header("3", 3,headerRoot,false);
+            //Header h4 = new Header("4", 4,headerRoot,false);
+            //Header h11 = new Header("1.1", 1,h1,false);
+            //Header h111 = new Header("1.1.1", 1,h11,false);
+            //Header h112 = new Header("1.1.2", 1,h11,false);
+            //Header h21 = new Header("2.1", 1,h2,false);
+            //Header h22 = new Header("2.2", 2,h2,false);
+            //Header h41 = new Header("4.1", 1,h4,false);
+
+            //Header h12 = new Header("1.2", 2,h1,false);
+            //Header h13 = new Header("1.3", 3,h1,false);
+            //Header h14 = new Header("1.4",4,h1,false);
+            //Header h15 = new Header("1.5",5,h1,false);
+            //Header h151 = new Header("1.5.1",5,h15,false);
+            //Header h152 = new Header("1.5.2",5,h15,false);
+            //Header h153 = new Header("1.5.3",5,h15,false);
+            //Header h16 = new Header("1.6",6,h1,false);
+
+           /* Header h2 = new Header("2", 2,headerRoot,false);
+            Header h21 = new Header("2.1", 1,h2,false);
+            Header h22 = new Header("2.2", 2,h2,false);
+            Header h221 = new Header("2.2.1", 1,h22,false);
+            */
+            //Header testHeader = h41;
+            //System.out.println(testHeader.getOwnTreeIndex() + " own Nr :" + testHeader.getOwnNr() + " labelNr :" + testHeader.getLabelNr());
+
             HeaderComponent hc = new HeaderComponent(WINDOW_BACKGROUND_COLOR, false, h1, headerElementContainer );
-            headerElementContainer.add(hc);
-            System.out.println( h111.getOverallIndex(0));  
+            headerElementContainer.add(hc); 
+            
 
             try {
                 for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
