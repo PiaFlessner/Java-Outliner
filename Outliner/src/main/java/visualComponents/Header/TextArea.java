@@ -7,6 +7,8 @@ import javax.swing.BorderFactory;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.KeyStroke;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.event.MouseInputAdapter;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
@@ -33,6 +35,7 @@ public class TextArea extends JScrollPane {
         this.setViewportView(textArea);
         //setUpEditableFunction();
         addFocusingFunction();
+        addChangedFunction();
     }
 
 
@@ -47,6 +50,27 @@ public class TextArea extends JScrollPane {
             public void focusLost(FocusEvent e) {
                 textArea.setBorder(null);
             }
+        });
+    }
+
+    private void addChangedFunction(){
+        this.textArea.getDocument().addDocumentListener(new DocumentListener() {
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                parent.connectedHeader.setText(textArea.getText());               
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                parent.connectedHeader.setText(textArea.getText());
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                parent.connectedHeader.setText(textArea.getText());  
+            }
+            
         });
     }
 
