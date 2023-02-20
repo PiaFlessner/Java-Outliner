@@ -288,7 +288,6 @@ public class Header {
                 indexAndFound.isFound = true;
                 return indexAndFound;
             } else {
-                //indexAndFound.index -= 1;
                 indexAndFound = this.getHeaderViaTreeIndex(header, indexAndFound);
                 if (indexAndFound.isFound) {
                     break;
@@ -321,7 +320,7 @@ public class Header {
      *
      * @return total sub tree count
      */
-    private int getTotalSubTreeCount() {
+    public int getTotalSubTreeCount() {
         int elementCounter = 0;
         if (this.subheaders.size() == 0)
             return elementCounter;

@@ -65,16 +65,25 @@ public class HeaderComponent extends JPanel {
         setUpOpenHeaderFunction();
         setUpHoverColorChangeFunction();
 
-        //add header to same level
+        // add header to same level
         addingHeaderActions(-1, "Add Header on same level", connectedHeader.getParentElement(),
                 KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, KeyEvent.CTRL_DOWN_MASK), "addSubheaderToParent");
 
-        //add subheader adding function
+        // add subheader adding function
         addingHeaderActions(-1, "Add subheader", connectedHeader,
                 KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, KeyEvent.CTRL_DOWN_MASK), "addSubHeader");
-        //add header to level above
-        //addingHeaderActions(-1, "Add Header to level above", connectedHeader.getParentElement().getParentElement(),
-        //KeyStroke.getKeyStroke(KeyEvent.VK_UP, KeyEvent.CTRL_DOWN_MASK), "addHeaderToParentParent");
+
+        shiftHeaderAction(1, "Shift whole header one down", KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, KeyEvent.VK_SHIFT),
+                "shiftOneDown");
+
+        shiftHeaderAction(-1, "Shift whole header one up", KeyStroke.getKeyStroke(KeyEvent.VK_UP, KeyEvent.VK_SHIFT),
+                "shiftOneUp");
+
+        // add header to level above
+        // addingHeaderActions(-1, "Add Header to level above",
+        // connectedHeader.getParentElement().getParentElement(),
+        // KeyStroke.getKeyStroke(KeyEvent.VK_UP, KeyEvent.CTRL_DOWN_MASK),
+        // "addHeaderToParentParent");
         // adjust open or not open size
         if (isOpen) {
             openHeader();
@@ -140,57 +149,76 @@ public class HeaderComponent extends JPanel {
      * Adds an add Header Action from the Focused Header.
      */
     private void addingHeaderActions(int index, String actionText, Header parentElement, KeyStroke keystroke,
-            String actionMapKey ) {
+            String actionMapKey) {
 
-            // Action definition
-            Action action = new AbstractAction(actionText) {
-                @Override
-                public void actionPerformed(ActionEvent e) {
+        // Action definition
+        Action action = new AbstractAction(actionText) {
+            @Override
+            public void actionPerformed(ActionEvent e) {
 
-                    Header h = new Header("Add Title Here", index, parentElement, false);
-                    HeaderComponent hc = new HeaderComponent(backgroundColor, false, h, parentContainer);
-                    parentContainer.add(hc, h.getIndex(Header.ROOT)-1);
+                Header h = new Header("Add Title Here", index, parentElement, false);
+                HeaderComponent hc = new HeaderComponent(backgroundColor, false, h, parentContainer);
+                parentContainer.add(hc, h.getIndex(Header.ROOT) - 1);
+                parentContainer.revalidate();
+            }
+        };
+
+        // Contextmenue Item configuration
+        JMenuItem menuItem;
+        menuItem = new JMenuItem(actionText);
+        menuItem.setAction(action);
+        menuItem.setAccelerator(keystroke);
+        this.popupMenu.add(menuItem);
+
+        // makes keystroke possible without opening the contextmenue.
+        this.getInputMap(this.WHEN_FOCUSED).put(keystroke, actionMapKey);
+        this.getActionMap().put(actionMapKey, action);
+
+    }
+
+    // Executes the HeaderShifting
+    private void shiftHeaderAction(int shiftIndex, String actionText, KeyStroke keystroke, String actionMapKey) {
+
+        HeaderComponent self = this;
+
+        // Action definition
+        Action action = new AbstractAction(actionText) {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                int displayIndex = parentContainer.getComponentZOrder(self);
+                int predictedTreeIndex = displayIndex - 1;
+                int newIndex = displayIndex + shiftIndex;
+                //betroffener header, sage mir mal wie groß du im gesamten bist
+                int rangeOfShiftElements = self.connectedHeader.getTotalSubTreeCount() + 1;
+                //Check, if the new index is in the allowed range.
+                if (parentContainer.getComponentCount() > newIndex && newIndex>=0) {
+
+                    
+                    //ich weiß, dass ich dann alle komponenten mitnehmen muss, die in der größe des Header sind
+
+
+                    System.out.println(displayIndex);
+                    System.out.println(newIndex);
+                    parentContainer.setComponentZOrder(self, newIndex);
                     parentContainer.revalidate();
                 }
-            };
+            }
+        };
 
-            // Contextmenue Item configuration
-            JMenuItem menuItem;
-            menuItem = new JMenuItem(actionText);
-            menuItem.setAction(action);
-            menuItem.setAccelerator(keystroke);
-            this.popupMenu.add(menuItem);
+        // Contextmenue Item configuration
+        JMenuItem menuItem;
+        menuItem = new JMenuItem(actionText);
+        menuItem.setAction(action);
+        menuItem.setAccelerator(keystroke);
+        this.popupMenu.add(menuItem);
 
-            // makes keystroke possible without opening the contextmenue.
-            this.getInputMap(this.WHEN_FOCUSED).put(keystroke, actionMapKey);
-            this.getActionMap().put(actionMapKey, action);
-
-    }
-
-    //Executes the HeaderShifting
-    private void shiftHeaderAction(int shiftIndex, String actionText, KeyStroke keystroke, String ActionMapKey ){
-        //- up + down
-        if(shiftIndex > 0){
-
-
-        }
-        else{
-
-        }
-    }
-
-    private void shiftDown(int shiftIndex){
-        //if subheader reach out subheadersize
-        if(shiftIndex > this.connectedHeader.getSubheaderSize()){
-            //need to go in subheader
-        }
-        else{
-            //stay in subheader
-
-        }
-
+        // makes keystroke possible without opening the contextmenue.
+        this.getInputMap(this.WHEN_FOCUSED).put(keystroke, actionMapKey);
+        this.getActionMap().put(actionMapKey, action);
 
     }
+
     /**
      * Visibly opens the header.
      */

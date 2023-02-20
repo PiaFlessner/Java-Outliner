@@ -207,7 +207,6 @@ public class HeaderTest {
         Header h3 = new Header("3", 3,h0,false);
         Header h4 = new Header("4", 4,h0,false);
         Header h41 = new Header("4.1", 1,h4,false);
-
    
         assertEquals(h1, h0.getHeaderViaIndex(h0,1));
         assertEquals(h11, h0.getHeaderViaIndex(h0,2));
