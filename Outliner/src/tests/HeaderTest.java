@@ -154,4 +154,44 @@ public class HeaderTest {
         assertEquals(10, h41.getIndex(h0));
     }
 
+    @Test
+    public void testSwitchingObjects(){
+
+        h2.switchHeader(h11);
+        assertEquals(h1, h2.getParentElement());
+        assertEquals(h0, h11.getParentElement());
+
+        assertEquals(1, h1.getOwnNr());
+        assertEquals(2, h11.getOwnNr());
+        assertEquals(1, h2.getOwnNr());
+    }
+
+    @Test
+    public void testSwitchingObjectsComplicatesStructure(){
+        Header h111 = new Header("1.1.1", 1,h11,false);
+        Header h112 = new Header("1.1.2", 2,h11,false);
+        Header h2 = new Header("2", 2,h0,false);
+        Header h21 = new Header("2.1", 1,h2,false);
+        Header h22 = new Header("2.2", 2,h2,false);
+        Header h3 = new Header("3", 3,h0,false);
+        Header h4 = new Header("4", 4,h0,false);
+        Header h41 = new Header("4.1", 1,h4,false);
+
+        h3.switchHeader(h1);
+
+        assertEquals(1,h3.getOwnNr());
+        assertEquals(h0, h1.getParentElement());
+        assertEquals(2, h2.getOwnNr());
+        assertEquals(h0, h2.getParentElement());
+        assertEquals(3, h1.getOwnNr());
+        assertEquals(h0, h3.getParentElement());
+        assertEquals(4, h4.getOwnNr());
+        assertEquals(h0, h4.getParentElement());
+
+        h21.switchHeader(h4);
+        assertEquals(4, h21.getOwnNr());
+        assertEquals(h0, h21.getParentElement());
+        assertEquals(1, h4.getOwnNr());
+        assertEquals(h2, h4.getParentElement());
+    }
 }
