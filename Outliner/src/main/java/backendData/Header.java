@@ -127,14 +127,14 @@ public class Header {
      * Gets next the neighbour of a header.
      * @return next neighbour (neighbour of 1 would be 2).
      */
-    private Header getNextNeigbourHeader(){
+    public Header getNextNeigbourHeader(){
         return this.parentElement.subheaders.get(this.ownNr);
     }
     /**
      * Geths the neighbour before a header.
      * @return before neighbour (neighbour of 2 would be 1).
      */
-    private Header getBeforeNeigbourHeader(){
+    public Header getBeforeNeigbourHeader(){
         return this.parentElement.subheaders.get(this.ownNr-2);
     }
 

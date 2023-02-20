@@ -12,14 +12,15 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.KeyStroke;
 import javax.swing.event.MouseInputAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.LinkedList;
-
 import javax.swing.JPopupMenu;
 
 public class HeaderComponent extends JPanel {
@@ -74,10 +75,10 @@ public class HeaderComponent extends JPanel {
                 KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, KeyEvent.CTRL_DOWN_MASK), "addSubHeader");
 
         shiftHeaderAction(1, "Shift whole header one down", KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, KeyEvent.VK_SHIFT),
-                "shiftOneDown");
+                "shiftOneDown", true);
 
         shiftHeaderAction(-1, "Shift whole header one up", KeyStroke.getKeyStroke(KeyEvent.VK_UP, KeyEvent.VK_SHIFT),
-                "shiftOneUp");
+                "shiftOneUp", false);
 
         // add header to level above
         // addingHeaderActions(-1, "Add Header to level above",
@@ -177,7 +178,8 @@ public class HeaderComponent extends JPanel {
     }
 
     // Executes the HeaderShifting
-    private void shiftHeaderAction(int shiftIndex, String actionText, KeyStroke keystroke, String actionMapKey) {
+    private void shiftHeaderAction(int shiftIndex, String actionText, KeyStroke keystroke, String actionMapKey,
+            boolean up) {
 
         HeaderComponent self = this;
 
@@ -187,20 +189,48 @@ public class HeaderComponent extends JPanel {
             public void actionPerformed(ActionEvent e) {
 
                 int displayIndex = parentContainer.getComponentZOrder(self);
-                int predictedTreeIndex = displayIndex - 1;
                 int newIndex = displayIndex + shiftIndex;
-                //betroffener header, sage mir mal wie groß du im gesamten bist
+
+                // Get size of the header which should be shifted, because all subheader has to
+                // be shifted too.
                 int rangeOfShiftElements = self.connectedHeader.getTotalSubTreeCount() + 1;
-                //Check, if the new index is in the allowed range.
-                if (parentContainer.getComponentCount() > newIndex && newIndex>=0) {
+                ArrayList<Component> affectedHeaderComponents = new ArrayList<>();
 
-                    
-                    //ich weiß, dass ich dann alle komponenten mitnehmen muss, die in der größe des Header sind
+                // Check, if the new index is in the allowed range.
+                if (parentContainer.getComponentCount() > newIndex && newIndex >= 0) {
 
+                    //Get the affected Components (affected are all, which belongs to the header);
+                    for (int i = displayIndex, j = 0; j < rangeOfShiftElements; i++, j++) {
+                        affectedHeaderComponents.add(parentContainer.getComponent(i));
+                    }
 
-                    System.out.println(displayIndex);
-                    System.out.println(newIndex);
-                    parentContainer.setComponentZOrder(self, newIndex);
+                    //if the direction is up or down, the operations are slightly different
+                    if (up) {
+
+                        // The new index is dependend on the subheadercount of all neighbour header
+                        for (int i = 0; i < shiftIndex; i++) {
+                            newIndex = newIndex + self.connectedHeader.getNextNeigbourHeader().getTotalSubTreeCount();
+                        }
+
+                        // shift all affected elements
+                        for (int i = affectedHeaderComponents.size() - 1; i >= 0; i--) {
+                            System.out.println("im in");
+                            parentContainer.setComponentZOrder(affectedHeaderComponents.get(i), newIndex + i);
+                        }
+                    } else {
+
+                        // The new index is dependend on the subheadercount of all neighbour header
+                        for (int i = 0; i > shiftIndex; i--) {
+                            newIndex = newIndex + self.connectedHeader.getBeforeNeigbourHeader().getTotalSubTreeCount();
+                        }
+                        // shift all affected elements
+                        for (int i = 0; i < affectedHeaderComponents.size(); i++) {
+                            System.out.println("im in");
+                            parentContainer.setComponentZOrder(affectedHeaderComponents.get(i), newIndex + i);
+                        }
+                    }
+
+                    // parentContainer.setComponentZOrder(self, newIndex);
                     parentContainer.revalidate();
                 }
             }
