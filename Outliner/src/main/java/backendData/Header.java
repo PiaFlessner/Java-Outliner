@@ -128,6 +128,7 @@ public class Header {
      * @return next neighbour (neighbour of 1 would be 2).
      */
     public Header getNextNeigbourHeader(){
+        if(this.ownNr == this.parentElement.subheaders.size()) return null;
         return this.parentElement.subheaders.get(this.ownNr);
     }
     /**
@@ -135,6 +136,7 @@ public class Header {
      * @return before neighbour (neighbour of 2 would be 1).
      */
     public Header getBeforeNeigbourHeader(){
+        if(this.ownNr == 1) return null;
         return this.parentElement.subheaders.get(this.ownNr-2);
     }
 

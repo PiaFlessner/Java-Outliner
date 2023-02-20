@@ -74,17 +74,14 @@ public class HeaderComponent extends JPanel {
         addingHeaderActions(-1, "Add subheader", connectedHeader,
                 KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, KeyEvent.CTRL_DOWN_MASK), "addSubHeader");
 
-        shiftHeaderAction(1, "Shift whole header one down", KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, KeyEvent.VK_SHIFT),
-                "shiftOneDown", true);
-
-        shiftHeaderAction(-1, "Shift whole header one up", KeyStroke.getKeyStroke(KeyEvent.VK_UP, KeyEvent.VK_SHIFT),
+        shiftHeaderAction(1, "Shift whole header one level up",
+                KeyStroke.getKeyStroke(KeyEvent.VK_UP, KeyEvent.VK_SHIFT),
                 "shiftOneUp", false);
 
-        // add header to level above
-        // addingHeaderActions(-1, "Add Header to level above",
-        // connectedHeader.getParentElement().getParentElement(),
-        // KeyStroke.getKeyStroke(KeyEvent.VK_UP, KeyEvent.CTRL_DOWN_MASK),
-        // "addHeaderToParentParent");
+        shiftHeaderAction(1, "Shift whole header one level down",
+                KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, KeyEvent.VK_SHIFT),
+                "shiftOneDown", true);
+       
         // adjust open or not open size
         if (isOpen) {
             openHeader();
@@ -179,7 +176,7 @@ public class HeaderComponent extends JPanel {
 
     // Executes the HeaderShifting
     private void shiftHeaderAction(int shiftIndex, String actionText, KeyStroke keystroke, String actionMapKey,
-            boolean up) {
+            boolean down) {
 
         HeaderComponent self = this;
 
@@ -189,7 +186,7 @@ public class HeaderComponent extends JPanel {
             public void actionPerformed(ActionEvent e) {
 
                 int displayIndex = parentContainer.getComponentZOrder(self);
-                int newIndex = displayIndex + shiftIndex;
+                int newIndex;
 
                 // Get size of the header which should be shifted, because all subheader has to
                 // be shifted too.
@@ -197,16 +194,16 @@ public class HeaderComponent extends JPanel {
                 ArrayList<Component> affectedHeaderComponents = new ArrayList<>();
 
                 // Check, if the new index is in the allowed range.
-                if (parentContainer.getComponentCount() > newIndex && newIndex >= 0) {
+                // Get the affected Components (affected are all, which belongs to the header);
+                for (int i = displayIndex, j = 0; j < rangeOfShiftElements; i++, j++) {
+                    affectedHeaderComponents.add(parentContainer.getComponent(i));
+                }
 
-                    //Get the affected Components (affected are all, which belongs to the header);
-                    for (int i = displayIndex, j = 0; j < rangeOfShiftElements; i++, j++) {
-                        affectedHeaderComponents.add(parentContainer.getComponent(i));
-                    }
-
-                    //if the direction is up or down, the operations are slightly different
-                    if (up) {
-
+                // if the direction is up or down, the operations are slightly different
+                if (down) {
+                    // only shift down, if the header is not the last element.
+                    if (self.connectedHeader.getNextNeigbourHeader() != null) {
+                        newIndex = displayIndex + shiftIndex;
                         // The new index is dependend on the subheadercount of all neighbour header
                         for (int i = 0; i < shiftIndex; i++) {
                             newIndex = newIndex + self.connectedHeader.getNextNeigbourHeader().getTotalSubTreeCount();
@@ -214,25 +211,27 @@ public class HeaderComponent extends JPanel {
 
                         // shift all affected elements
                         for (int i = affectedHeaderComponents.size() - 1; i >= 0; i--) {
-                            System.out.println("im in");
-                            parentContainer.setComponentZOrder(affectedHeaderComponents.get(i), newIndex + i);
-                        }
-                    } else {
-
-                        // The new index is dependend on the subheadercount of all neighbour header
-                        for (int i = 0; i > shiftIndex; i--) {
-                            newIndex = newIndex + self.connectedHeader.getBeforeNeigbourHeader().getTotalSubTreeCount();
-                        }
-                        // shift all affected elements
-                        for (int i = 0; i < affectedHeaderComponents.size(); i++) {
-                            System.out.println("im in");
                             parentContainer.setComponentZOrder(affectedHeaderComponents.get(i), newIndex + i);
                         }
                     }
 
-                    // parentContainer.setComponentZOrder(self, newIndex);
-                    parentContainer.revalidate();
+                } else {
+                    // only shift up, if the header ist not the first element.
+                    if (self.connectedHeader.getBeforeNeigbourHeader() != null) {
+                        newIndex = displayIndex - shiftIndex;
+                        // The new index is dependend on the subheadercount of all neighbour header
+                        for (int i = 0; i < shiftIndex; i++) {
+                            newIndex = newIndex - self.connectedHeader.getBeforeNeigbourHeader().getTotalSubTreeCount();
+                        }
+
+                        // shift all affected elements
+                        for (int i = affectedHeaderComponents.size() - 1; i >= 0; i--) {
+                            parentContainer.setComponentZOrder(affectedHeaderComponents.get(i), newIndex);
+                        }
+                    }
+
                 }
+                parentContainer.revalidate();
             }
         };
 
