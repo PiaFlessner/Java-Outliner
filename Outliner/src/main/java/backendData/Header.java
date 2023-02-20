@@ -103,6 +103,26 @@ public class Header {
     }
 
     /**
+     * Switches two header with each other.
+     * Header Switching in own branch possible, but unexpected behavior.
+     * @param targetHeader Header, with whom the element get switched with.
+     */
+    public void switchHeader(Header targetHeader){
+        Header targetParent = targetHeader.parentElement;
+        int targetOwnNr = targetHeader.ownNr;
+        
+        Header thisParent = this.parentElement;
+        int thisOwnNr = this.ownNr;
+
+        thisParent.deleteSubheader(this);
+        targetParent.deleteSubheader(targetHeader);
+
+        this.setParentElement(targetParent, targetOwnNr-1);
+        targetHeader.setParentElement(thisParent, thisOwnNr-1);
+
+    }
+
+    /**
      * Deletes a Subheader
      * 
      * @param head Subheader which should be deleted
