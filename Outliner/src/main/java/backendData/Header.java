@@ -1,6 +1,7 @@
 package main.java.backendData;
 
 import java.util.HashMap;
+import java.util.IllegalFormatCodePointException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -16,7 +17,7 @@ public class Header {
     private final boolean isRoot;
     private static final String DISPLAYDIVIDER = ".";
     private Logger log = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
-    public static Header root;
+    public static Header ROOT;
 
     public Header(String title, int ownNr, Header parentElement, boolean isRoot) {
         this.title = title;
@@ -105,21 +106,36 @@ public class Header {
     /**
      * Switches two header with each other.
      * Header Switching in own branch possible, but unexpected behavior.
+     * 
      * @param targetHeader Header, with whom the element get switched with.
      */
-    public void switchHeader(Header targetHeader){
+    public void switchHeader(Header targetHeader) {
         Header targetParent = targetHeader.parentElement;
         int targetOwnNr = targetHeader.ownNr;
-        
+
         Header thisParent = this.parentElement;
         int thisOwnNr = this.ownNr;
 
         thisParent.deleteSubheader(this);
         targetParent.deleteSubheader(targetHeader);
 
-        this.setParentElement(targetParent, targetOwnNr-1);
-        targetHeader.setParentElement(thisParent, thisOwnNr-1);
+        this.setParentElement(targetParent, targetOwnNr - 1);
+        targetHeader.setParentElement(thisParent, thisOwnNr - 1);
 
+    }
+    /**
+     * Gets next the neighbour of a header.
+     * @return next neighbour (neighbour of 1 would be 2).
+     */
+    private Header getNextNeigbourHeader(){
+        return this.parentElement.subheaders.get(this.ownNr);
+    }
+    /**
+     * Geths the neighbour before a header.
+     * @return before neighbour (neighbour of 2 would be 1).
+     */
+    private Header getBeforeNeigbourHeader(){
+        return this.parentElement.subheaders.get(this.ownNr-2);
     }
 
     /**
@@ -209,19 +225,23 @@ public class Header {
      * For example:
      * For example the overall construct inherits 1, 1.1, 1.2, 2, 2.1, 2.2, 2.2.1
      * so 2.2.1 would have the overall index of 7.
+     * 
      * @param startParent starting point
      * @return treeindex
      */
-    public int getIndex(Header startParent){
+    public int getIndex(Header startParent) {
         return getTreeIndex(startParent, new Tuple()).index;
     }
 
     /**
      * Actual implementation of getting the tree index. It is working recursive.
-     * Its going throuh all subheaders and count them until it finds the desired header.
+     * Its going throuh all subheaders and count them until it finds the desired
+     * header.
      * From this moment on, it is skipping all counting operations.
-     * @param startParent starting point of counting, mostly the root.
-     * @param indexAndFound a combined class which inherits the index and the bool is found.
+     * 
+     * @param startParent   starting point of counting, mostly the root.
+     * @param indexAndFound a combined class which inherits the index and the bool
+     *                      is found.
      * @return the modified tuple with index and isFound.
      */
     private Tuple getTreeIndex(Header startParent, Tuple indexAndFound) {
@@ -229,131 +249,101 @@ public class Header {
             if (header == this) {
                 indexAndFound.index += 1;
                 indexAndFound.isFound = true;
-                return  indexAndFound;
+                return indexAndFound;
             } else {
                 indexAndFound = this.getTreeIndex(header, indexAndFound);
                 indexAndFound.index += 1;
-                if(indexAndFound.isFound){
+                if (indexAndFound.isFound) {
                     break;
                 }
             }
         }
         return indexAndFound;
     }
-/**
- * Helping class for returning two values, since java 8 has no tuples.
- */
+
+    /**
+     * Searches an Header with an Tree index.
+     * If you want the overall index, always give the root as startParent.
+     * @param startParent Header where the counting gets started.
+     * @param index Index, with will be searched.
+     * @return Header on the index index.
+     */
+    public Header getHeaderViaIndex(Header startParent, int index) {
+        Tuple tuple = new Tuple(index);
+        return getHeaderViaTreeIndex(startParent, tuple).header;
+    }
+
+    /**
+     * Rekursive search implementation of searchign header via index.
+     * Goes through all subheader and decrements index until it finds the acutal index.
+     * @param startParent starting point of searching.
+     * @param indexAndFound tuple, with inherits header, isFound and the indexCounter.
+     * @return Tuple with the actual found header.
+     */
+    private Tuple getHeaderViaTreeIndex(Header startParent, Tuple indexAndFound) {
+        for (Header header : startParent.subheaders) {
+            indexAndFound.index -= 1;
+            if (indexAndFound.index == 0) {
+                indexAndFound.header = header;
+                indexAndFound.isFound = true;
+                return indexAndFound;
+            } else {
+                //indexAndFound.index -= 1;
+                indexAndFound = this.getHeaderViaTreeIndex(header, indexAndFound);
+                if (indexAndFound.isFound) {
+                    break;
+                }
+            }
+        }
+        return indexAndFound;
+    }
+
+    /**
+     * Helping class for returning two values, since java 8 has no tuples.
+     */
     private class Tuple {
         int index;
         boolean isFound = false;
+        Header header;
+
+        public Tuple(){}
+
+        public  Tuple(int index){
+            this.index = index;
+        }
     }
 
-    // public int getTreeIndex(Header startParent) {
-    //     int index = 0;
-    //     for (Header header : startParent.subheaders) {
-    //         if (header == this) {
-    //             return  1+ index;
-    //         } else {
-    //             index = index + 1 + this.getTreeIndex(header);
-    //         }
-    //     }
-    //     return index;
-    // }
-
-    //
-    // /**
-    // * Gets the total subtree count of a tree, for example for the tree:
-    // * Tree 1, 1.1, 1.2, 1.2.1, 1.2.2
-    // * the Tree 1 has a total subtreeCount of 4 (1.1 -> 1, 1.2 -> 2, 1.2.1 -> 3,
-    // * 1.2.2 -> 4).
-    // *
-    // * @return total sub tree count
-    // */
-    // private int getTotalSubTreeCount() {
-    //
-    // int elementCounter = 0;
-    // if (this.subheaders.size() == 0)
-    // return elementCounter;
-    // else {
-    // elementCounter = elementCounter + this.subheaders.size();
-    // for (Header header : this.subheaders) {
-    // elementCounter = elementCounter + header.getTotalSubTreeCount();
-    // }
-    // }
-    // return elementCounter;
-    // }
-    //
-    // /**
-    // * Finds out, on which index the current element on the branch is.
-    // * For example
-    // * Tree 1, 1.1, 1.2, 1.2.1, 1.2.2, the Header 1.2 has the index count of the
-    // * tree 3 and 1.2.2 has 5
-    // *
-    // * @return index, which described on which branch index the element is.
-    // */
-    // private int getOwnBranchIndex(Header startHeader) {
-    // int treeIndex = 1;
-    // if (!this.parentElement.isRoot) {
-    // treeIndex = this.ownNr;
-    // if(this == startHeader){
-    // treeIndex = treeIndex + getBeforeNeighboursSubtreeCount(false);
-    // }
-    // treeIndex = treeIndex + this.parentElement.getOwnBranchIndex(startHeader);
-    // }
-    // return treeIndex;
-    // }
-    //
-    // /**
-    // * Finds out, which overall branch the header is in.
-    // *
-    // * @return
-    // */
-    // private Header climbToRootAndSaveBranch() {
-    // Header desiredKnot = this;
-    // if (!this.parentElement.isRoot) {
-    // desiredKnot = this.parentElement.climbToRootAndSaveBranch();
-    // }
-    // return desiredKnot;
-    // }
-    //
-    // private int getBeforeNeighboursSubtreeCount(boolean countKnot){
-    // int index = 0;
-    // int knotCount = 0;
-    // if(countKnot) knotCount = 1;
-    //
-    // for (Header header : this.parentElement.subheaders) {
-    // if (header == this)
-    // break;
-    // else
-    // index = index + knotCount + header.getTotalSubTreeCount();
-    // }
-    // return index;
-    // }
-    //
-    // /*
-    // * Gets the overall Tree Index of a Header in the whole tree construct.
-    // * For example:
-    // * For example the overall construct inherits 1, 1.1, 1.2, 2, 2.1, 2.2, 2.2.1
-    // * so 2.2.1 would have the overall index of 7.
-    // *
-    // * @return overall index
-    // */
-    // public int getOwnTreeIndex() {
-    // int index = 0;
-    // if (!this.isRoot) {
-    // // Tree 1, 1.1, 1.2, 2, 2.1, 2.2 , search Element 2.2
-    //
-    // // 2.2 has the own Branch index of 3
-    // // index = 3
-    // index = this.getOwnBranchIndex(this);
-    // Header ownBranch = this.climbToRootAndSaveBranch();
-    //
-    // // 1 has the subheaderCount of 2, and each knot has to be counted also
-    // (therefore countKnot = true), so add 1
-    // // index = 3 + 1 + 2
-    // index = index + ownBranch.getBeforeNeighboursSubtreeCount(true);
-    // }
-    // // index = 6
-    // return index;
-    // }
+    /**
+     * Gets the total subtree count of a tree, for example for the tree:
+     * Tree 1, 1.1, 1.2, 1.2.1, 1.2.2
+     * the Tree 1 has a total subtreeCount of 4 (1.1 -> 1, 1.2 -> 2, 1.2.1 -> 3,
+     * 1.2.2 -> 4).
+     *
+     * @return total sub tree count
+     */
+    private int getTotalSubTreeCount() {
+        int elementCounter = 0;
+        if (this.subheaders.size() == 0)
+            return elementCounter;
+        else {
+            elementCounter = elementCounter + this.subheaders.size();
+            for (Header header : this.subheaders) {
+                elementCounter = elementCounter + header.getTotalSubTreeCount();
+            }
+        }
+        return elementCounter;
+    }
+    
+    /**
+     * Finds out, which overall branch the header is in.
+     *
+     * @return
+     */
+    private Header climbToRootAndSaveBranch() {
+        Header desiredKnot = this;
+        if (!this.parentElement.isRoot) {
+            desiredKnot = this.parentElement.climbToRootAndSaveBranch();
+        }
+        return desiredKnot;
+    }
 }

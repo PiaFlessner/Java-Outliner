@@ -29,7 +29,7 @@ public class App {
     final Color WINDOW_BACKGROUND_COLOR = new Color(255,255,255);
 
     public App(){
-        Header.root = headerRoot;
+        Header.ROOT = headerRoot;
         initComponents();
     }
 

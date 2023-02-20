@@ -194,4 +194,33 @@ public class HeaderTest {
         assertEquals(1, h4.getOwnNr());
         assertEquals(h2, h4.getParentElement());
     }
+
+    @Test
+    public void testSearchingObjects(){
+        Header h12 = new Header("1.2", 2,h1,false);
+        Header h121 = new Header("1.2.1", 1,h12,false);
+        Header h122 = new Header("1.2.2", 2,h12,false);
+        Header h21 = new Header("2.1", 1,h2,false);
+        Header h211 = new Header("2.1.1", 1,h21,false);
+        Header h212 = new Header("2.1.2", 2,h21,false);
+        Header h22 = new Header("2.2", 2,h2,false);
+        Header h3 = new Header("3", 3,h0,false);
+        Header h4 = new Header("4", 4,h0,false);
+        Header h41 = new Header("4.1", 1,h4,false);
+
+   
+        assertEquals(h1, h0.getHeaderViaIndex(h0,1));
+        assertEquals(h11, h0.getHeaderViaIndex(h0,2));
+        assertEquals(h12, h0.getHeaderViaIndex(h0,3));
+        assertEquals(h121, h0.getHeaderViaIndex(h0,4));
+        assertEquals(h122, h0.getHeaderViaIndex(h0,5));
+        assertEquals(h2, h0.getHeaderViaIndex(h0,6));
+        assertEquals(h21, h0.getHeaderViaIndex(h0,7));
+        assertEquals(h211, h0.getHeaderViaIndex(h0,8));
+        assertEquals(h212, h0.getHeaderViaIndex(h0,9));
+        assertEquals(h22, h0.getHeaderViaIndex(h0,10));
+        assertEquals(h3, h0.getHeaderViaIndex(h0,11));
+        assertEquals(h4, h0.getHeaderViaIndex(h0,12));
+        assertEquals(h41, h0.getHeaderViaIndex(h0,13));
+    }
 }

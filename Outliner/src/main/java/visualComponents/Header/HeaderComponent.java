@@ -142,7 +142,6 @@ public class HeaderComponent extends JPanel {
     private void addingHeaderActions(int index, String actionText, Header parentElement, KeyStroke keystroke,
             String actionMapKey ) {
 
-        //if (!parentElement.isRoot()) {
             // Action definition
             Action action = new AbstractAction(actionText) {
                 @Override
@@ -150,7 +149,7 @@ public class HeaderComponent extends JPanel {
 
                     Header h = new Header("Add Title Here", index, parentElement, false);
                     HeaderComponent hc = new HeaderComponent(backgroundColor, false, h, parentContainer);
-                    parentContainer.add(hc, h.getIndex(Header.root)-1);
+                    parentContainer.add(hc, h.getIndex(Header.ROOT)-1);
                     parentContainer.revalidate();
                 }
             };
@@ -166,7 +165,30 @@ public class HeaderComponent extends JPanel {
             this.getInputMap(this.WHEN_FOCUSED).put(keystroke, actionMapKey);
             this.getActionMap().put(actionMapKey, action);
 
-        //}
+    }
+
+    //Executes the HeaderShifting
+    private void shiftHeaderAction(int shiftIndex, String actionText, KeyStroke keystroke, String ActionMapKey ){
+        //- up + down
+        if(shiftIndex > 0){
+
+
+        }
+        else{
+
+        }
+    }
+
+    private void shiftDown(int shiftIndex){
+        //if subheader reach out subheadersize
+        if(shiftIndex > this.connectedHeader.getSubheaderSize()){
+            //need to go in subheader
+        }
+        else{
+            //stay in subheader
+
+        }
+
 
     }
     /**
