@@ -209,6 +209,9 @@ public class HeaderComponent extends JPanel {
                             newIndex = newIndex + self.connectedHeader.getNextNeigbourHeader().getTotalSubTreeCount();
                         }
 
+                        //refresh backend also.
+                        self.connectedHeader.getParentElement().rearrangeSubHeader(self.connectedHeader.getOwnNr()-1+shiftIndex, connectedHeader);
+                        System.out.println(self.connectedHeader.getLabelNr());
                         // shift all affected elements
                         for (int i = affectedHeaderComponents.size() - 1; i >= 0; i--) {
                             parentContainer.setComponentZOrder(affectedHeaderComponents.get(i), newIndex + i);
@@ -223,6 +226,10 @@ public class HeaderComponent extends JPanel {
                         for (int i = 0; i < shiftIndex; i++) {
                             newIndex = newIndex - self.connectedHeader.getBeforeNeigbourHeader().getTotalSubTreeCount();
                         }
+
+                        //refresh backend also.
+                        self.connectedHeader.getParentElement().rearrangeSubHeader(self.connectedHeader.getOwnNr()-1-shiftIndex, connectedHeader);
+                        System.out.println(self.connectedHeader.getLabelNr());
 
                         // shift all affected elements
                         for (int i = affectedHeaderComponents.size() - 1; i >= 0; i--) {
