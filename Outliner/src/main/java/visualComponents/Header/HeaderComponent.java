@@ -93,6 +93,8 @@ public class HeaderComponent extends JPanel {
 
 
         shiftTreeLevelUpDownAction("Shift header level down", KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, KeyEvent.ALT_DOWN_MASK), "shiftLevelDown", true);
+        
+        deleteHeaderAction("Delete Header", KeyStroke.getKeyStroke(KeyEvent.VK_BACK_SPACE, KeyEvent.CTRL_DOWN_MASK), "deleteHeader" );
         // adjust open or not open size
         if (isOpen) {
             openHeader();
@@ -181,6 +183,34 @@ public class HeaderComponent extends JPanel {
 
         this.add(headerContent, BorderLayout.CENTER);
 
+    }
+
+    private void deleteHeaderAction(String actionText, KeyStroke keystroke,
+            String actionMapKey) {
+
+        // Action definition
+        Action action = new AbstractAction(actionText) {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                deleteHeader();
+            }
+        };
+        contextMenuAdding(actionText, action, keystroke, actionMapKey);
+    }
+    
+    private void deleteHeader(){
+        int displayIndex = parentContainer.getComponentZOrder(this);
+        // Affected are all, which are subheader to the focused header
+        ArrayList<Component> affectedHeaderComponents = this.getConnectedSubHeaderToComponent(displayIndex);
+        this.connectedHeader.getParentElement().deleteSubheader(this.connectedHeader);
+        
+
+        for(Component hc : affectedHeaderComponents){
+            parentContainer.remove(hc);
+            HeaderComponent.deleteInstance((HeaderComponent)hc);
+        }
+        HeaderComponent.refreshNumbers();
+        parentContainer.revalidate();
     }
 
     /**

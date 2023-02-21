@@ -44,10 +44,8 @@ public class App {
 
             Header h1 = new Header("1", 1,headerRoot,false);
             HeaderComponent hc = new HeaderComponent(WINDOW_BACKGROUND_COLOR, false, h1, headerElementContainer );
-            HeaderComponent.addInstance(hc);
             headerElementContainer.add(hc); 
             
-
             try {
                 for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                     if ("Nimbus".equals(info.getName())) {
