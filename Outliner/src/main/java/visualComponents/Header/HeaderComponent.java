@@ -91,6 +91,8 @@ public class HeaderComponent extends JPanel {
 
         shiftTreeLevelUpDownAction(1,"Shift header level up", KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, KeyEvent.ALT_DOWN_MASK), "shiftLevelUp", false);
 
+
+        shiftTreeLevelUpDownAction(1,"Shift header level down", KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, KeyEvent.ALT_DOWN_MASK), "shiftLevelDown", true);
         // adjust open or not open size
         if (isOpen) {
             openHeader();
@@ -427,28 +429,46 @@ public class HeaderComponent extends JPanel {
         int newIndex;
         // Affected are all, which are subheader to the focused header
         ArrayList<Component> affectedHeaderComponents = this.getConnectedSubHeaderToComponent(displayIndex);
-        Header neighbour = this.connectedHeader.getNextNeigbourHeader();
-        Header beforeNeighbour = this.connectedHeader.getBeforeNeigbourHeader();
-
+        
         if(down){
-            //Level Down is only possible, if header has siblings.
-            if(neighbour != null || beforeNeighbour != null){
+            Header neighbour = this.connectedHeader.getNextNeigbourHeader();
+            Header beforeNeighbour = this.connectedHeader.getBeforeNeigbourHeader();
+            Header usedParent;
+            //Level down is only possible, if header has siblings.
+            if((neighbour != null && this.connectedHeader.getOwnNr() == 1) ||
+             (beforeNeighbour != null && this.connectedHeader.getOwnNr()>1)){
 
                 //#1 if self ownr = 1, then use nextSibling as new Parent
-                //#2 else use BeforeNeighbour
+                if(this.connectedHeader.getOwnNr() == 1){
+                    usedParent = neighbour;
+                }else {
+                    usedParent = beforeNeighbour;
+                }
+
+                //#2 delete self from current parent
+                this.connectedHeader.getParentElement().deleteSubheader(this.connectedHeader);
+                
+                //#3 add self to new Parent
+                usedParent.insertNewSubheaderInBetween(this.connectedHeader.getOwnNr(), this.connectedHeader);
+
+                //#3 validate the new Index
+                newIndex = this.connectedHeader.getIndex(Header.ROOT)-1;
+
+                //#4 shift all affected elements
+                for (int i = affectedHeaderComponents.size() - 1; i >= 0; i--) {
+                    parentContainer.setComponentZOrder(affectedHeaderComponents.get(i), newIndex +i);
+                }
 
             }
-
         }else{
             Header parentHeader = this.connectedHeader.getParentElement();
             //Level Up only possible, if parent is not root.
             if(!parentHeader.isRoot()){
-                //newIndex = parentHeader.getTotalSubTreeCount()+1+ parentHeader.getIndex(Header.ROOT);
                 
                 //#1 remove this from parent.
                 parentHeader.deleteSubheader(this.connectedHeader);
                 
-                //#2 add self to parentparent in ownNrParent+1
+                //#2 add self to parentparent in ownNrParent
                 parentHeader.getParentElement().insertNewSubheaderInBetween(parentHeader.getOwnNr(), this.connectedHeader);
                 
                 //#3 validate the new Index
@@ -458,11 +478,9 @@ public class HeaderComponent extends JPanel {
                 for (int i = affectedHeaderComponents.size() - 1; i >= 0; i--) {
                     parentContainer.setComponentZOrder(affectedHeaderComponents.get(i), newIndex +i);
                 }
-
-                HeaderComponent.refreshNumbers();
-                parentContainer.revalidate();
             }
-
         }
+        HeaderComponent.refreshNumbers();
+        parentContainer.revalidate();
     }
 }
