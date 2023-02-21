@@ -50,6 +50,7 @@ public class HeaderComponent extends JPanel {
     static LinkedList<HeaderComponent> allHeaderComponents = new LinkedList<>();
     JPanel parentContainer;
 
+
     public HeaderComponent(Color backgroundColor, boolean isOpen, Header connectedHeader, JPanel parentContainer) {
         this.isOpen = isOpen;
         this.parentContainer = parentContainer;
@@ -87,6 +88,34 @@ public class HeaderComponent extends JPanel {
             openHeader();
         } else {
             closeHeader();
+        }
+
+        HeaderComponent.addInstance(this);
+    }
+
+    /**
+     * adds an HeaderComponent to the allInstances List.
+     * @param hc
+     */
+    public static void addInstance(HeaderComponent hc){
+        allHeaderComponents.add(hc);
+    }
+
+    /**
+     * Deletes an HeaderComponent 
+     * @param hc
+     */
+    public static void deleteInstance(HeaderComponent hc){
+        
+        allHeaderComponents.remove(hc);
+    }
+
+    /**
+     * refreshes all displayed Numbers based on the backend information
+     */
+    public static void refreshNumbers(){
+        for(HeaderComponent hc : HeaderComponent.allHeaderComponents){
+            hc.displayedNumber.setText(hc.connectedHeader.getLabelNr());
         }
     }
 
@@ -238,6 +267,7 @@ public class HeaderComponent extends JPanel {
                     }
 
                 }
+                HeaderComponent.refreshNumbers();
                 parentContainer.revalidate();
             }
         };

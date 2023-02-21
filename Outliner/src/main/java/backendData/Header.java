@@ -1,10 +1,13 @@
 package main.java.backendData;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.IllegalFormatCodePointException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
+
+import main.java.visualComponents.Header.HeaderComponent;
 
 public class Header {
 
@@ -19,6 +22,7 @@ public class Header {
     private Logger log = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
     public static Header ROOT;
 
+
     public Header(String title, int ownNr, Header parentElement, boolean isRoot) {
         this.title = title;
         this.ownNr = ownNr;
@@ -26,6 +30,7 @@ public class Header {
         this.setParentElement(parentElement, this.ownNr - 1);
         this.isRoot = isRoot;
     }
+
 
     public String getTitle() {
         return title;
