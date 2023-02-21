@@ -51,11 +51,16 @@ public class HeaderComponent extends JPanel {
     JPanel parentContainer;
 
     /**
-     * Constructor for the HeaderComponent. Displays the whole Container with Numbers, Icon, Title and inherited Text.
+     * Constructor for the HeaderComponent. Displays the whole Container with
+     * Numbers, Icon, Title and inherited Text.
+     * 
      * @param backgroundColor backgroundcolor which should be used.
-     * @param isOpen Determines, if the Container should be instantiated opened or closed.
-     * @param connectedHeader The Backend Header Element which belongs to the ComponentHeader.
-     * @param parentContainer The ParentContainer, which inherits all HeaderComponents.
+     * @param isOpen          Determines, if the Container should be instantiated
+     *                        opened or closed.
+     * @param connectedHeader The Backend Header Element which belongs to the
+     *                        ComponentHeader.
+     * @param parentContainer The ParentContainer, which inherits all
+     *                        HeaderComponents.
      */
     public HeaderComponent(Color backgroundColor, boolean isOpen, Header connectedHeader, JPanel parentContainer) {
         this.isOpen = isOpen;
@@ -89,12 +94,14 @@ public class HeaderComponent extends JPanel {
                 KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, KeyEvent.ALT_DOWN_MASK),
                 "shiftOneDown", true);
 
-        shiftTreeLevelUpDownAction("Shift header level up", KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, KeyEvent.ALT_DOWN_MASK), "shiftLevelUp", false);
+        shiftTreeLevelUpDownAction("Shift header level up",
+                KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, KeyEvent.ALT_DOWN_MASK), "shiftLevelUp", false);
 
+        shiftTreeLevelUpDownAction("Shift header level down",
+                KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, KeyEvent.ALT_DOWN_MASK), "shiftLevelDown", true);
 
-        shiftTreeLevelUpDownAction("Shift header level down", KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, KeyEvent.ALT_DOWN_MASK), "shiftLevelDown", true);
-        
-        deleteHeaderAction("Delete Header", KeyStroke.getKeyStroke(KeyEvent.VK_BACK_SPACE, KeyEvent.CTRL_DOWN_MASK), "deleteHeader" );
+        deleteHeaderAction("Delete Header", KeyStroke.getKeyStroke(KeyEvent.VK_BACK_SPACE, KeyEvent.CTRL_DOWN_MASK),
+                "deleteHeader");
         // adjust open or not open size
         if (isOpen) {
             openHeader();
@@ -197,17 +204,16 @@ public class HeaderComponent extends JPanel {
         };
         contextMenuAdding(actionText, action, keystroke, actionMapKey);
     }
-    
-    private void deleteHeader(){
+
+    private void deleteHeader() {
         int displayIndex = parentContainer.getComponentZOrder(this);
         // Affected are all, which are subheader to the focused header
         ArrayList<Component> affectedHeaderComponents = this.getConnectedSubHeaderToComponent(displayIndex);
         this.connectedHeader.getParentElement().deleteSubheader(this.connectedHeader);
-        
 
-        for(Component hc : affectedHeaderComponents){
+        for (Component hc : affectedHeaderComponents) {
             parentContainer.remove(hc);
-            HeaderComponent.deleteInstance((HeaderComponent)hc);
+            HeaderComponent.deleteInstance((HeaderComponent) hc);
         }
         HeaderComponent.refreshNumbers();
         parentContainer.revalidate();
@@ -277,8 +283,9 @@ public class HeaderComponent extends JPanel {
 
     /**
      * Actual implementaion of HeaderShifting in Gui and Backend.
+     * 
      * @param shiftIndex Index to be shifted (always positive).
-     * @param down true = shifting down, false = shifting up.
+     * @param down       true = shifting down, false = shifting up.
      */
     private void shiftUpOrDown(int shiftIndex, boolean down) {
 
@@ -421,10 +428,12 @@ public class HeaderComponent extends JPanel {
 
     /**
      * Adds a contextMenu to the HeaderComponent fast.
-     * @param actionText Text which will be displayed in contextmenu.
-     * @param action Executed Action, when clicking on contextmenu.
-     * @param keystroke Keystroke to use the action without contextmenu.
-     * @param actionMapKey Text to let the Backend identify action, needs to be unique in class.
+     * 
+     * @param actionText   Text which will be displayed in contextmenu.
+     * @param action       Executed Action, when clicking on contextmenu.
+     * @param keystroke    Keystroke to use the action without contextmenu.
+     * @param actionMapKey Text to let the Backend identify action, needs to be
+     *                     unique in class.
      */
     private void contextMenuAdding(String actionText, Action action, KeyStroke keystroke, String actionMapKey) {
         // Contextmenue Item configuration
@@ -440,7 +449,7 @@ public class HeaderComponent extends JPanel {
     }
 
     private void shiftTreeLevelUpDownAction(String actionText, KeyStroke keystroke, String actionMapKey,
-    boolean down){
+            boolean down) {
 
         HeaderComponent self = this;
         Action action = new AbstractAction(actionText) {
@@ -454,61 +463,61 @@ public class HeaderComponent extends JPanel {
 
     }
 
-    private void shiftTreeLevelUpOrDown(boolean down){
+    private void shiftTreeLevelUpOrDown(boolean down) {
         int displayIndex = parentContainer.getComponentZOrder(this);
         int newIndex;
         // Affected are all, which are subheader to the focused header
         ArrayList<Component> affectedHeaderComponents = this.getConnectedSubHeaderToComponent(displayIndex);
-        
-        if(down){
 
+        if (down) {
 
             Header neighbour = this.connectedHeader.getNextNeigbourHeader();
             Header beforeNeighbour = this.connectedHeader.getBeforeNeigbourHeader();
             Header usedParent;
-            //Level down is only possible, if header has siblings.
-            if((neighbour != null && this.connectedHeader.getOwnNr() == 1) ||
-             (beforeNeighbour != null && this.connectedHeader.getOwnNr()>1)){
+            // Level down is only possible, if header has siblings.
+            if ((neighbour != null && this.connectedHeader.getOwnNr() == 1) ||
+                    (beforeNeighbour != null && this.connectedHeader.getOwnNr() > 1)) {
 
-                //#1 if self ownr = 1, then use nextSibling as new Parent
-                if(this.connectedHeader.getOwnNr() == 1){
+                // #1 if self ownr = 1, then use nextSibling as new Parent
+                if (this.connectedHeader.getOwnNr() == 1) {
                     usedParent = neighbour;
-                }else {
+                } else {
                     usedParent = beforeNeighbour;
                 }
 
-                //#2 delete self from current parent
+                // #2 delete self from current parent
                 this.connectedHeader.getParentElement().deleteSubheader(this.connectedHeader);
 
-                //#3 add self to new Parent
+                // #3 add self to new Parent
                 usedParent.insertNewSubheaderInBetween(this.connectedHeader.getOwnNr(), this.connectedHeader);
 
-                //#3 validate the new Index
-                newIndex = this.connectedHeader.getIndex(Header.ROOT)-1;
+                // #3 validate the new Index
+                newIndex = this.connectedHeader.getIndex(Header.ROOT) - 1;
 
-                //#4 shift all affected elements
+                // #4 shift all affected elements
                 for (int i = affectedHeaderComponents.size() - 1; i >= 0; i--) {
-                    parentContainer.setComponentZOrder(affectedHeaderComponents.get(i), newIndex +i);
+                    parentContainer.setComponentZOrder(affectedHeaderComponents.get(i), newIndex + i);
                 }
 
             }
-        }else{
+        } else {
             Header parentHeader = this.connectedHeader.getParentElement();
-            //Level Up only possible, if parent is not root.
-            if(!parentHeader.isRoot()){
-                
-                //#1 remove this from parent.
-                parentHeader.deleteSubheader(this.connectedHeader);
-                
-                //#2 add self to parentparent in ownNrParent
-                parentHeader.getParentElement().insertNewSubheaderInBetween(parentHeader.getOwnNr(), this.connectedHeader);
-                
-                //#3 validate the new Index
-                newIndex = this.connectedHeader.getIndex(Header.ROOT)-1;
+            // Level Up only possible, if parent is not root.
+            if (!parentHeader.isRoot()) {
 
-                //#4 shift all affected elements
+                // #1 remove this from parent.
+                parentHeader.deleteSubheader(this.connectedHeader);
+
+                // #2 add self to parentparent in ownNrParent
+                parentHeader.getParentElement().insertNewSubheaderInBetween(parentHeader.getOwnNr(),
+                        this.connectedHeader);
+
+                // #3 validate the new Index
+                newIndex = this.connectedHeader.getIndex(Header.ROOT) - 1;
+
+                // #4 shift all affected elements
                 for (int i = affectedHeaderComponents.size() - 1; i >= 0; i--) {
-                    parentContainer.setComponentZOrder(affectedHeaderComponents.get(i), newIndex +i);
+                    parentContainer.setComponentZOrder(affectedHeaderComponents.get(i), newIndex + i);
                 }
             }
         }
