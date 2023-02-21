@@ -41,8 +41,8 @@ public class HeaderComponent extends JPanel {
 
     Color backgroundColor;
     final Color EDIT_COLOR = new Color(242, 242, 242);
-    final int HEADERCONTAINER_FOLDED_HEIGHT = 40;
-    final int HEADERCONTAINER_UNFOLDED_HEIGHT = 200;
+    static final int HEADERCONTAINER_FOLDED_HEIGHT = 40;
+    static final int HEADERCONTAINER_UNFOLDED_HEIGHT = 200;
     final Color FOCUS_COLOR = new Color(214, 220, 229);
 
     boolean isOpen;
@@ -88,6 +88,8 @@ public class HeaderComponent extends JPanel {
         shiftHeaderAction(1, "Shift header down",
                 KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, KeyEvent.ALT_DOWN_MASK),
                 "shiftOneDown", true);
+
+        shiftTreeLevelUpDownAction(1,"Shift header level up", KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, KeyEvent.ALT_DOWN_MASK), "shiftLevelUp", false);
 
         // adjust open or not open size
         if (isOpen) {
@@ -403,5 +405,64 @@ public class HeaderComponent extends JPanel {
         // makes keystroke possible without opening the contextmenue.
         this.getInputMap(this.WHEN_FOCUSED).put(keystroke, actionMapKey);
         this.getActionMap().put(actionMapKey, action);
+    }
+
+    private void shiftTreeLevelUpDownAction(int shiftIndex, String actionText, KeyStroke keystroke, String actionMapKey,
+    boolean down){
+
+        HeaderComponent self = this;
+        Action action = new AbstractAction(actionText) {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                self.shiftTreeLevelUpOrDown(down);
+            }
+        };
+
+        contextMenuAdding(actionText, action, keystroke, actionMapKey);
+
+    }
+
+    private void shiftTreeLevelUpOrDown(boolean down){
+        int displayIndex = parentContainer.getComponentZOrder(this);
+        int newIndex;
+        // Affected are all, which are subheader to the focused header
+        ArrayList<Component> affectedHeaderComponents = this.getConnectedSubHeaderToComponent(displayIndex);
+        Header neighbour = this.connectedHeader.getNextNeigbourHeader();
+        Header beforeNeighbour = this.connectedHeader.getBeforeNeigbourHeader();
+
+        if(down){
+            //Level Down is only possible, if header has siblings.
+            if(neighbour != null || beforeNeighbour != null){
+
+                //#1 if self ownr = 1, then use nextSibling as new Parent
+                //#2 else use BeforeNeighbour
+
+            }
+
+        }else{
+            Header parentHeader = this.connectedHeader.getParentElement();
+            //Level Up only possible, if parent is not root.
+            if(!parentHeader.isRoot()){
+                //newIndex = parentHeader.getTotalSubTreeCount()+1+ parentHeader.getIndex(Header.ROOT);
+                
+                //#1 remove this from parent.
+                parentHeader.deleteSubheader(this.connectedHeader);
+                
+                //#2 add self to parentparent in ownNrParent+1
+                parentHeader.getParentElement().insertNewSubheaderInBetween(parentHeader.getOwnNr(), this.connectedHeader);
+                
+                //#3 validate the new Index
+                newIndex = this.connectedHeader.getIndex(Header.ROOT)-1;
+
+                //#4 shift all affected elements
+                for (int i = affectedHeaderComponents.size() - 1; i >= 0; i--) {
+                    parentContainer.setComponentZOrder(affectedHeaderComponents.get(i), newIndex +i);
+                }
+
+                HeaderComponent.refreshNumbers();
+                parentContainer.revalidate();
+            }
+
+        }
     }
 }
