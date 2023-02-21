@@ -89,10 +89,10 @@ public class HeaderComponent extends JPanel {
                 KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, KeyEvent.ALT_DOWN_MASK),
                 "shiftOneDown", true);
 
-        shiftTreeLevelUpDownAction(1,"Shift header level up", KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, KeyEvent.ALT_DOWN_MASK), "shiftLevelUp", false);
+        shiftTreeLevelUpDownAction("Shift header level up", KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, KeyEvent.ALT_DOWN_MASK), "shiftLevelUp", false);
 
 
-        shiftTreeLevelUpDownAction(1,"Shift header level down", KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, KeyEvent.ALT_DOWN_MASK), "shiftLevelDown", true);
+        shiftTreeLevelUpDownAction("Shift header level down", KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, KeyEvent.ALT_DOWN_MASK), "shiftLevelDown", true);
         // adjust open or not open size
         if (isOpen) {
             openHeader();
@@ -409,7 +409,7 @@ public class HeaderComponent extends JPanel {
         this.getActionMap().put(actionMapKey, action);
     }
 
-    private void shiftTreeLevelUpDownAction(int shiftIndex, String actionText, KeyStroke keystroke, String actionMapKey,
+    private void shiftTreeLevelUpDownAction(String actionText, KeyStroke keystroke, String actionMapKey,
     boolean down){
 
         HeaderComponent self = this;
@@ -431,6 +431,8 @@ public class HeaderComponent extends JPanel {
         ArrayList<Component> affectedHeaderComponents = this.getConnectedSubHeaderToComponent(displayIndex);
         
         if(down){
+
+
             Header neighbour = this.connectedHeader.getNextNeigbourHeader();
             Header beforeNeighbour = this.connectedHeader.getBeforeNeigbourHeader();
             Header usedParent;
@@ -447,7 +449,7 @@ public class HeaderComponent extends JPanel {
 
                 //#2 delete self from current parent
                 this.connectedHeader.getParentElement().deleteSubheader(this.connectedHeader);
-                
+
                 //#3 add self to new Parent
                 usedParent.insertNewSubheaderInBetween(this.connectedHeader.getOwnNr(), this.connectedHeader);
 
