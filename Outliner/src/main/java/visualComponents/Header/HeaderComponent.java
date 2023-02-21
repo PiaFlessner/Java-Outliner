@@ -76,11 +76,11 @@ public class HeaderComponent extends JPanel {
                 KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, KeyEvent.CTRL_DOWN_MASK), "addSubHeader");
 
         shiftHeaderAction(1, "Shift whole header one level up",
-                KeyStroke.getKeyStroke(KeyEvent.VK_UP, KeyEvent.VK_SHIFT),
+                KeyStroke.getKeyStroke(KeyEvent.VK_UP, KeyEvent.ALT_DOWN_MASK),
                 "shiftOneUp", false);
 
         shiftHeaderAction(1, "Shift whole header one level down",
-                KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, KeyEvent.VK_SHIFT),
+                KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, KeyEvent.ALT_DOWN_MASK),
                 "shiftOneDown", true);
        
         // adjust open or not open size
