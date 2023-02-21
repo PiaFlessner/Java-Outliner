@@ -50,7 +50,13 @@ public class HeaderComponent extends JPanel {
     static LinkedList<HeaderComponent> allHeaderComponents = new LinkedList<>();
     JPanel parentContainer;
 
-
+    /**
+     * Constructor for the HeaderComponent. Displays the whole Container with Numbers, Icon, Title and inherited Text.
+     * @param backgroundColor backgroundcolor which should be used.
+     * @param isOpen Determines, if the Container should be instantiated opened or closed.
+     * @param connectedHeader The Backend Header Element which belongs to the ComponentHeader.
+     * @param parentContainer The ParentContainer, which inherits all HeaderComponents.
+     */
     public HeaderComponent(Color backgroundColor, boolean isOpen, Header connectedHeader, JPanel parentContainer) {
         this.isOpen = isOpen;
         this.parentContainer = parentContainer;
@@ -75,14 +81,14 @@ public class HeaderComponent extends JPanel {
         addingHeaderActions(-1, "Add subheader", connectedHeader,
                 KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, KeyEvent.CTRL_DOWN_MASK), "addSubHeader");
 
-        shiftHeaderAction(1, "Shift whole header one level up",
+        shiftHeaderAction(1, "Shift header up",
                 KeyStroke.getKeyStroke(KeyEvent.VK_UP, KeyEvent.ALT_DOWN_MASK),
                 "shiftOneUp", false);
 
-        shiftHeaderAction(1, "Shift whole header one level down",
+        shiftHeaderAction(1, "Shift header down",
                 KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, KeyEvent.ALT_DOWN_MASK),
                 "shiftOneDown", true);
-       
+
         // adjust open or not open size
         if (isOpen) {
             openHeader();
@@ -95,26 +101,27 @@ public class HeaderComponent extends JPanel {
 
     /**
      * adds an HeaderComponent to the allInstances List.
+     * 
      * @param hc
      */
-    public static void addInstance(HeaderComponent hc){
+    public static void addInstance(HeaderComponent hc) {
         allHeaderComponents.add(hc);
     }
 
     /**
-     * Deletes an HeaderComponent 
+     * Deletes an HeaderComponent
+     * 
      * @param hc
      */
-    public static void deleteInstance(HeaderComponent hc){
-        
+    public static void deleteInstance(HeaderComponent hc) {
         allHeaderComponents.remove(hc);
     }
 
     /**
      * refreshes all displayed Numbers based on the backend information
      */
-    public static void refreshNumbers(){
-        for(HeaderComponent hc : HeaderComponent.allHeaderComponents){
+    public static void refreshNumbers() {
+        for (HeaderComponent hc : HeaderComponent.allHeaderComponents) {
             hc.displayedNumber.setText(hc.connectedHeader.getLabelNr());
         }
     }
@@ -189,100 +196,105 @@ public class HeaderComponent extends JPanel {
                 parentContainer.revalidate();
             }
         };
-
-        // Contextmenue Item configuration
-        JMenuItem menuItem;
-        menuItem = new JMenuItem(actionText);
-        menuItem.setAction(action);
-        menuItem.setAccelerator(keystroke);
-        this.popupMenu.add(menuItem);
-
-        // makes keystroke possible without opening the contextmenue.
-        this.getInputMap(this.WHEN_FOCUSED).put(keystroke, actionMapKey);
-        this.getActionMap().put(actionMapKey, action);
-
+        contextMenuAdding(actionText, action, keystroke, actionMapKey);
     }
 
-    // Executes the HeaderShifting
+    /**
+     * Gets all the Components, which belongs to one Header.
+     * 
+     * @param displayIndex The startIndex in the GUI Container of the Header which
+     *                     is affected
+     * @param hc           The affected HeaderComponent
+     * @return ArrayList of HeaderComponents, which should be also shifted.
+     */
+    private ArrayList<Component> getConnectedSubHeaderToComponent(int displayIndex) {
+        int rangeOfShiftElements = this.connectedHeader.getTotalSubTreeCount() + 1;
+        ArrayList<Component> affectedHeaderComponents = new ArrayList<>();
+        // Get the affected Components (affected are all, which belongs to the header);
+        for (int i = displayIndex, j = 0; j < rangeOfShiftElements; i++, j++) {
+            affectedHeaderComponents.add(parentContainer.getComponent(i));
+        }
+        return affectedHeaderComponents;
+    }
+
+    /**
+     * Makes the shifting via ContextMenu and Keystroke possible.
+     * 
+     * @param shiftIndex   index, to what the current Element should be shifted.
+     * @param actionText   Text description which will be displayed in the
+     *                     contextmenu.
+     * @param keystroke    Keystroke, which will be used to execute the command.
+     * @param actionMapKey actionKeymap for backend orientation.
+     * @param down         true= down shift, false= up shift.
+     */
     private void shiftHeaderAction(int shiftIndex, String actionText, KeyStroke keystroke, String actionMapKey,
             boolean down) {
 
         HeaderComponent self = this;
-
-        // Action definition
         Action action = new AbstractAction(actionText) {
             @Override
             public void actionPerformed(ActionEvent e) {
-
-                int displayIndex = parentContainer.getComponentZOrder(self);
-                int newIndex;
-
-                // Get size of the header which should be shifted, because all subheader has to
-                // be shifted too.
-                int rangeOfShiftElements = self.connectedHeader.getTotalSubTreeCount() + 1;
-                ArrayList<Component> affectedHeaderComponents = new ArrayList<>();
-
-                // Check, if the new index is in the allowed range.
-                // Get the affected Components (affected are all, which belongs to the header);
-                for (int i = displayIndex, j = 0; j < rangeOfShiftElements; i++, j++) {
-                    affectedHeaderComponents.add(parentContainer.getComponent(i));
-                }
-
-                // if the direction is up or down, the operations are slightly different
-                if (down) {
-                    // only shift down, if the header is not the last element.
-                    if (self.connectedHeader.getNextNeigbourHeader() != null) {
-                        newIndex = displayIndex + shiftIndex;
-                        // The new index is dependend on the subheadercount of all neighbour header
-                        for (int i = 0; i < shiftIndex; i++) {
-                            newIndex = newIndex + self.connectedHeader.getNextNeigbourHeader().getTotalSubTreeCount();
-                        }
-
-                        //refresh backend also.
-                        self.connectedHeader.getParentElement().rearrangeSubHeader(self.connectedHeader.getOwnNr()-1+shiftIndex, connectedHeader);
-                        System.out.println(self.connectedHeader.getLabelNr());
-                        // shift all affected elements
-                        for (int i = affectedHeaderComponents.size() - 1; i >= 0; i--) {
-                            parentContainer.setComponentZOrder(affectedHeaderComponents.get(i), newIndex + i);
-                        }
-                    }
-
-                } else {
-                    // only shift up, if the header ist not the first element.
-                    if (self.connectedHeader.getBeforeNeigbourHeader() != null) {
-                        newIndex = displayIndex - shiftIndex;
-                        // The new index is dependend on the subheadercount of all neighbour header
-                        for (int i = 0; i < shiftIndex; i++) {
-                            newIndex = newIndex - self.connectedHeader.getBeforeNeigbourHeader().getTotalSubTreeCount();
-                        }
-
-                        //refresh backend also.
-                        self.connectedHeader.getParentElement().rearrangeSubHeader(self.connectedHeader.getOwnNr()-1-shiftIndex, connectedHeader);
-                        System.out.println(self.connectedHeader.getLabelNr());
-
-                        // shift all affected elements
-                        for (int i = affectedHeaderComponents.size() - 1; i >= 0; i--) {
-                            parentContainer.setComponentZOrder(affectedHeaderComponents.get(i), newIndex);
-                        }
-                    }
-
-                }
-                HeaderComponent.refreshNumbers();
-                parentContainer.revalidate();
+                self.shiftUpOrDown(shiftIndex, down);
             }
         };
 
-        // Contextmenue Item configuration
-        JMenuItem menuItem;
-        menuItem = new JMenuItem(actionText);
-        menuItem.setAction(action);
-        menuItem.setAccelerator(keystroke);
-        this.popupMenu.add(menuItem);
+        contextMenuAdding(actionText, action, keystroke, actionMapKey);
+    }
 
-        // makes keystroke possible without opening the contextmenue.
-        this.getInputMap(this.WHEN_FOCUSED).put(keystroke, actionMapKey);
-        this.getActionMap().put(actionMapKey, action);
+    /**
+     * Actual implementaion of HeaderShifting in Gui and Backend.
+     * @param shiftIndex Index to be shifted (always positive).
+     * @param down true = shifting down, false = shifting up.
+     */
+    private void shiftUpOrDown(int shiftIndex, boolean down) {
 
+        int displayIndex = parentContainer.getComponentZOrder(this);
+        int newIndex;
+
+        // Affected are all, which are subheader to the focused header
+        ArrayList<Component> affectedHeaderComponents = this.getConnectedSubHeaderToComponent(displayIndex);
+
+        // if the direction is up or down, the operations are slightly different
+        if (down) {
+            // only shift down, if the header is not the last element.
+            if (this.connectedHeader.getNextNeigbourHeader() != null) {
+                newIndex = displayIndex + shiftIndex;
+                // The new index is dependend on the subheadercount of all neighbour header
+                for (int i = 0; i < shiftIndex; i++) {
+                    newIndex = newIndex + this.connectedHeader.getNextNeigbourHeader().getTotalSubTreeCount();
+                }
+
+                // refresh backend also.
+                this.connectedHeader.getParentElement()
+                        .rearrangeSubHeader(this.connectedHeader.getOwnNr() - 1 + shiftIndex, connectedHeader);
+                // shift all affected elements
+                for (int i = affectedHeaderComponents.size() - 1; i >= 0; i--) {
+                    parentContainer.setComponentZOrder(affectedHeaderComponents.get(i), newIndex + i);
+                }
+            }
+
+        } else {
+            // only shift up, if the header ist not the first element.
+            if (this.connectedHeader.getBeforeNeigbourHeader() != null) {
+                newIndex = displayIndex - shiftIndex;
+                // The new index is dependend on the subheadercount of all neighbour header
+                for (int i = 0; i < shiftIndex; i++) {
+                    newIndex = newIndex - this.connectedHeader.getBeforeNeigbourHeader().getTotalSubTreeCount();
+                }
+
+                // refresh backend also.
+                this.connectedHeader.getParentElement()
+                        .rearrangeSubHeader(this.connectedHeader.getOwnNr() - 1 - shiftIndex, connectedHeader);
+
+                // shift all affected elements
+                for (int i = affectedHeaderComponents.size() - 1; i >= 0; i--) {
+                    parentContainer.setComponentZOrder(affectedHeaderComponents.get(i), newIndex);
+                }
+            }
+
+        }
+        HeaderComponent.refreshNumbers();
+        parentContainer.revalidate();
     }
 
     /**
@@ -356,6 +368,9 @@ public class HeaderComponent extends JPanel {
         });
     }
 
+    /**
+     * Adds the Focusing function to the component.
+     */
     private void addFocusingFunction() {
         this.addFocusListener(new FocusAdapter() {
             @Override
@@ -368,5 +383,25 @@ public class HeaderComponent extends JPanel {
                 headerTitle.setBackground(backgroundColor);
             }
         });
+    }
+
+    /**
+     * Adds a contextMenu to the HeaderComponent fast.
+     * @param actionText Text which will be displayed in contextmenu.
+     * @param action Executed Action, when clicking on contextmenu.
+     * @param keystroke Keystroke to use the action without contextmenu.
+     * @param actionMapKey Text to let the Backend identify action, needs to be unique in class.
+     */
+    private void contextMenuAdding(String actionText, Action action, KeyStroke keystroke, String actionMapKey) {
+        // Contextmenue Item configuration
+        JMenuItem menuItem;
+        menuItem = new JMenuItem(actionText);
+        menuItem.setAction(action);
+        menuItem.setAccelerator(keystroke);
+        this.popupMenu.add(menuItem);
+
+        // makes keystroke possible without opening the contextmenue.
+        this.getInputMap(this.WHEN_FOCUSED).put(keystroke, actionMapKey);
+        this.getActionMap().put(actionMapKey, action);
     }
 }
