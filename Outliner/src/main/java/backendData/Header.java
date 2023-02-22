@@ -1,13 +1,8 @@
 package main.java.backendData;
-
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.IllegalFormatCodePointException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
-
-import main.java.visualComponents.Header.HeaderComponent;
 
 public class Header {
 
@@ -67,6 +62,10 @@ public class Header {
 
     public boolean isRoot() {
         return isRoot;
+    }
+
+    public List<Header> getSubheaders(){
+        return this.subheaders;
     }
 
     /**
