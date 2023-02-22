@@ -78,7 +78,7 @@ public class HeaderConverter {
      * @return true = everything was right, false = something went wrong.
      */
     public boolean saveMD(Header header, int depht, String target) {
-        String targetName = this.correctPathName(target);
+        String targetName = target + ".md";
         boolean isCreated = this.createFile(targetName);
         boolean isSaved = this.saveHeaderInFile(header, targetName, depht);
         return isCreated && isSaved;
@@ -123,14 +123,6 @@ public class HeaderConverter {
             e.printStackTrace();
             return false;
         }
-    }
-
-    private String correctPathName(String path) {
-        // make sure its always an .md file
-        return path;
-        // String rightFileName = path;
-        //rightFileName += ".md";
-        //return rightFileName;
     }
 
 }

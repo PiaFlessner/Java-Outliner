@@ -31,7 +31,8 @@ public class ToolBoxExportMDAction extends AbstractAction {
             public void approveSelection() {
 
                 File selectedFile = getSelectedFile();
-                if (selectedFile.exists() && getDialogType() == JFileChooser.SAVE_DIALOG)
+                File withEnding = new File(selectedFile.getAbsolutePath() + ".md");
+                if (withEnding.exists() && getDialogType() == JFileChooser.SAVE_DIALOG)
                 {
                   int result = JOptionPane.showConfirmDialog(this,
                     "Do you want to overwrite?",
