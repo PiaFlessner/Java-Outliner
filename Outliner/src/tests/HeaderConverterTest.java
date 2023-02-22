@@ -2,6 +2,10 @@ package tests;
 
 import static org.junit.Assert.assertEquals;
 
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+
 import org.junit.Test;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,6 +26,8 @@ public class HeaderConverterTest {
     Header h2 = new Header(title2, 2, h0, false);
     Header h11 = new Header(title11, 1, h1, false);
 
+    HeaderConverter converter = new HeaderConverter();
+
     @BeforeEach
     public void setup() {
         this.h0.insertNewSubheaderEnd(h1);
@@ -38,7 +44,7 @@ public class HeaderConverterTest {
     }
 
     @Test
-    public void testDeleteSubheader() {
+    public void testMDStringCreation() {
 
         h2.setText(text2);
         h1.setText(text1);
@@ -59,9 +65,20 @@ public class HeaderConverterTest {
         + text2 
         + System.lineSeparator() + System.lineSeparator();
 
-        HeaderConverter converter = new HeaderConverter();
+  
         String mdTranslated = converter.convertHeaderToMD(h0, 0);
         assertEquals(expectedString, mdTranslated);
     }
 
+    @Test
+    public void testSaveFile(){
+        h2.setText(text2);
+        h1.setText(text1);
+        h11.setText(text11);
+        String target = "target.md";
+        converter.saveMD(h0, 0, target);
+        File file = new File(target);
+        assertEquals(true, file.exists());
+        file.delete();
+    }
 }

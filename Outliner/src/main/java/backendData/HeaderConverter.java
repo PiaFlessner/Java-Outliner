@@ -1,5 +1,8 @@
 package main.java.backendData;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Collections;
 
 public class HeaderConverter {
@@ -7,6 +10,12 @@ public class HeaderConverter {
     public static String HEADERSYMBOL = "#";
     public static String SPACESYMBOL = " ";
 
+    /**
+     * converts the content of a header into a MD String representation recursevly.
+     * @param header Header which should be written
+     * @param startDepth start depht
+     * @return MD String.
+     */
     public String convertHeaderToMD(Header header, int startDepth) {
         String answer = "";
         if (header.getSubheaderSize() == 0)
@@ -47,6 +56,55 @@ public class HeaderConverter {
                 + System.lineSeparator();
 
         return answer;
+    }
+
+    /**
+     * Creates a File with the target path,
+     * then writes the header content in file.
+     * @param header header which should be written down in file
+     * @param depht starting depht
+     * @param target target path
+     * @return true = everything was right, false = something went wrong.
+     */
+    public boolean saveMD(Header header, int depht, String target){
+        boolean isCreated = this.createFile(target);
+        boolean isSaved = this.saveHeaderInFile(header, target, depht);
+        return isCreated && isSaved;
+    }
+
+/**
+ * Create file in target.
+ * @param target File which should be created.
+ * @return boolean, if everyting was ok.
+ */
+    private boolean createFile(String target){
+        File newFile = new File(target);
+        try {
+            if(newFile.exists()) return true;
+            if(newFile.createNewFile()) return true;
+            return false;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+/**
+ * writes the content into the file
+ * @param header header to be written.
+ * @param target target path
+ * @param depht start depht
+ * @return is everyting was ok.
+ */
+    private boolean saveHeaderInFile(Header header, String target, int depht){
+        try {
+            FileWriter writer = new FileWriter(target);
+            writer.write(this.convertHeaderToMD(header, depht));
+            writer.close();
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
 }
