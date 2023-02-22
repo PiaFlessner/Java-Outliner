@@ -127,9 +127,10 @@ public class HeaderConverter {
 
     private String correctPathName(String path) {
         // make sure its always an .md file
-        String rightFileName = path;
-        rightFileName += ".md";
-        return rightFileName;
+        return path;
+        // String rightFileName = path;
+        //rightFileName += ".md";
+        //return rightFileName;
     }
 
 }
