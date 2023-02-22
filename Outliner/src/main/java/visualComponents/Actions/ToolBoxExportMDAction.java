@@ -31,7 +31,7 @@ public class ToolBoxExportMDAction extends AbstractAction {
             public void approveSelection() {
 
                 File selectedFile = getSelectedFile();
-                File withEnding = new File(selectedFile.getAbsolutePath() + ".md");
+                File withEnding = new File(HeaderConverter.rightName(selectedFile.getAbsolutePath()));
                 if (withEnding.exists() && getDialogType() == JFileChooser.SAVE_DIALOG)
                 {
                   int result = JOptionPane.showConfirmDialog(this,
