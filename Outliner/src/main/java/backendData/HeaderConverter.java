@@ -43,6 +43,11 @@ public class HeaderConverter {
      */
     private String convertSingleObject(Header header, int depht) {
         String answer = "";
+        String textInput;
+
+        if (header.getText() == null) textInput = HeaderConverter.SPACESYMBOL;
+        else textInput = header.getText();
+
         // repeat Headersymbol depth times
         answer += String.join("", Collections.nCopies(depht, HeaderConverter.HEADERSYMBOL))
                 + HeaderConverter.SPACESYMBOL
@@ -51,7 +56,7 @@ public class HeaderConverter {
                 + header.getTitle()
                 + System.lineSeparator()
                 + System.lineSeparator()
-                + header.getText()
+                + textInput
                 + System.lineSeparator()
                 + System.lineSeparator();
 

@@ -3,6 +3,7 @@ import javax.swing.*;
 
 import main.java.backendData.Header;
 import main.java.visualComponents.Actions.ShowHideToolBarAction;
+import main.java.visualComponents.Actions.ToolBoxExportMDAction;
 import main.java.visualComponents.Header.HeaderComponent;
 import main.java.visualComponents.ToolBox.ToolBoxComponent;
 
@@ -16,17 +17,19 @@ public class App {
     JFrame fenster;
     JPanel headerElementContainer;
     JPanel masterContainer;
-    JPopupMenu contextMenu;
-    ToolBoxComponent toolboxComponent = new ToolBoxComponent();
+    JPopupMenu contextMenu = new JPopupMenu();
+    ToolBoxComponent toolboxComponent;
     JRadioButtonMenuItem showToolbarMenuItem;
     JScrollPane headerElementScroller;
     KeyStroke keyStrokeForToolbarVisibility = KeyStroke.getKeyStroke(KeyEvent.VK_0,KeyEvent.VK_ALT);
     KeyStroke keyStrokeForAddNewHeader = KeyStroke.getKeyStroke(KeyEvent.VK_ADD,KeyEvent.VK_ALT);
+    KeyStroke keyStrokeForMDExport = KeyStroke.getKeyStroke(KeyEvent.VK_F8, KeyEvent.VK_SHIFT);
     JPanel headerContainer;
     JPanel columnContainer;
     JLabel topicLabel;
     JMenuItem addNewHeaderItem;
     final Color WINDOW_BACKGROUND_COLOR = new Color(255,255,255);
+    ToolBoxExportMDAction exportAction;
 
     public App(){
         Header.ROOT = headerRoot;
@@ -34,13 +37,15 @@ public class App {
     }
 
     private void initComponents(){
-
+ 
             setUpWindow();
             setUpMasterContainer();
             setUpHeaderContainer();
+
+            setUpToolBoxActions();
+            toolboxComponent = new ToolBoxComponent(exportAction);
             masterContainer.add(toolboxComponent, BorderLayout.NORTH);
-            setUpContextMenue();            
-            setUpGlobalKeystrokes();  
+            setUpShowHideAction();           
 
             Header h1 = new Header("1", 1,headerRoot,false);
             HeaderComponent hc = new HeaderComponent(WINDOW_BACKGROUND_COLOR, false, h1, headerElementContainer );
@@ -132,37 +137,39 @@ public class App {
         fenster.setBackground(WINDOW_BACKGROUND_COLOR);
     }
 
+    private void setUpToolBoxActions(){
+        //Export MD Action
+        exportAction = new ToolBoxExportMDAction(headerRoot, fenster, "Export to MD", keyStrokeForMDExport);
+        masterContainer.getInputMap(masterContainer.WHEN_IN_FOCUSED_WINDOW).put(keyStrokeForMDExport, "exportMD");
+        masterContainer.getActionMap().put("exportMD", exportAction);
+    }
+
+
     /**
      * Setup globally accessible keystrokes
      */
-    public void setUpGlobalKeystrokes(){
+    public void setUpShowHideAction(){
+
+         //Show Hide Toolbar
+         showToolbarMenuItem = new JRadioButtonMenuItem();
+         showToolbarMenuItem.setActionCommand("hide");
+         showToolbarMenuItem.setSelected(true);
+         contextMenu.add(showToolbarMenuItem);
+ 
+         masterContainer.setComponentPopupMenu(contextMenu);
+ 
+         headerContainer.setInheritsPopupMenu(true);
+         columnContainer.setInheritsPopupMenu(true);
+         headerElementScroller.setInheritsPopupMenu(true);
+         headerElementContainer.setInheritsPopupMenu(true);
+
+
         //Bind an Action globally for the whole window, and give action menue item.
         ////Show Hide Toolbar
         ShowHideToolBarAction showHideAction = new ShowHideToolBarAction(toolboxComponent, showToolbarMenuItem, "Show Toolbox", keyStrokeForToolbarVisibility);
         masterContainer.getInputMap(masterContainer.WHEN_IN_FOCUSED_WINDOW).put(keyStrokeForToolbarVisibility, "show or Hide Toolbox");
         masterContainer.getActionMap().put("show or Hide Toolbox", showHideAction);
         showToolbarMenuItem.setAction(showHideAction);
-    }
-
-    /**
-     * Creates a globally available contextmenu and adds it to the masterContainer
-     */
-    public void setUpContextMenue(){
-        contextMenu = new JPopupMenu();
-
-        //Show Hide Toolbar
-        showToolbarMenuItem = new JRadioButtonMenuItem();
-        showToolbarMenuItem.setActionCommand("hide");
-        showToolbarMenuItem.setSelected(true);
-        contextMenu.add(showToolbarMenuItem);
-
-        masterContainer.setComponentPopupMenu(contextMenu);
-
-        headerContainer.setInheritsPopupMenu(true);
-        columnContainer.setInheritsPopupMenu(true);
-        headerElementScroller.setInheritsPopupMenu(true);
-        headerElementContainer.setInheritsPopupMenu(true);
-        
     }
 
 

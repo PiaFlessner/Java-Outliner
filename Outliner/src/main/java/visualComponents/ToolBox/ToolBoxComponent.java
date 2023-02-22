@@ -3,12 +3,14 @@ package main.java.visualComponents.ToolBox;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
-import main.java.visualComponents.ActionListener.ToolBoxExportMDActionListener;
 import main.java.visualComponents.ActionListener.ToolBoxNewFileActionListener;
 import main.java.visualComponents.ActionListener.ToolBoxSaveFileActionListener;
+import main.java.visualComponents.Actions.ToolBoxExportMDAction;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 
 
@@ -19,9 +21,11 @@ public class ToolBoxComponent extends JPanel{
      private static final Dimension MAXIMUM_SIZE = (new Dimension(32767, 50));
      private static final Dimension MINIMUM_SIZE = (new Dimension(100, 10));
      private static final Dimension PREFERRED_SIZE= (new Dimension(636, 50));
+     private ToolBoxExportMDAction exportAction;
 
      //Constructor
-    public ToolBoxComponent(){
+    public ToolBoxComponent(ToolBoxExportMDAction exportAction){
+        this.exportAction = exportAction;
         this.setBackground(BACKGROUND_COLOR);
         this.setMaximumSize(MAXIMUM_SIZE);
         this.setMinimumSize(MINIMUM_SIZE);
@@ -46,7 +50,7 @@ public class ToolBoxComponent extends JPanel{
         //Add Action Listeners
         newFileButton.addActionListener(new ToolBoxNewFileActionListener());
         saveFileButton.addActionListener(new ToolBoxSaveFileActionListener());
-        exportMDButton.addActionListener(new ToolBoxExportMDActionListener());
+        exportMDButton.setAction(exportAction);
         //detachToolTipButton.addActionListener(new ToolBoxDetachActionListener(this));
 
         //Group Layouting - NetBeans Generated Code
