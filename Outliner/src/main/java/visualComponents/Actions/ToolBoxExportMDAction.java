@@ -1,11 +1,15 @@
 package main.java.visualComponents.Actions;
 import java.awt.event.ActionEvent;
 import java.io.File;
+import java.util.regex.Pattern;
 
 import javax.swing.AbstractAction;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.KeyStroke;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
+import org.junit.jupiter.params.shadow.com.univocity.parsers.annotations.Replace;
 
 import main.java.backendData.Header;
 import main.java.backendData.HeaderConverter;
@@ -25,12 +29,14 @@ public class ToolBoxExportMDAction extends AbstractAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         JFileChooser fileChooser = new JFileChooser();
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("MD Files", "md", "MD");
+        fileChooser.setFileFilter(filter);
         fileChooser.setDialogTitle("Specify a file to save");
 
         int userSelection = fileChooser.showSaveDialog(parentFrame);
 
         if(userSelection ==JFileChooser.APPROVE_OPTION){
-            File fileToSave = fileChooser.getSelectedFile();
+            File fileToSave = fileChooser.getSelectedFile();            
             HeaderConverter converter = new HeaderConverter();
             converter.saveMD(this.header, 0, fileToSave.getAbsolutePath());
         }
