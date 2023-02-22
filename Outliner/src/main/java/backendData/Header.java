@@ -1,11 +1,13 @@
 package main.java.backendData;
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
 
-public class Header {
+public class Header implements Serializable{
 
+    private static final long serialVersionUID = 1L;
     private String title;
     private String text;
     private int ownNr;
@@ -14,7 +16,7 @@ public class Header {
     private Header parentElement;
     private final boolean isRoot;
     private static final String DISPLAYDIVIDER = ".";
-    private Logger log = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+    private transient Logger log = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
     public static Header ROOT;
 
 

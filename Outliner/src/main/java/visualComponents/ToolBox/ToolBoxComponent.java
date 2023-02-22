@@ -4,8 +4,8 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 
 import main.java.visualComponents.ActionListener.ToolBoxNewFileActionListener;
-import main.java.visualComponents.ActionListener.ToolBoxSaveFileActionListener;
 import main.java.visualComponents.Actions.ToolBoxExportMDAction;
+import main.java.visualComponents.Actions.ToolBoxSaveFileAction;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -20,10 +20,12 @@ public class ToolBoxComponent extends JPanel{
      private static final Dimension MINIMUM_SIZE = (new Dimension(100, 10));
      private static final Dimension PREFERRED_SIZE= (new Dimension(636, 60));
      private ToolBoxExportMDAction exportAction;
+     private ToolBoxSaveFileAction saveFileAction;
 
      //Constructor
-    public ToolBoxComponent(ToolBoxExportMDAction exportAction){
+    public ToolBoxComponent(ToolBoxExportMDAction exportAction, ToolBoxSaveFileAction saveFileAction){
         this.exportAction = exportAction;
+        this.saveFileAction = saveFileAction;
         this.setBackground(BACKGROUND_COLOR);
         this.setMaximumSize(MAXIMUM_SIZE);
         this.setMinimumSize(MINIMUM_SIZE);
@@ -47,7 +49,7 @@ public class ToolBoxComponent extends JPanel{
 
         //Add Action Listeners
         newFileButton.addActionListener(new ToolBoxNewFileActionListener());
-        saveFileButton.addActionListener(new ToolBoxSaveFileActionListener());
+        saveFileButton.setAction(saveFileAction);
         exportMDButton.setAction(exportAction);
         //detachToolTipButton.addActionListener(new ToolBoxDetachActionListener(this));
 

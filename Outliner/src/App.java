@@ -4,10 +4,12 @@ import javax.swing.*;
 import main.java.backendData.Header;
 import main.java.visualComponents.Actions.ShowHideToolBarAction;
 import main.java.visualComponents.Actions.ToolBoxExportMDAction;
+import main.java.visualComponents.Actions.ToolBoxSaveFileAction;
 import main.java.visualComponents.Header.HeaderComponent;
 import main.java.visualComponents.ToolBox.ToolBoxComponent;
 
 import java.awt.event.*;
+import java.io.File;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Color;
@@ -24,12 +26,15 @@ public class App {
     KeyStroke keyStrokeForToolbarVisibility = KeyStroke.getKeyStroke(KeyEvent.VK_0,KeyEvent.VK_ALT);
     KeyStroke keyStrokeForAddNewHeader = KeyStroke.getKeyStroke(KeyEvent.VK_ADD,KeyEvent.VK_ALT);
     KeyStroke keyStrokeForMDExport = KeyStroke.getKeyStroke(KeyEvent.VK_F8, KeyEvent.VK_SHIFT);
+    KeyStroke keyStrokeForSave = KeyStroke.getKeyStroke(KeyEvent.VK_F6, KeyEvent.VK_SHIFT);
     JPanel headerContainer;
     JPanel columnContainer;
     JLabel topicLabel;
     JMenuItem addNewHeaderItem;
     final Color WINDOW_BACKGROUND_COLOR = new Color(255,255,255);
+    final String ICONPATH = "src"+File.separator+"main"+File.separator+"resources"+File.separator+"appIcon.png";
     ToolBoxExportMDAction exportAction;
+    ToolBoxSaveFileAction saveFileAction;
 
     public App(){
         Header.ROOT = headerRoot;
@@ -43,7 +48,7 @@ public class App {
             setUpHeaderContainer();
 
             setUpToolBoxActions();
-            toolboxComponent = new ToolBoxComponent(exportAction);
+            toolboxComponent = new ToolBoxComponent(exportAction,saveFileAction);
             masterContainer.add(toolboxComponent, BorderLayout.NORTH);
             setUpShowHideAction();           
 
@@ -137,9 +142,22 @@ public class App {
         fenster.setSize(300,200);
         fenster.setVisible(true);
         fenster.setBackground(WINDOW_BACKGROUND_COLOR);
+
+        //Set Image
+        ImageIcon appIcon = new ImageIcon(ICONPATH);
+        fenster.setIconImage(appIcon.getImage());
+
+
     }
 
     private void setUpToolBoxActions(){
+
+        //Save FileAction
+        saveFileAction = new ToolBoxSaveFileAction(headerRoot, fenster, "Save", keyStrokeForSave);
+        masterContainer.getInputMap(masterContainer.WHEN_IN_FOCUSED_WINDOW).put(keyStrokeForMDExport, "saveFile");
+        masterContainer.getActionMap().put("saveFile", exportAction);
+
+
         //Export MD Action
         exportAction = new ToolBoxExportMDAction(headerRoot, fenster, "Export to MD", keyStrokeForMDExport);
         masterContainer.getInputMap(masterContainer.WHEN_IN_FOCUSED_WINDOW).put(keyStrokeForMDExport, "exportMD");
@@ -173,7 +191,6 @@ public class App {
         masterContainer.getActionMap().put("show or Hide Toolbox", showHideAction);
         showToolbarMenuItem.setAction(showHideAction);
     }
-
 
     public static void main(String[] args) throws Exception {   
         Runnable guiCreator = new Runnable(){
