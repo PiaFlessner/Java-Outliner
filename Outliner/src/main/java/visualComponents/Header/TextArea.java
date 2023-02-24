@@ -29,7 +29,9 @@ public class TextArea extends JScrollPane {
         this.textArea.setColumns(20);
         this.textArea.setLineWrap(true);
         this.textArea.setRows(5);
-        this.textArea.setText("Please put your Text here.");
+        if(parent.connectedHeader.getText() != null) 
+        this.textArea.setText(parent.connectedHeader.getText());    
+        else this.textArea.setText("Please put your Text here.");
         this.textArea.setMaximumSize(new Dimension(2147483647, 150));
         this.textArea.setFocusable(false);
         this.setViewportView(textArea);

@@ -65,24 +65,6 @@ public class MainFrame {
 
     }
     
-    private void reloadComponents(){
-        
-        headerElementContainer.removeAll();
-        HeaderComponent.deleteAllInstances();
-        this.addWholeHeaderTree(headerRoot);
-        fenster.revalidate();
-
-
-    }
-
-    private void addWholeHeaderTree(Header h){
-        for(Header header : h.getSubheaders()){
-            HeaderComponent hc = new HeaderComponent(WINDOW_BACKGROUND_COLOR, false, header, headerElementContainer );
-            headerElementContainer.add(hc);
-            addWholeHeaderTree(header);
-        }
-    }
-
     public JFrame getWindow(){
         return this.fenster;
     }
@@ -245,4 +227,21 @@ public class MainFrame {
         showToolbarMenuItem.setAction(showHideAction);
     }
     
+    private void reloadComponents(){
+        
+        headerElementContainer.removeAll();
+        HeaderComponent.deleteAllInstances();
+        this.addWholeHeaderTree(headerRoot);
+        fenster.revalidate();
+
+
+    }
+
+    private void addWholeHeaderTree(Header h){
+        for(Header header : h.getSubheaders()){
+            HeaderComponent hc = new HeaderComponent(WINDOW_BACKGROUND_COLOR, false, header, headerElementContainer );
+            headerElementContainer.add(hc);
+            addWholeHeaderTree(header);
+        }
+    }
 }

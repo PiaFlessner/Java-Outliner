@@ -165,6 +165,9 @@ public class HeaderComponent extends JPanel {
         displayedHeaderTitle = new Title(this);
         headerTitle.add(displayedHeaderTitle);
         this.add(headerTitle, BorderLayout.NORTH);
+        //if(this.connectedHeader.getTitle() == null) this.textArea.textArea.setText("Insert Title here");
+        //else this.textArea.textArea.setText(this.connectedHeader.getTitle());
+        
     }
 
     /**
