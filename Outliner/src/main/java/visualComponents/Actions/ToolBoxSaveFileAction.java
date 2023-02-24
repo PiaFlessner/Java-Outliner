@@ -16,6 +16,7 @@ public class ToolBoxSaveFileAction extends AbstractAction {
 
     JFrame parentFrame;
     Header header;
+    File file;
 
     public ToolBoxSaveFileAction(Header header, JFrame parentFrame, String text, KeyStroke keystroke){
         super(text);
@@ -45,8 +46,6 @@ public class ToolBoxSaveFileAction extends AbstractAction {
                 super.approveSelection();
             }
         };
-        //FileNameExtensionFilter filter = new FileNameExtensionFilter("MD Files", "md", "MD");
-        //fileChooser.setFileFilter(filter);
         fileChooser.setDialogTitle("Specify a file to save");
 
         int userSelection = fileChooser.showSaveDialog(parentFrame);
@@ -56,7 +55,7 @@ public class ToolBoxSaveFileAction extends AbstractAction {
             
             //Save File here
             try {
-                FileOutputStream fileOut = new FileOutputStream(fileToSave);
+                FileOutputStream fileOut = new FileOutputStream(fileToSave,false);
                 ObjectOutputStream objectOut;
                 objectOut = new ObjectOutputStream(fileOut);
                 objectOut.writeObject(header);

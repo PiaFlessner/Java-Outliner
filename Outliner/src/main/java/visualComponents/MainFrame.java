@@ -232,9 +232,7 @@ public class MainFrame {
         headerElementContainer.removeAll();
         HeaderComponent.deleteAllInstances();
         this.addWholeHeaderTree(headerRoot);
-        fenster.revalidate();
-
-
+        headerElementContainer.revalidate();
     }
 
     private void addWholeHeaderTree(Header h){

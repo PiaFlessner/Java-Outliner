@@ -71,6 +71,7 @@ public class ToolBoxOpenFileAction extends AbstractAction {
                         "File could not be loaded",
                         JOptionPane.WARNING_MESSAGE);
             }
+            JOptionPane.showMessageDialog(parent.getWindow(), "File successfully loaded." );
         }
     }
 }
