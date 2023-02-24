@@ -14,7 +14,6 @@ import javax.swing.JScrollPane;
 import javax.swing.KeyStroke;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
-
 import java.awt.event.*;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -62,7 +61,26 @@ public class MainFrame {
         this.headerRoot = root;
         Header.ROOT = root;
 
-        //TODO: reload the components.
+        this.reloadComponents();
+
+    }
+    
+    private void reloadComponents(){
+        
+        headerElementContainer.removeAll();
+        HeaderComponent.deleteAllInstances();
+        this.addWholeHeaderTree(headerRoot);
+        fenster.revalidate();
+
+
+    }
+
+    private void addWholeHeaderTree(Header h){
+        for(Header header : h.getSubheaders()){
+            HeaderComponent hc = new HeaderComponent(WINDOW_BACKGROUND_COLOR, false, header, headerElementContainer );
+            headerElementContainer.add(hc);
+            addWholeHeaderTree(header);
+        }
     }
 
     public JFrame getWindow(){

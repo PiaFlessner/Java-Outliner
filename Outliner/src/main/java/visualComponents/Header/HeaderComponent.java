@@ -139,6 +139,10 @@ public class HeaderComponent extends JPanel {
         }
     }
 
+    public static void deleteAllInstances(){
+        HeaderComponent.allHeaderComponents.clear();
+    }
+
     /**
      * sets up the header title with an icon and the actual title.
      */
@@ -448,6 +452,13 @@ public class HeaderComponent extends JPanel {
         this.getActionMap().put(actionMapKey, action);
     }
 
+    /**
+     * Instantiation of the shift header up or down one level.
+     * @param actionText Text which will be displayed in the contextmenue
+     * @param keystroke Used Keystroke for controlling with keyboard
+     * @param actionMapKey backend actionMapKey, which should be unique
+     * @param down true= level down, false = level up.
+     */
     private void shiftTreeLevelUpDownAction(String actionText, KeyStroke keystroke, String actionMapKey,
             boolean down) {
 
@@ -463,6 +474,10 @@ public class HeaderComponent extends JPanel {
 
     }
 
+    /**
+     * shifting the element actually up or down.
+     * @param down true= level down, false = level up
+     */
     private void shiftTreeLevelUpOrDown(boolean down) {
         int displayIndex = parentContainer.getComponentZOrder(this);
         int newIndex;
@@ -478,7 +493,7 @@ public class HeaderComponent extends JPanel {
             if ((neighbour != null && this.connectedHeader.getOwnNr() == 1) ||
                     (beforeNeighbour != null && this.connectedHeader.getOwnNr() > 1)) {
 
-                // #1 if self ownr = 1, then use nextSibling as new Parent
+                // #1 if self ownr = 1, then use nextSibling as new Parent (because there is no alternate)
                 if (this.connectedHeader.getOwnNr() == 1) {
                     usedParent = neighbour;
                 } else {
