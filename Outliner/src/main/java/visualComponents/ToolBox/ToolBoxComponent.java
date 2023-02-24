@@ -2,9 +2,8 @@ package main.java.visualComponents.ToolBox;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
-
-import main.java.visualComponents.ActionListener.ToolBoxNewFileActionListener;
 import main.java.visualComponents.Actions.ToolBoxExportMDAction;
+import main.java.visualComponents.Actions.ToolBoxOpenFileAction;
 import main.java.visualComponents.Actions.ToolBoxSaveFileAction;
 
 import java.awt.Color;
@@ -21,11 +20,14 @@ public class ToolBoxComponent extends JPanel{
      private static final Dimension PREFERRED_SIZE= (new Dimension(636, 60));
      private ToolBoxExportMDAction exportAction;
      private ToolBoxSaveFileAction saveFileAction;
+     private ToolBoxOpenFileAction openFileAction;
+     public JButton openFileButton;
 
      //Constructor
-    public ToolBoxComponent(ToolBoxExportMDAction exportAction, ToolBoxSaveFileAction saveFileAction){
+    public ToolBoxComponent(ToolBoxExportMDAction exportAction, ToolBoxSaveFileAction saveFileAction, ToolBoxOpenFileAction openFileAction){
         this.exportAction = exportAction;
         this.saveFileAction = saveFileAction;
+        this.openFileAction = openFileAction;
         this.setBackground(BACKGROUND_COLOR);
         this.setMaximumSize(MAXIMUM_SIZE);
         this.setMinimumSize(MINIMUM_SIZE);
@@ -41,6 +43,7 @@ public class ToolBoxComponent extends JPanel{
         //Create all neccessary Elements of Toolbox
         JPanel leftTooltipContainer = new OuterContainer(BACKGROUND_COLOR);
         JButton newFileButton = new Button("New File", BACKGROUND_COLOR,FOREGROUND_COLOR,leftTooltipContainer);
+        this.openFileButton = new Button("Open File", BACKGROUND_COLOR,FOREGROUND_COLOR, leftTooltipContainer);
         JButton saveFileButton = new Button("Save",BACKGROUND_COLOR,FOREGROUND_COLOR,leftTooltipContainer);
         JPanel middleTooltipContainer = new InnerContainer(BACKGROUND_COLOR, FOREGROUND_COLOR);
         JPanel rightTooltipContainer = new OuterContainer(BACKGROUND_COLOR);
@@ -48,9 +51,11 @@ public class ToolBoxComponent extends JPanel{
         //JButton detachToolTipButton = new ToolBoxButton("Detach", BACKGROUND_COLOR, FOREGROUND_COLOR, rightTooltipContainer);
 
         //Add Action Listeners
-        newFileButton.addActionListener(new ToolBoxNewFileActionListener());
+        //newFileButton.setAction(newFileAction);
         saveFileButton.setAction(saveFileAction);
         exportMDButton.setAction(exportAction);
+        openFileButton.setAction(openFileAction);
+        //openFilen.setAction(openFileAction);
         //detachToolTipButton.addActionListener(new ToolBoxDetachActionListener(this));
 
         //Group Layouting - NetBeans Generated Code

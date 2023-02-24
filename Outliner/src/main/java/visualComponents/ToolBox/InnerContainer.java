@@ -20,7 +20,7 @@ public class InnerContainer extends JPanel{
         this.setMinimumSize(MINIMUM_SIZE);
         this.setLayout(new BorderLayout());
 
-        initComponents(backgroundColor, foregroundColor);
+       // initComponents(backgroundColor, foregroundColor);
     }
 
     private void initComponents(Color backgroundColor, Color foregroundColor){
