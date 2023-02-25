@@ -7,27 +7,26 @@ import java.io.ObjectOutputStream;
 
 import javax.swing.AbstractAction;
 import javax.swing.JFileChooser;
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
-import main.java.backendData.Header;
+import main.java.visualComponents.MainFrame;
 
 public class ToolBoxSaveFileAction extends AbstractAction {
 
-    JFrame parentFrame;
-    Header header;
+    MainFrame mainFrame;
     File file;
 
-    public ToolBoxSaveFileAction(Header header, JFrame parentFrame, String text, KeyStroke keystroke){
+    public ToolBoxSaveFileAction(MainFrame mainframe, String text, KeyStroke keystroke){
         super(text);
-        this.header = header;
-        this.parentFrame = parentFrame;
+        this.mainFrame = mainframe;
         putValue(ACCELERATOR_KEY, keystroke);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         JFileChooser fileChooser = new JFileChooser(){
+
+            //Ask to overwrite action
             @Override
             public void approveSelection() {
 
@@ -48,7 +47,7 @@ public class ToolBoxSaveFileAction extends AbstractAction {
         };
         fileChooser.setDialogTitle("Specify a file to save");
 
-        int userSelection = fileChooser.showSaveDialog(parentFrame);
+        int userSelection = fileChooser.showSaveDialog(mainFrame.getWindow());
 
         if(userSelection ==JFileChooser.APPROVE_OPTION){
             File fileToSave = fileChooser.getSelectedFile();            
@@ -58,7 +57,7 @@ public class ToolBoxSaveFileAction extends AbstractAction {
                 FileOutputStream fileOut = new FileOutputStream(fileToSave,false);
                 ObjectOutputStream objectOut;
                 objectOut = new ObjectOutputStream(fileOut);
-                objectOut.writeObject(header);
+                objectOut.writeObject(mainFrame.getRoot());
                 objectOut.close();
             } catch (IOException e1) {
                 e1.printStackTrace();

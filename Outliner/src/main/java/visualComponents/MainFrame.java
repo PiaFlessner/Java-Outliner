@@ -28,7 +28,7 @@ import main.java.visualComponents.ToolBox.ToolBoxComponent;
 
 public class MainFrame {
 
-    Header headerRoot = new Header("Root", 1, null, true);
+    Header headerRoot = new Header("Root", 0, null, true);
     
     JFrame fenster;
     JPanel headerElementContainer;
@@ -58,11 +58,15 @@ public class MainFrame {
     }
 
     public void setRoot(Header root){
-        this.headerRoot = root;
         Header.ROOT = root;
+        this.headerRoot = root;
 
         this.reloadComponents();
 
+    }
+
+    public Header getRoot(){
+        return this.headerRoot;
     }
     
     public JFrame getWindow(){
@@ -182,7 +186,7 @@ public class MainFrame {
 
         //Save FileAction
         String actionMapKeySaveFile = "saveFile";
-        saveFileAction = new ToolBoxSaveFileAction(headerRoot, fenster, "Save", keyStrokeForSave);
+        saveFileAction = new ToolBoxSaveFileAction(this, "Save", keyStrokeForSave);
         masterContainer.getInputMap(masterContainer.WHEN_IN_FOCUSED_WINDOW).put(keyStrokeForMDExport, actionMapKeySaveFile);
         masterContainer.getActionMap().put(actionMapKeySaveFile, exportAction);
 
