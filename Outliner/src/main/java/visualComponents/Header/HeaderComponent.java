@@ -77,6 +77,7 @@ public class HeaderComponent extends JPanel {
         addFocusingFunction();
         setUpOpenHeaderFunction();
         setUpHoverColorChangeFunction();
+        setUpEditTextfieldFunction();
 
         // add header to same level
         addingHeaderActions(-1, "Add Header on same level", connectedHeader.getParentElement(),
@@ -176,7 +177,7 @@ public class HeaderComponent extends JPanel {
      */
     private void setUpDisplayedNumber() {
         displayedNumber = new JLabel();
-        // displayedNumber.setFont(displayedNumber.getFont());
+        displayedNumber.setFont(displayedNumber.getFont());
         displayedNumber.setText(this.connectedHeader.getLabelNr());
         headerTitle.add(displayedNumber);
     }
@@ -348,7 +349,6 @@ public class HeaderComponent extends JPanel {
                     parentContainer.setComponentZOrder(affectedHeaderComponents.get(i), newIndex);
                 }
             }
-
         }
         HeaderComponent.refreshNumbers();
         parentContainer.revalidate();
@@ -411,6 +411,18 @@ public class HeaderComponent extends JPanel {
         });
     }
 
+    private void setUpEditTextfieldFunction(){
+        String actionMapKey = "EditTextfield";
+        this.getInputMap().put(KeyStroke.getKeyStroke("ENTER"), actionMapKey);
+        this.getActionMap().put(actionMapKey, new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                displayedHeaderTitle.editAbleChange();
+            }
+        });
+
+    }
+
     /**
      * Sets up the Color change, when the user hovers over the element by setting
      * the focus.
@@ -441,7 +453,6 @@ public class HeaderComponent extends JPanel {
             }
         });
     }
-
     /**
      * Adds a contextMenu to the HeaderComponent fast.
      * 
@@ -481,9 +492,7 @@ public class HeaderComponent extends JPanel {
                 self.shiftTreeLevelUpOrDown(down);
             }
         };
-
         contextMenuAdding(actionText, action, keystroke, actionMapKey);
-
     }
 
     /**

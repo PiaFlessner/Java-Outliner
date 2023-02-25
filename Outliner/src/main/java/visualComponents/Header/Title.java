@@ -29,7 +29,7 @@ public class Title extends JTextField{
         this.setMaximumSize(new Dimension(500, 16));
         this.setMinimumSize(new Dimension(500, 16));
         this.setPreferredSize(new Dimension(500, 16));
-        this.setFocusable(true);
+        this.setFocusable(false);
         this.setEditable(false);
         this.setCursor(this.NORMAL_CURSOR);
         this.setBackground(parent.backgroundColor);
@@ -108,14 +108,16 @@ public class Title extends JTextField{
     /**
      * Changes the editablity 
      */
-      private void editAbleChange(){
+      public void editAbleChange(){
   
         if(this.isEditable){
             //Change to not editable
             this.setEditable(false);
             this.isEditable = false;
+            this.setFocusable(false);
             this.setBackground(parent.backgroundColor);
             this.setCursor(this.NORMAL_CURSOR);
+            this.transferFocusBackward();
               
         }else {
             //change to editable
@@ -123,6 +125,8 @@ public class Title extends JTextField{
             this.isEditable = true;
             this.setBackground(parent.EDIT_COLOR);
             this.setCursor(this.EDIT_CURSOR);
+            this.setFocusable(true);
+            this.requestFocus();
           }
   
       }
