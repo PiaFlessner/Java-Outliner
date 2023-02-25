@@ -222,6 +222,7 @@ public class HeaderComponent extends JPanel {
         }
         HeaderComponent.refreshNumbers();
         parentContainer.revalidate();
+        parentContainer.repaint();
     }
 
     /**
