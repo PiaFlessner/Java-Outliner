@@ -21,10 +21,16 @@ public class Icon extends JLabel{
         this.setPreferredSize(new Dimension(20, 20));
     }
 
+    /**
+     * Changes the arrow to the open symbol.
+     */
     public void setArrowOpen(){
         this.setIcon(this.arrowOpen);
     }
 
+    /**
+     * Changes the arrow to the closed symbol.
+     */
     public void setArrowClose(){
         this.setIcon(this.arrow);
     }

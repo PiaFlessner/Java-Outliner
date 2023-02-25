@@ -343,8 +343,7 @@ public class Header implements Serializable{
     
     /**
      * Finds out, which overall branch the header is in.
-     *
-     * @return
+     * @return the root branch of the header.
      */
     private Header climbToRootAndSaveBranch() {
         Header desiredKnot = this;

@@ -35,12 +35,13 @@ public class TextArea extends JScrollPane {
         this.textArea.setMaximumSize(new Dimension(2147483647, 150));
         this.textArea.setFocusable(false);
         this.setViewportView(textArea);
-        //setUpEditableFunction();
         addFocusingFunction();
         addChangedFunction();
     }
 
-
+/**
+ * Adds a focusing behavior
+ */
     private void addFocusingFunction(){
         textArea.addFocusListener(new FocusAdapter(){
             @Override
@@ -55,6 +56,9 @@ public class TextArea extends JScrollPane {
         });
     }
 
+    /**
+     * Invokes the refreshing of the backend data when user writes something down.
+     */
     private void addChangedFunction(){
         this.textArea.getDocument().addDocumentListener(new DocumentListener() {
 
@@ -74,42 +78,5 @@ public class TextArea extends JScrollPane {
             }
             
         });
-    }
-
-
-    private void setUpEditableFunction(){
-      //KeyStroke Function
-      textArea.getInputMap().put(KeyStroke.getKeyStroke("SPACE"), "EditTextField");
-      textArea.getActionMap().put("EditTextField", new AbstractAction(){
-        @Override
-        public void actionPerformed(java.awt.event.ActionEvent e) {
-            editAbleChange();
-        }
-      });
-
-      //Button Click Function
-      textArea.addMouseListener(new MouseInputAdapter() {
-          @Override
-          public void mouseClicked(java.awt.event.MouseEvent e) {
-            if(e.getClickCount() == 2){
-                editAbleChange();         
-
-            }
-          }           
-      });
-    }
-
-    private void editAbleChange(){
-
-        if(this.isEditable){
-            //Cange to not editable
-            textArea.setEditable(false);
-        }
-        else{
-            //change to editable
-            textArea.setEditable(true);
-
-        }
-
     }
 }

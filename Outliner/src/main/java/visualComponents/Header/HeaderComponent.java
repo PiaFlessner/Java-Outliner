@@ -139,6 +139,9 @@ public class HeaderComponent extends JPanel {
         }
     }
 
+    /**
+     * Deletes all instances from the allHeaderComponents.
+     */
     public static void deleteAllInstances(){
         HeaderComponent.allHeaderComponents.clear();
     }
@@ -196,7 +199,12 @@ public class HeaderComponent extends JPanel {
         this.add(headerContent, BorderLayout.CENTER);
 
     }
-
+    /**
+     * Invokes the deleteHeader for the current header.
+     * @param actionText text for the contextmenue
+     * @param keystroke keystroke for invoking the action
+     * @param actionMapKey unique identifier for invoking action.
+     */
     private void deleteHeaderAction(String actionText, KeyStroke keystroke,
             String actionMapKey) {
 
@@ -209,7 +217,9 @@ public class HeaderComponent extends JPanel {
         };
         contextMenuAdding(actionText, action, keystroke, actionMapKey);
     }
-
+    /**
+     * deletes a header and the belonging subheader from the frontend and the backend.
+     */
     private void deleteHeader() {
         int displayIndex = parentContainer.getComponentZOrder(this);
         // Affected are all, which are subheader to the focused header

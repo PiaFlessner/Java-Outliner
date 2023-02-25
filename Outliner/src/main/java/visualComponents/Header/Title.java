@@ -39,6 +39,9 @@ public class Title extends JTextField{
 
     }
 
+    /**
+     * Sets the focusing function.
+     */
     private void addFocusingFunction(){
         this.addFocusListener(new FocusAdapter(){
             @Override
@@ -55,6 +58,9 @@ public class Title extends JTextField{
         });
     }
 
+    /**
+     * Makes the textfield editable when user presses enter. 
+     */
     private void setUpEditableFunction(){
         //KeyStroke Function
         this.getInputMap().put(KeyStroke.getKeyStroke("ENTER"), "EditTextField");
@@ -75,7 +81,9 @@ public class Title extends JTextField{
             }           
         });
       }
-
+      /**
+       * Refreshes the beackend data when user changes something.
+       */
       private void setUpChangedFunction(){
         this.getDocument().addDocumentListener(new DocumentListener() {
 
@@ -97,6 +105,9 @@ public class Title extends JTextField{
         });     
     }
   
+    /**
+     * Changes the editablity 
+     */
       private void editAbleChange(){
   
         if(this.isEditable){

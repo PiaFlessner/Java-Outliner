@@ -125,6 +125,11 @@ public class HeaderConverter {
         }
     }
 
+    /**
+     * Makes the saved file with the right extension.
+     * @param fileName source filename.
+     * @return a filename with .md at the end.
+     */
     public static String rightName(String fileName){
         String answer = fileName;
         if(answer.endsWith(".md")){
