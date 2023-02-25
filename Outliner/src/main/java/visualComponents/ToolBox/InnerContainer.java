@@ -1,6 +1,7 @@
 package main.java.visualComponents.ToolBox;
 import java.awt.Color;
 
+import javax.swing.JButton;
 import javax.swing.JPanel;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -10,6 +11,7 @@ import java.awt.event.ActionEvent;
 
 public class InnerContainer extends JPanel{
     private JTextField FileNameTextField;
+    private Button addButton;
     private final Dimension MINIMUM_SIZE = new Dimension(10, 40);
     private final Dimension BUTTON_PREFFERED_SIZE = new Dimension(150, 22);
     
@@ -19,7 +21,6 @@ public class InnerContainer extends JPanel{
         this.setBackground(backgroundColor);
         this.setMinimumSize(MINIMUM_SIZE);
         this.setLayout(new BorderLayout());
-
        // initComponents(backgroundColor, foregroundColor);
     }
 

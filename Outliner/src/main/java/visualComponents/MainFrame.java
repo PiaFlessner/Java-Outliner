@@ -192,7 +192,7 @@ public class MainFrame {
 
         //Export MD Action
         String actionMapKeyExportMD = "exportMD";
-        exportAction = new ToolBoxExportMDAction(headerRoot, fenster, "Export to MD", keyStrokeForMDExport);
+        exportAction = new ToolBoxExportMDAction(this, "Export to MD", keyStrokeForMDExport);
         masterContainer.getInputMap(masterContainer.WHEN_IN_FOCUSED_WINDOW).put(keyStrokeForMDExport, actionMapKeyExportMD);
         masterContainer.getActionMap().put(actionMapKeyExportMD, exportAction);
 

@@ -8,6 +8,7 @@ import main.java.visualComponents.Actions.ToolBoxSaveFileAction;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.io.File;
 
 
 
@@ -39,6 +40,7 @@ public class ToolBoxComponent extends JPanel{
     //Fill Element with other Elements
     @SuppressWarnings("unchecked")                       
     private void initComponents() {
+        String addHeaderIcon = "src"+File.separator+"main"+File.separator+"resources"+File.separator+"addHeaderSymbol.png";
 
         //Create all neccessary Elements of Toolbox
         JPanel leftTooltipContainer = new OuterContainer(BACKGROUND_COLOR);
@@ -48,6 +50,7 @@ public class ToolBoxComponent extends JPanel{
         JPanel middleTooltipContainer = new InnerContainer(BACKGROUND_COLOR, FOREGROUND_COLOR);
         JPanel rightTooltipContainer = new OuterContainer(BACKGROUND_COLOR);
         JButton exportMDButton = new Button("Export MD", BACKGROUND_COLOR, FOREGROUND_COLOR, rightTooltipContainer);
+        JButton addHeader = new Button(BACKGROUND_COLOR,FOREGROUND_COLOR,middleTooltipContainer, addHeaderIcon);
         //JButton detachToolTipButton = new ToolBoxButton("Detach", BACKGROUND_COLOR, FOREGROUND_COLOR, rightTooltipContainer);
 
         //Add Action Listeners

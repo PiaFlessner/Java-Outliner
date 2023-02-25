@@ -5,22 +5,19 @@ import java.util.regex.Pattern;
 
 import javax.swing.AbstractAction;
 import javax.swing.JFileChooser;
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import main.java.backendData.Header;
 import main.java.backendData.HeaderConverter;
+import main.java.visualComponents.MainFrame;
 
 public class ToolBoxExportMDAction extends AbstractAction {
 
-    JFrame parentFrame;
-    Header header;
+  MainFrame mainFrame;
 
-    public ToolBoxExportMDAction(Header header, JFrame parentFrame, String text, KeyStroke keystroke){
+    public ToolBoxExportMDAction(MainFrame mainFrame, String text, KeyStroke keystroke){
         super(text);
-        this.header = header;
-        this.parentFrame = parentFrame;
+        this.mainFrame = mainFrame;
         putValue(ACCELERATOR_KEY, keystroke);
     }
 
@@ -50,12 +47,12 @@ public class ToolBoxExportMDAction extends AbstractAction {
         fileChooser.setFileFilter(filter);
         fileChooser.setDialogTitle("Specify a file to save");
 
-        int userSelection = fileChooser.showSaveDialog(parentFrame);
+        int userSelection = fileChooser.showSaveDialog(mainFrame.getWindow());
 
         if(userSelection ==JFileChooser.APPROVE_OPTION){
             File fileToSave = fileChooser.getSelectedFile();            
             HeaderConverter converter = new HeaderConverter();
-            converter.saveMD(this.header, 0, fileToSave.getAbsolutePath());
+            converter.saveMD(mainFrame.getRoot(), 0, fileToSave.getAbsolutePath());
         }
     }    
 }
