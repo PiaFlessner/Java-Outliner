@@ -39,12 +39,12 @@ public class MainFrame {
     ToolBoxComponent toolboxComponent;
     JRadioButtonMenuItem showToolbarMenuItem;
     JScrollPane headerElementScroller;
-    KeyStroke keyStrokeForNewFile = KeyStroke.getKeyStroke(KeyEvent.VK_F5,KeyEvent.VK_SHIFT);
-    KeyStroke keyStrokeForToolbarVisibility = KeyStroke.getKeyStroke(KeyEvent.VK_F6,KeyEvent.VK_SHIFT);
-    KeyStroke keyStrokeForMDExport = KeyStroke.getKeyStroke(KeyEvent.VK_F5, KeyEvent.VK_SHIFT);
-    KeyStroke keyStrokeForSave = KeyStroke.getKeyStroke(KeyEvent.VK_F3, KeyEvent.VK_SHIFT);
-    KeyStroke keyStrokeForOpen = KeyStroke.getKeyStroke(KeyEvent.VK_F2, KeyEvent.VK_SHIFT);
-    KeyStroke keyStrokeForAddHeaderRoot = KeyStroke.getKeyStroke(KeyEvent.VK_F4, KeyEvent.VK_SHIFT);
+    KeyStroke keyStrokeForNewFile = KeyStroke.getKeyStroke(KeyEvent.VK_N,KeyEvent.CTRL_DOWN_MASK);
+    KeyStroke keyStrokeForToolbarVisibility = KeyStroke.getKeyStroke(KeyEvent.VK_V,KeyEvent.CTRL_DOWN_MASK);
+    KeyStroke keyStrokeForMDExport = KeyStroke.getKeyStroke(KeyEvent.VK_E, KeyEvent.CTRL_DOWN_MASK);
+    KeyStroke keyStrokeForSave = KeyStroke.getKeyStroke(KeyEvent.VK_S, KeyEvent.CTRL_DOWN_MASK);
+    KeyStroke keyStrokeForOpen = KeyStroke.getKeyStroke(KeyEvent.VK_O, KeyEvent.CTRL_DOWN_MASK);
+    KeyStroke keyStrokeForAddHeaderRoot = KeyStroke.getKeyStroke(KeyEvent.VK_A, KeyEvent.CTRL_DOWN_MASK);
     JPanel headerContainer;
     JPanel columnContainer;
     JLabel topicLabel;
@@ -237,8 +237,8 @@ public class MainFrame {
         contextMenu.addSeparator();
 
         //Export MD Action
-        String actionMapKeyExportMD = "exportMD";
-        exportAction = new ToolBoxExportMDAction(this, "Export to MD", keyStrokeForMDExport);
+        String actionMapKeyExportMD = "exportToMarkdown";
+        exportAction = new ToolBoxExportMDAction(this, "Export to Markdown", keyStrokeForMDExport);
         masterContainer.getInputMap(masterContainer.WHEN_IN_FOCUSED_WINDOW).put(keyStrokeForMDExport, actionMapKeyExportMD);
         masterContainer.getActionMap().put(actionMapKeyExportMD, exportAction);
         ////Add Contextmenu option
