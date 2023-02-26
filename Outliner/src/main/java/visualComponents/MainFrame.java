@@ -20,7 +20,9 @@ import java.awt.FlowLayout;
 import java.awt.Color;
 import main.java.backendData.Header;
 import main.java.visualComponents.Actions.ShowHideToolBarAction;
+import main.java.visualComponents.Actions.ToolBoxAddHeaderToRootAction;
 import main.java.visualComponents.Actions.ToolBoxExportMDAction;
+import main.java.visualComponents.Actions.ToolBoxNewFileAction;
 import main.java.visualComponents.Actions.ToolBoxOpenFileAction;
 import main.java.visualComponents.Actions.ToolBoxSaveFileAction;
 import main.java.visualComponents.Header.HeaderComponent;
@@ -30,27 +32,31 @@ public class MainFrame {
 
     Header headerRoot = new Header("Root", 0, null, true);
     
-    JFrame fenster;
+    JFrame window;
     JPanel headerElementContainer;
     JPanel masterContainer;
     JPopupMenu contextMenu = new JPopupMenu();
     ToolBoxComponent toolboxComponent;
     JRadioButtonMenuItem showToolbarMenuItem;
     JScrollPane headerElementScroller;
-    KeyStroke keyStrokeForToolbarVisibility = KeyStroke.getKeyStroke(KeyEvent.VK_0,KeyEvent.VK_ALT);
-    KeyStroke keyStrokeForAddNewHeader = KeyStroke.getKeyStroke(KeyEvent.VK_ADD,KeyEvent.VK_ALT);
-    KeyStroke keyStrokeForMDExport = KeyStroke.getKeyStroke(KeyEvent.VK_F8, KeyEvent.VK_SHIFT);
-    KeyStroke keyStrokeForSave = KeyStroke.getKeyStroke(KeyEvent.VK_F7, KeyEvent.VK_SHIFT);
-    KeyStroke keyStrokeForOpen = KeyStroke.getKeyStroke(KeyEvent.VK_F6, KeyEvent.VK_SHIFT);
+    KeyStroke keyStrokeForNewFile = KeyStroke.getKeyStroke(KeyEvent.VK_F5,KeyEvent.VK_SHIFT);
+    KeyStroke keyStrokeForToolbarVisibility = KeyStroke.getKeyStroke(KeyEvent.VK_F6,KeyEvent.VK_SHIFT);
+    KeyStroke keyStrokeForMDExport = KeyStroke.getKeyStroke(KeyEvent.VK_F5, KeyEvent.VK_SHIFT);
+    KeyStroke keyStrokeForSave = KeyStroke.getKeyStroke(KeyEvent.VK_F3, KeyEvent.VK_SHIFT);
+    KeyStroke keyStrokeForOpen = KeyStroke.getKeyStroke(KeyEvent.VK_F2, KeyEvent.VK_SHIFT);
+    KeyStroke keyStrokeForAddHeaderRoot = KeyStroke.getKeyStroke(KeyEvent.VK_F4, KeyEvent.VK_SHIFT);
     JPanel headerContainer;
     JPanel columnContainer;
     JLabel topicLabel;
     JMenuItem addNewHeaderItem;
-    final Color WINDOW_BACKGROUND_COLOR = new Color(255,255,255);
+    public static final Color WINDOW_BACKGROUND_COLOR = new Color(255,255,255);
     final String ICONPATH = "src"+File.separator+"main"+File.separator+"resources"+File.separator+"appIcon.png";
-    ToolBoxExportMDAction exportAction;
-    ToolBoxSaveFileAction saveFileAction;
+    
+    ToolBoxNewFileAction newFileAction;
     ToolBoxOpenFileAction openFileAction;
+    ToolBoxSaveFileAction saveFileAction;
+    ToolBoxAddHeaderToRootAction addHeaderAction;
+    ToolBoxExportMDAction exportAction;
 
     public MainFrame(){
         Header.ROOT = headerRoot;
@@ -70,7 +76,7 @@ public class MainFrame {
     }
     
     public JFrame getWindow(){
-        return this.fenster;
+        return this.window;
     }
 
     private void initComponents(){
@@ -80,14 +86,9 @@ public class MainFrame {
             setUpHeaderContainer();
 
             setUpToolBoxActions();
-            toolboxComponent = new ToolBoxComponent(exportAction,saveFileAction, openFileAction);
+            toolboxComponent = new ToolBoxComponent(exportAction,saveFileAction, openFileAction,addHeaderAction, newFileAction);
             masterContainer.add(toolboxComponent, BorderLayout.NORTH);
-            setUpShowHideAction();           
-
-            Header h1 = new Header("1", 1,headerRoot,false);
-            HeaderComponent hc = new HeaderComponent(WINDOW_BACKGROUND_COLOR, false, h1, headerElementContainer );
-            headerElementContainer.add(hc); 
-
+            setUpShowHideAction();      
 
             try {
                 // Set System L&F
@@ -112,6 +113,8 @@ public class MainFrame {
         headerContainer = new JPanel();
         headerContainer.setBackground(WINDOW_BACKGROUND_COLOR);
         headerContainer.setLayout(new BorderLayout());
+        //Inherit contextmenue
+        headerContainer.setInheritsPopupMenu(true);
 
         setUpColumnContainer();
         setUpHeaderElementContainer();
@@ -133,6 +136,8 @@ public class MainFrame {
         topicLabel.setText("Topic");
         columnContainer.add(topicLabel);
 
+        //inherit context menue
+        columnContainer.setInheritsPopupMenu(true);
         headerContainer.add(columnContainer, BorderLayout.NORTH);
     }
 
@@ -148,11 +153,16 @@ public class MainFrame {
         headerElementContainer.setMinimumSize(new java.awt.Dimension(1024, 768));
         headerElementContainer.setPreferredSize(new Dimension(1024, 768));
         headerElementContainer.setBackground(WINDOW_BACKGROUND_COLOR);
+        //inherit contextmenue
+        headerElementContainer.setInheritsPopupMenu(true);
         
         //Configure Scroller Element
         headerElementScroller = new JScrollPane();
         headerElementScroller.setViewportView(headerElementContainer);
         headerElementScroller.setBackground(WINDOW_BACKGROUND_COLOR);
+
+        //Inherit contextmenue
+        headerElementScroller.setInheritsPopupMenu(true);
         
         headerContainer.add(headerElementScroller, BorderLayout.CENTER);
     }
@@ -162,47 +172,81 @@ public class MainFrame {
     private void setUpMasterContainer(){
         masterContainer = new JPanel();
         masterContainer.setLayout(new BorderLayout());
-        fenster.add(masterContainer);
+        window.add(masterContainer);
+        masterContainer.setComponentPopupMenu(contextMenu);
     }
 
     /**
      * Setup the Window
      */
     private void setUpWindow(){
-        fenster = new JFrame("Outliner");
-        fenster.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        fenster.setSize(800,400);
-        fenster.setVisible(true);
-        fenster.setBackground(WINDOW_BACKGROUND_COLOR);
+        window = new JFrame("Outliner");
+        window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        window.setSize(800,400);
+        window.setVisible(true);
+        window.setBackground(WINDOW_BACKGROUND_COLOR);
 
         //Set Image
         ImageIcon appIcon = new ImageIcon(ICONPATH);
-        fenster.setIconImage(appIcon.getImage());
-
+        window.setIconImage(appIcon.getImage());
 
     }
 
     private void setUpToolBoxActions(){
 
+        //Export OpenFile Action
+        String actionMapNewFile = "newFile";
+        newFileAction = new ToolBoxNewFileAction(this, "New File", keyStrokeForNewFile);
+        masterContainer.getInputMap(masterContainer.WHEN_IN_FOCUSED_WINDOW).put(keyStrokeForNewFile, actionMapNewFile);
+        masterContainer.getActionMap().put(actionMapNewFile, newFileAction);
+        ////Add Contextmenu option
+        JMenuItem newFileItem = new JMenuItem();
+        newFileItem.setAction(newFileAction);
+        contextMenu.add(newFileItem);
+
+        //Export OpenFile Action
+        String actionMapKeyOpen = "openFile";
+        openFileAction = new ToolBoxOpenFileAction(this, "Open File", keyStrokeForOpen);
+        masterContainer.getInputMap(masterContainer.WHEN_IN_FOCUSED_WINDOW).put(keyStrokeForOpen, actionMapKeyOpen);
+        masterContainer.getActionMap().put(actionMapKeyOpen, openFileAction);
+        ////Add Contextmenu option
+        JMenuItem openFileItem = new JMenuItem();
+        openFileItem.setAction(openFileAction);
+        contextMenu.add(openFileItem);
+
         //Save FileAction
         String actionMapKeySaveFile = "saveFile";
         saveFileAction = new ToolBoxSaveFileAction(this, "Save", keyStrokeForSave);
-        masterContainer.getInputMap(masterContainer.WHEN_IN_FOCUSED_WINDOW).put(keyStrokeForMDExport, actionMapKeySaveFile);
-        masterContainer.getActionMap().put(actionMapKeySaveFile, exportAction);
+        masterContainer.getInputMap(masterContainer.WHEN_IN_FOCUSED_WINDOW).put(keyStrokeForSave, actionMapKeySaveFile);
+        masterContainer.getActionMap().put(actionMapKeySaveFile, saveFileAction);
+        ////Add Contextmenu option
+        JMenuItem saveFileItem = new JMenuItem();
+        saveFileItem.setAction(saveFileAction);
+        contextMenu.add(saveFileItem);
+
+        //Add Header to Root Action
+        String actionMapKeyAddHeaderRoot = "addHeaderToRoot";
+        addHeaderAction = new ToolBoxAddHeaderToRootAction(this,headerElementContainer, "Add to first level", keyStrokeForAddHeaderRoot);
+        masterContainer.getInputMap(masterContainer.WHEN_IN_FOCUSED_WINDOW).put(keyStrokeForAddHeaderRoot, actionMapKeyAddHeaderRoot);
+        masterContainer.getActionMap().put(actionMapKeyAddHeaderRoot, addHeaderAction);
+        ////Add Contextmenu option
+        JMenuItem addHeaderRootItem = new JMenuItem();
+        addHeaderRootItem.setAction(addHeaderAction);
+        contextMenu.addSeparator();
+        contextMenu.add(addHeaderRootItem);
+        contextMenu.addSeparator();
 
         //Export MD Action
         String actionMapKeyExportMD = "exportMD";
         exportAction = new ToolBoxExportMDAction(this, "Export to MD", keyStrokeForMDExport);
         masterContainer.getInputMap(masterContainer.WHEN_IN_FOCUSED_WINDOW).put(keyStrokeForMDExport, actionMapKeyExportMD);
         masterContainer.getActionMap().put(actionMapKeyExportMD, exportAction);
-
-        //Export OpenFile Action
-        String actionMapKeyOpen = "openFile";
-        openFileAction = new ToolBoxOpenFileAction(this, "Open File", keyStrokeForOpen);
-        masterContainer.getInputMap(masterContainer.WHEN_IN_FOCUSED_WINDOW).put(keyStrokeForMDExport, actionMapKeyOpen);
-        masterContainer.getActionMap().put(actionMapKeyOpen, openFileAction);
+        ////Add Contextmenu option
+        JMenuItem exportFileItem = new JMenuItem();
+        exportFileItem.setAction(exportAction);
+        contextMenu.add(exportFileItem);
+        contextMenu.addSeparator();
     }
-
 
     /**
      * Setup globally accessible keystrokes
@@ -214,14 +258,6 @@ public class MainFrame {
          showToolbarMenuItem.setActionCommand("hide");
          showToolbarMenuItem.setSelected(true);
          contextMenu.add(showToolbarMenuItem);
- 
-         masterContainer.setComponentPopupMenu(contextMenu);
- 
-         headerContainer.setInheritsPopupMenu(true);
-         columnContainer.setInheritsPopupMenu(true);
-         headerElementScroller.setInheritsPopupMenu(true);
-         headerElementContainer.setInheritsPopupMenu(true);
-
 
         //Bind an Action globally for the whole window, and give action menue item.
         ////Show Hide Toolbar
@@ -229,6 +265,7 @@ public class MainFrame {
         masterContainer.getInputMap(masterContainer.WHEN_IN_FOCUSED_WINDOW).put(keyStrokeForToolbarVisibility, "show or Hide Toolbox");
         masterContainer.getActionMap().put("show or Hide Toolbox", showHideAction);
         showToolbarMenuItem.setAction(showHideAction);
+
     }
     
     private void reloadComponents(){
@@ -237,10 +274,15 @@ public class MainFrame {
         HeaderComponent.deleteAllInstances();
         this.addWholeHeaderTree(headerRoot);
         headerElementContainer.revalidate();
+        headerElementContainer.repaint();
     }
 
-    private void addWholeHeaderTree(Header h){
-        for(Header header : h.getSubheaders()){
+    /**
+     * Rekursive methods which adds a whole Header inclusive subheaders to the GUI
+     * @param root starting point of adding. Mostly the root.
+     */
+    private void addWholeHeaderTree(Header root){
+        for(Header header : root.getSubheaders()){
             HeaderComponent hc = new HeaderComponent(WINDOW_BACKGROUND_COLOR, false, header, headerElementContainer );
             headerElementContainer.add(hc);
             addWholeHeaderTree(header);

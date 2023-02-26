@@ -2,10 +2,11 @@ package main.java.visualComponents.ToolBox;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
+import main.java.visualComponents.Actions.ToolBoxAddHeaderToRootAction;
 import main.java.visualComponents.Actions.ToolBoxExportMDAction;
+import main.java.visualComponents.Actions.ToolBoxNewFileAction;
 import main.java.visualComponents.Actions.ToolBoxOpenFileAction;
 import main.java.visualComponents.Actions.ToolBoxSaveFileAction;
-
 import java.awt.Color;
 import java.awt.Dimension;
 import java.io.File;
@@ -19,16 +20,20 @@ public class ToolBoxComponent extends JPanel{
      private static final Dimension MAXIMUM_SIZE = (new Dimension(32767, 60));
      private static final Dimension MINIMUM_SIZE = (new Dimension(100, 10));
      private static final Dimension PREFERRED_SIZE= (new Dimension(636, 60));
+     private ToolBoxNewFileAction newFileAction;
      private ToolBoxExportMDAction exportAction;
      private ToolBoxSaveFileAction saveFileAction;
      private ToolBoxOpenFileAction openFileAction;
+     private ToolBoxAddHeaderToRootAction addHeaderAction;
      public JButton openFileButton;
 
      //Constructor
-    public ToolBoxComponent(ToolBoxExportMDAction exportAction, ToolBoxSaveFileAction saveFileAction, ToolBoxOpenFileAction openFileAction){
+    public ToolBoxComponent(ToolBoxExportMDAction exportAction, ToolBoxSaveFileAction saveFileAction, ToolBoxOpenFileAction openFileAction, ToolBoxAddHeaderToRootAction addHeaderAction, ToolBoxNewFileAction newFileAction){
+        this.newFileAction = newFileAction;
         this.exportAction = exportAction;
         this.saveFileAction = saveFileAction;
         this.openFileAction = openFileAction;
+        this.addHeaderAction = addHeaderAction;
         this.setBackground(BACKGROUND_COLOR);
         this.setMaximumSize(MAXIMUM_SIZE);
         this.setMinimumSize(MINIMUM_SIZE);
@@ -50,15 +55,15 @@ public class ToolBoxComponent extends JPanel{
         JPanel middleTooltipContainer = new InnerContainer(BACKGROUND_COLOR, FOREGROUND_COLOR);
         JPanel rightTooltipContainer = new OuterContainer(BACKGROUND_COLOR);
         JButton exportMDButton = new Button("Export MD", BACKGROUND_COLOR, FOREGROUND_COLOR, rightTooltipContainer);
-        JButton addHeader = new Button(BACKGROUND_COLOR,FOREGROUND_COLOR,middleTooltipContainer, addHeaderIcon);
+        JButton addHeaderButton = new Button(BACKGROUND_COLOR,FOREGROUND_COLOR,middleTooltipContainer, addHeaderIcon);
         //JButton detachToolTipButton = new ToolBoxButton("Detach", BACKGROUND_COLOR, FOREGROUND_COLOR, rightTooltipContainer);
 
         //Add Action Listeners
-        //newFileButton.setAction(newFileAction);
+        newFileButton.setAction(newFileAction);
         saveFileButton.setAction(saveFileAction);
         exportMDButton.setAction(exportAction);
         openFileButton.setAction(openFileAction);
-        //openFilen.setAction(openFileAction);
+        addHeaderButton.setAction(addHeaderAction);
         //detachToolTipButton.addActionListener(new ToolBoxDetachActionListener(this));
 
         //Group Layouting - NetBeans Generated Code

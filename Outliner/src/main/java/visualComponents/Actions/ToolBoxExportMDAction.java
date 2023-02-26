@@ -1,8 +1,6 @@
 package main.java.visualComponents.Actions;
 import java.awt.event.ActionEvent;
 import java.io.File;
-import java.util.regex.Pattern;
-
 import javax.swing.AbstractAction;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
