@@ -1,5 +1,6 @@
 package main.java.visualComponents.ToolBox;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import main.java.visualComponents.Actions.ToolBoxAddHeaderToRootAction;
@@ -25,7 +26,6 @@ public class ToolBoxComponent extends JPanel{
      private ToolBoxSaveFileAction saveFileAction;
      private ToolBoxOpenFileAction openFileAction;
      private ToolBoxAddHeaderToRootAction addHeaderAction;
-     public JButton openFileButton;
 
      //Constructor
     public ToolBoxComponent(ToolBoxExportMDAction exportAction, ToolBoxSaveFileAction saveFileAction, ToolBoxOpenFileAction openFileAction, ToolBoxAddHeaderToRootAction addHeaderAction, ToolBoxNewFileAction newFileAction){
@@ -49,21 +49,25 @@ public class ToolBoxComponent extends JPanel{
 
         //Create all neccessary Elements of Toolbox
         JPanel leftTooltipContainer = new OuterContainer(BACKGROUND_COLOR);
-        JButton newFileButton = new Button("New File", BACKGROUND_COLOR,FOREGROUND_COLOR,leftTooltipContainer);
-        this.openFileButton = new Button("Open File", BACKGROUND_COLOR,FOREGROUND_COLOR, leftTooltipContainer);
-        JButton saveFileButton = new Button("Save",BACKGROUND_COLOR,FOREGROUND_COLOR,leftTooltipContainer);
+        JButton newFileButton = new Button(BACKGROUND_COLOR,FOREGROUND_COLOR,leftTooltipContainer);
+        JButton openFileButton = new Button(BACKGROUND_COLOR,FOREGROUND_COLOR, leftTooltipContainer);
+        JButton saveFileButton = new Button(BACKGROUND_COLOR,FOREGROUND_COLOR,leftTooltipContainer);
         JPanel middleTooltipContainer = new InnerContainer(BACKGROUND_COLOR, FOREGROUND_COLOR);
         JPanel rightTooltipContainer = new OuterContainer(BACKGROUND_COLOR);
-        JButton exportMDButton = new Button("Export MD", BACKGROUND_COLOR, FOREGROUND_COLOR, rightTooltipContainer);
-        JButton addHeaderButton = new Button(BACKGROUND_COLOR,FOREGROUND_COLOR,middleTooltipContainer, addHeaderIcon);
+        JButton addHeaderButton = new Button(BACKGROUND_COLOR,FOREGROUND_COLOR,middleTooltipContainer);
+        JButton exportMDButton = new Button( BACKGROUND_COLOR, FOREGROUND_COLOR, rightTooltipContainer);
         //JButton detachToolTipButton = new ToolBoxButton("Detach", BACKGROUND_COLOR, FOREGROUND_COLOR, rightTooltipContainer);
 
         //Add Action Listeners
         newFileButton.setAction(newFileAction);
-        saveFileButton.setAction(saveFileAction);
-        exportMDButton.setAction(exportAction);
         openFileButton.setAction(openFileAction);
+        saveFileButton.setAction(saveFileAction);
         addHeaderButton.setAction(addHeaderAction);
+        exportMDButton.setAction(exportAction);
+
+        //Since the action overwrites the buttons content, it will be corrected here.
+        addHeaderButton.setIcon(new ImageIcon(addHeaderIcon));
+        addHeaderButton.setText("");
         //detachToolTipButton.addActionListener(new ToolBoxDetachActionListener(this));
 
         //Group Layouting - NetBeans Generated Code
