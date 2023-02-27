@@ -79,9 +79,14 @@ public class HeaderComponent extends JPanel {
         setUpHoverColorChangeFunction();
         setUpEditTextfieldFunction();
         
+        //// Action addition, generates action as well as the contextmenue
         // add header to same level before current
         addingHeaderActions(0, "Add Header on same level before", connectedHeader.getParentElement(),
         KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, KeyEvent.CTRL_DOWN_MASK), "addSubheaderToParentBefore", true, false);
+        
+        // add subheader at start adding function
+        //addingHeaderActions(0, "Add subheader start", connectedHeader,
+        //KeyStroke.getKeyStroke(KeyEvent.VK_UP, KeyEvent.CTRL_DOWN_MASK), "addSubHeaderStart", false, false);
 
         // add subheader before adding function
         addingHeaderBeforeActions("Add before",
@@ -95,10 +100,6 @@ public class HeaderComponent extends JPanel {
         addingHeaderActions(1, "Add Header on same level after", connectedHeader.getParentElement(),
                 KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, KeyEvent.CTRL_DOWN_MASK), "addSubheaderToParentAfter", false, true);
 
-
-        // add subheader at start adding function
-        //addingHeaderActions(0, "Add subheader start", connectedHeader,
-        //KeyStroke.getKeyStroke(KeyEvent.VK_UP, KeyEvent.CTRL_DOWN_MASK), "addSubHeaderStart");
 
         shiftHeaderAction(1, "Shift header up",
                 KeyStroke.getKeyStroke(KeyEvent.VK_UP, KeyEvent.ALT_DOWN_MASK),
@@ -328,6 +329,7 @@ public class HeaderComponent extends JPanel {
         Action action = new AbstractAction(actionText) {
             @Override
             public void actionPerformed(ActionEvent e) {
+                //self.shift(shiftIndex);
                 self.shiftUpOrDown(shiftIndex, down);
             }
         };
@@ -389,6 +391,36 @@ public class HeaderComponent extends JPanel {
         }
         HeaderComponent.refreshNumbers();
         parentContainer.revalidate();
+        parentContainer.repaint();
+    }
+
+    private void shift(int shiftIndex){
+        int displayIndex = parentContainer.getComponentZOrder(this);
+        int newIndex;
+        int newInnerIndex = 0;
+        //If the shift index is negative, therefore it will be shifted up, then the ownNr needs an incrementation
+        if(shiftIndex <0) newInnerIndex = 1;
+
+        // Affected are all, which are subheader to the focused header
+        ArrayList<Component> affectedHeaderComponents = this.getConnectedSubHeaderToComponent(displayIndex);
+
+        //calculate the new index
+        newIndex = this.connectedHeader.getIndex(Header.ROOT) + shiftIndex;
+        Header aimReplaceHeader = this.connectedHeader.getHeaderViaIndex(Header.ROOT, newIndex);
+        //replace the targeted header
+        aimReplaceHeader.getParentElement().insertNewSubheaderInBetween(aimReplaceHeader.getOwnNr()+newInnerIndex, this.connectedHeader);
+
+        //let the frontend execute the shifting
+        //down Addition is needed, since otherwise the elements would be in a wrong order when shifting down.
+        int downAddition = 0;
+        for (int i = affectedHeaderComponents.size() - 1; i >= 0; i--) {
+            if (shiftIndex >= 0) downAddition = i;
+            parentContainer.setComponentZOrder(affectedHeaderComponents.get(i), newIndex + downAddition);
+        }
+
+        HeaderComponent.refreshNumbers();
+        parentContainer.revalidate();
+        parentContainer.repaint();
     }
 
     /**
