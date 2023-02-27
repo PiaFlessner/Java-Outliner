@@ -78,31 +78,45 @@ public class HeaderComponent extends JPanel {
         setUpOpenHeaderFunction();
         setUpHoverColorChangeFunction();
         setUpEditTextfieldFunction();
+        
+        // add header to same level before current
+        addingHeaderActions(0, "Add Header on same level before", connectedHeader.getParentElement(),
+        KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, KeyEvent.CTRL_DOWN_MASK), "addSubheaderToParentBefore", true, false);
 
-        // add header to same level
-        addingHeaderActions(-1, "Add Header on same level", connectedHeader.getParentElement(),
-                KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, KeyEvent.CTRL_DOWN_MASK), "addSubheaderToParent");
+        // add subheader before adding function
+        addingHeaderBeforeActions("Add before",
+        KeyStroke.getKeyStroke(KeyEvent.VK_UP, KeyEvent.CTRL_DOWN_MASK), "addSubHeaderBefore", false, false);
 
-        // add subheader adding function
-        addingHeaderActions(-1, "Add subheader", connectedHeader,
-                KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, KeyEvent.CTRL_DOWN_MASK), "addSubHeader");
+        // add subheader at ending adding function
+        addingHeaderActions(-1, "Add Subheader", connectedHeader,
+        KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, KeyEvent.CTRL_DOWN_MASK), "addSubHeaderEnd", false, false);
+
+        // add header to same level after current
+        addingHeaderActions(1, "Add Header on same level after", connectedHeader.getParentElement(),
+                KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, KeyEvent.CTRL_DOWN_MASK), "addSubheaderToParentAfter", false, true);
+
+
+        // add subheader at start adding function
+        //addingHeaderActions(0, "Add subheader start", connectedHeader,
+        //KeyStroke.getKeyStroke(KeyEvent.VK_UP, KeyEvent.CTRL_DOWN_MASK), "addSubHeaderStart");
 
         shiftHeaderAction(1, "Shift header up",
                 KeyStroke.getKeyStroke(KeyEvent.VK_UP, KeyEvent.ALT_DOWN_MASK),
-                "shiftOneUp", false);
+                "shiftOneUp", false,false,false);
 
         shiftHeaderAction(1, "Shift header down",
                 KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, KeyEvent.ALT_DOWN_MASK),
-                "shiftOneDown", true);
+                "shiftOneDown", true, false, false);
 
         shiftTreeLevelUpDownAction("Shift header level up",
-                KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, KeyEvent.ALT_DOWN_MASK), "shiftLevelUp", false);
+                KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, KeyEvent.ALT_DOWN_MASK), "shiftLevelUp", false, false,false);
 
         shiftTreeLevelUpDownAction("Shift header level down",
-                KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, KeyEvent.ALT_DOWN_MASK), "shiftLevelDown", true);
+                KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, KeyEvent.ALT_DOWN_MASK), "shiftLevelDown", true, false, true);
 
         deleteHeaderAction("Delete Header", KeyStroke.getKeyStroke(KeyEvent.VK_BACK_SPACE, KeyEvent.CTRL_DOWN_MASK),
                 "deleteHeader");
+
         // adjust open or not open size
         if (isOpen) {
             openHeader();
@@ -216,7 +230,7 @@ public class HeaderComponent extends JPanel {
                 deleteHeader();
             }
         };
-        contextMenuAdding(actionText, action, keystroke, actionMapKey);
+        contextMenuAdding(actionText, action, keystroke, actionMapKey, false, false);
     }
     /**
      * deletes a header and the belonging subheader from the frontend and the backend.
@@ -236,24 +250,45 @@ public class HeaderComponent extends JPanel {
         parentContainer.repaint();
     }
 
+    private void addingHeaderBeforeActions(String actionText, KeyStroke keystroke, String actionMapKey, boolean sepBefore, boolean sepAfter){
+        HeaderComponent self = this;
+        Action action = new AbstractAction(actionText) {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int insertIndex = self.connectedHeader.getIndex(Header.ROOT) -1;
+                Header beforeHeader = self.connectedHeader.getHeaderViaIndex(Header.ROOT,insertIndex+1);
+                Header h = new Header("Add Title Here", beforeHeader.getOwnNr(), beforeHeader.getParentElement(), false);
+                HeaderComponent hc = new HeaderComponent(backgroundColor, false, h, parentContainer);
+                parentContainer.add(hc, h.getIndex(Header.ROOT)-1);
+                HeaderComponent.refreshNumbers();
+                parentContainer.revalidate();
+                parentContainer.repaint();
+            }            
+        };
+        contextMenuAdding(actionText, action, keystroke, actionMapKey, sepBefore, sepAfter);
+    }
+
     /**
      * Adds an add Header Action from the Focused Header.
      */
-    private void addingHeaderActions(int index, String actionText, Header parentElement, KeyStroke keystroke,
-            String actionMapKey) {
+    private void addingHeaderActions(int addPlace, String actionText, Header parentElement, KeyStroke keystroke,
+            String actionMapKey, boolean sepBefore, boolean sepAfter) {
+                HeaderComponent self = this;
 
         // Action definition
         Action action = new AbstractAction(actionText) {
             @Override
-            public void actionPerformed(ActionEvent e) {
-
-                Header h = new Header("Add Title Here", index, parentElement, false);
+            public void actionPerformed(ActionEvent e) {           
+                int indexInParent = self.connectedHeader.getOwnNr() + addPlace;
+                Header h = new Header("Add Title Here", indexInParent, parentElement, false);
                 HeaderComponent hc = new HeaderComponent(backgroundColor, false, h, parentContainer);
-                parentContainer.add(hc, h.getIndex(Header.ROOT) - 1);
+                parentContainer.add(hc, h.getIndex(Header.ROOT)-1);
+                HeaderComponent.refreshNumbers();
                 parentContainer.revalidate();
+                parentContainer.repaint();
             }
         };
-        contextMenuAdding(actionText, action, keystroke, actionMapKey);
+        contextMenuAdding(actionText, action, keystroke, actionMapKey, sepBefore, sepAfter);
     }
 
     /**
@@ -283,9 +318,11 @@ public class HeaderComponent extends JPanel {
      * @param keystroke    Keystroke, which will be used to execute the command.
      * @param actionMapKey actionKeymap for backend orientation.
      * @param down         true= down shift, false= up shift.
+     * @param sepBefore    true = a separator before item will be added in contextmenu
+     * @param sepAfter     true = a separator after item will be added in contextmenu
      */
     private void shiftHeaderAction(int shiftIndex, String actionText, KeyStroke keystroke, String actionMapKey,
-            boolean down) {
+            boolean down, boolean sepBefore, boolean sepAfter) {
 
         HeaderComponent self = this;
         Action action = new AbstractAction(actionText) {
@@ -295,7 +332,7 @@ public class HeaderComponent extends JPanel {
             }
         };
 
-        contextMenuAdding(actionText, action, keystroke, actionMapKey);
+        contextMenuAdding(actionText, action, keystroke, actionMapKey, sepBefore, sepAfter);
     }
 
     /**
@@ -461,14 +498,18 @@ public class HeaderComponent extends JPanel {
      * @param keystroke    Keystroke to use the action without contextmenu.
      * @param actionMapKey Text to let the Backend identify action, needs to be
      *                     unique in class.
+     * @param sepBefore    true = a separator before item will be added in contextmenu
+     * @param sepAfter     true = a separator after item will be added in contextmenu
      */
-    private void contextMenuAdding(String actionText, Action action, KeyStroke keystroke, String actionMapKey) {
+    private void contextMenuAdding(String actionText, Action action, KeyStroke keystroke, String actionMapKey, boolean sepBefore, boolean sepAfter) {
         // Contextmenue Item configuration
         JMenuItem menuItem;
         menuItem = new JMenuItem(actionText);
         menuItem.setAction(action);
         menuItem.setAccelerator(keystroke);
+        if(sepBefore) this.popupMenu.addSeparator();
         this.popupMenu.add(menuItem);
+        if(sepAfter) this.popupMenu.addSeparator();
 
         // makes keystroke possible without opening the contextmenue.
         this.getInputMap(this.WHEN_FOCUSED).put(keystroke, actionMapKey);
@@ -481,9 +522,11 @@ public class HeaderComponent extends JPanel {
      * @param keystroke Used Keystroke for controlling with keyboard
      * @param actionMapKey backend actionMapKey, which should be unique
      * @param down true= level down, false = level up.
+     * @param sepBefore true = a separator before item will be added in contextmenu
+     * @param sepAfter true = a separator after item will be added in contextmenu
      */
     private void shiftTreeLevelUpDownAction(String actionText, KeyStroke keystroke, String actionMapKey,
-            boolean down) {
+            boolean down, boolean sepBefore, boolean sepAfter) {
 
         HeaderComponent self = this;
         Action action = new AbstractAction(actionText) {
@@ -492,7 +535,7 @@ public class HeaderComponent extends JPanel {
                 self.shiftTreeLevelUpOrDown(down);
             }
         };
-        contextMenuAdding(actionText, action, keystroke, actionMapKey);
+        contextMenuAdding(actionText, action, keystroke, actionMapKey, sepBefore, sepAfter);
     }
 
     /**

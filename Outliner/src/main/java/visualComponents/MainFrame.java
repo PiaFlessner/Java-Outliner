@@ -88,6 +88,7 @@ public class MainFrame {
             setUpToolBoxActions();
             toolboxComponent = new ToolBoxComponent(exportAction,saveFileAction, openFileAction,addHeaderAction, newFileAction);
             masterContainer.add(toolboxComponent, BorderLayout.NORTH);
+            
             setUpShowHideAction();      
 
             try {
