@@ -6,8 +6,13 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.MouseInputAdapter;
 
+import javafx.scene.input.KeyEvent;
+
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.KeyAdapter;
+
 import javax.swing.AbstractAction;
 import java.awt.Color;
 import javax.swing.BorderFactory;
@@ -33,6 +38,7 @@ public class Title extends JTextField{
         this.setEditable(false);
         this.setCursor(this.NORMAL_CURSOR);
         this.setBackground(parent.backgroundColor);
+        setUpCharacterLimit(80);
         addFocusingFunction();
         setUpEditableFunction();
         setUpChangedFunction();
@@ -103,6 +109,23 @@ public class Title extends JTextField{
             
             
         });     
+    }
+
+/**
+ * Sets Up the character limit of the component to the in limit specified count.
+ * @param limit applied limit.
+ */
+    private void setUpCharacterLimit(int limit){
+        this.addKeyListener(new KeyAdapter(){
+
+            @Override
+            public void keyTyped(java.awt.event.KeyEvent e) {
+                if(getText().length() > limit){
+                    getToolkit().beep();
+                    e.consume();
+                }   
+            }
+        });
     }
   
     /**

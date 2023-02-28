@@ -150,9 +150,9 @@ public class MainFrame {
         //Configure Header Container
         headerElementContainer = new JPanel();
         headerElementContainer.setLayout(new BoxLayout(headerElementContainer, BoxLayout.Y_AXIS));
-        headerElementContainer.setMaximumSize(new Dimension(32767, 200));
-        headerElementContainer.setMinimumSize(new java.awt.Dimension(1024, 768));
-        headerElementContainer.setPreferredSize(new Dimension(1024, 768));
+        //headerElementContainer.setMaximumSize(new Dimension(32767, 200));
+        //headerElementContainer.setMinimumSize(new java.awt.Dimension(1024, 768));
+        //headerElementContainer.setPreferredSize(new Dimension(1024, 768));
         headerElementContainer.setBackground(WINDOW_BACKGROUND_COLOR);
         //inherit contextmenue
         headerElementContainer.setInheritsPopupMenu(true);

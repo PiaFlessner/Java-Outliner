@@ -233,6 +233,7 @@ public class HeaderComponent extends JPanel {
         };
         contextMenuAdding(actionText, action, keystroke, actionMapKey, false, false);
     }
+
     /**
      * deletes a header and the belonging subheader from the frontend and the backend.
      */
@@ -417,7 +418,6 @@ public class HeaderComponent extends JPanel {
             if (shiftIndex >= 0) downAddition = i;
             parentContainer.setComponentZOrder(affectedHeaderComponents.get(i), newIndex + downAddition);
         }
-
         HeaderComponent.refreshNumbers();
         parentContainer.revalidate();
         parentContainer.repaint();
@@ -433,6 +433,8 @@ public class HeaderComponent extends JPanel {
         this.textArea.setVisible(true);
         this.headerContent.setVisible(true);
         this.textArea.textArea.setFocusable(true);
+        parentContainer.revalidate();
+        parentContainer.repaint();
     }
 
     /**
@@ -445,6 +447,8 @@ public class HeaderComponent extends JPanel {
         this.headerContent.setVisible(false);
         this.textArea.setVisible(false);
         this.textArea.textArea.setFocusable(false);
+        parentContainer.revalidate();
+        parentContainer.repaint();
     }
 
     /**
@@ -634,5 +638,6 @@ public class HeaderComponent extends JPanel {
         }
         HeaderComponent.refreshNumbers();
         parentContainer.revalidate();
+        parentContainer.repaint();
     }
 }
