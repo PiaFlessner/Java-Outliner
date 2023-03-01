@@ -3,6 +3,8 @@ package main.java.visualComponents.ToolBox;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
+
 import main.java.visualComponents.Actions.ToolBoxAddHeaderToRootAction;
 import main.java.visualComponents.Actions.ToolBoxExportMDAction;
 import main.java.visualComponents.Actions.ToolBoxNewFileAction;
@@ -10,6 +12,7 @@ import main.java.visualComponents.Actions.ToolBoxOpenFileAction;
 import main.java.visualComponents.Actions.ToolBoxSaveFileAction;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Image;
 import java.io.File;
 
@@ -46,7 +49,6 @@ public class ToolBoxComponent extends JPanel{
     //Fill Element with other Elements
     @SuppressWarnings("unchecked")                       
     private void initComponents() {
-        String addHeaderIcon = "src"+File.separator+"main"+File.separator+"resources"+File.separator+"addHeaderSymbol.png";
 
         //Create all neccessary Elements of Toolbox
         JPanel leftTooltipContainer = new OuterContainer(BACKGROUND_COLOR);
@@ -66,15 +68,11 @@ public class ToolBoxComponent extends JPanel{
         addHeaderButton.setAction(addHeaderAction);
         exportMDButton.setAction(exportAction);
 
-        //Since the action overwrites the buttons content, it will be corrected here.
-        //For smoothing icons, smaller it down.
-        ImageIcon icon = new ImageIcon(addHeaderIcon);
-        Image img = icon.getImage();
-        img = img.getScaledInstance(35, 35, Image.SCALE_SMOOTH);
-        icon = new ImageIcon(img);
-        addHeaderButton.setIcon(icon);
-        addHeaderButton.setText("");
-        //detachToolTipButton.addActionListener(new ToolBoxDetachActionListener(this));
+        //Add header configuration
+        addHeaderButton.setText("+");
+        addHeaderButton.setFont(new Font(getFont().getName(), Font.PLAIN, 50));
+        addHeaderButton.setForeground(FOREGROUND_COLOR);
+        addHeaderButton.setVerticalAlignment(SwingConstants.CENTER);
 
         //Group Layouting - NetBeans Generated Code
         javax.swing.GroupLayout tooltipContainerLayout = new javax.swing.GroupLayout(this);
