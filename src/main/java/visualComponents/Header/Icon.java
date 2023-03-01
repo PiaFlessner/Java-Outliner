@@ -7,14 +7,14 @@ import java.awt.Font;
 import javax.swing.SwingConstants;
 public class Icon extends JLabel{
 
-    final int iconSize = 15;
+    final int iconSize = 16;
 
 
     public Icon(){
         this.setHorizontalAlignment(SwingConstants.CENTER);
         this.setToolTipText("");
         this.setHorizontalTextPosition(SwingConstants.CENTER);
-        this.setPreferredSize(new Dimension(iconSize, iconSize));
+        this.setPreferredSize(new Dimension(iconSize+5, iconSize+5));
         this.setFont(new Font(getFont().getName(), Font.PLAIN, iconSize));
     }
 
