@@ -10,6 +10,7 @@ import main.java.visualComponents.Actions.ToolBoxOpenFileAction;
 import main.java.visualComponents.Actions.ToolBoxSaveFileAction;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Image;
 import java.io.File;
 
 
@@ -66,7 +67,12 @@ public class ToolBoxComponent extends JPanel{
         exportMDButton.setAction(exportAction);
 
         //Since the action overwrites the buttons content, it will be corrected here.
-        addHeaderButton.setIcon(new ImageIcon(addHeaderIcon));
+        //For smoothing icons, smaller it down.
+        ImageIcon icon = new ImageIcon(addHeaderIcon);
+        Image img = icon.getImage();
+        img = img.getScaledInstance(35, 35, Image.SCALE_SMOOTH);
+        icon = new ImageIcon(img);
+        addHeaderButton.setIcon(icon);
         addHeaderButton.setText("");
         //detachToolTipButton.addActionListener(new ToolBoxDetachActionListener(this));
 

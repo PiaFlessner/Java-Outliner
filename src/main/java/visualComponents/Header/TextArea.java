@@ -1,15 +1,11 @@
 package main.java.visualComponents.Header;
 
 import java.awt.Dimension;
-
-import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-import javax.swing.KeyStroke;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.event.MouseInputAdapter;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.Color;
@@ -29,6 +25,7 @@ public class TextArea extends JScrollPane {
         this.textArea.setColumns(20);
         this.textArea.setLineWrap(true);
         this.textArea.setRows(5);
+        this.textArea.setFont(getFont());
         if(parent.connectedHeader.getText() != null) 
         this.textArea.setText(parent.connectedHeader.getText());    
         else this.textArea.setText("Please put your Text here.");
