@@ -50,6 +50,7 @@ public class MainFrame {
     JLabel topicLabel;
     JMenuItem addNewHeaderItem;
     public static final Color WINDOW_BACKGROUND_COLOR = new Color(255, 255, 255);
+    public static final Color BUTTON_BACKGROUND_COLOR = new Color(165, 165, 165);
     final String ICONPATH = "src" + File.separator + "main" + File.separator + "resources" + File.separator
             + "appIcon.png";
 
@@ -69,7 +70,6 @@ public class MainFrame {
         this.headerRoot = root;
 
         this.reloadComponents();
-
     }
 
     public Header getRoot() {
@@ -81,19 +81,6 @@ public class MainFrame {
     }
 
     private void initComponents() {
-        
-        contextMenu = new JPopupMenu();
-
-        setUpWindow();
-        setUpMasterContainer();
-        setUpHeaderContainer();
-
-        setUpToolBoxActions();
-        toolboxComponent = new ToolBoxComponent(exportAction, saveFileAction, openFileAction, addHeaderAction,
-                newFileAction);
-        masterContainer.add(toolboxComponent, BorderLayout.NORTH);
-
-        setUpShowHideAction();
 
         try {
             // Set System L&F
@@ -108,6 +95,19 @@ public class MainFrame {
             } catch (IllegalAccessException e) {
                 java.util.logging.Logger.getLogger(MainFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, e);
             }
+        
+        contextMenu = new JPopupMenu();
+
+        setUpWindow();
+        setUpMasterContainer();
+        setUpHeaderContainer();
+
+        setUpToolBoxActions();
+        toolboxComponent = new ToolBoxComponent(exportAction, saveFileAction, openFileAction, addHeaderAction,
+                newFileAction);
+        masterContainer.add(toolboxComponent, BorderLayout.NORTH);
+
+        setUpShowHideAction();
 
         
     }
