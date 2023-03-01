@@ -7,7 +7,7 @@ import java.awt.Font;
 import javax.swing.SwingConstants;
 public class Icon extends JLabel{
 
-    final int iconSize = 20;
+    final int iconSize = 15;
 
 
     public Icon(){
@@ -15,7 +15,7 @@ public class Icon extends JLabel{
         this.setToolTipText("");
         this.setHorizontalTextPosition(SwingConstants.CENTER);
         this.setPreferredSize(new Dimension(iconSize, iconSize));
-        this.setFont(new Font(getFont().getName(), Font.PLAIN, 20));
+        this.setFont(new Font(getFont().getName(), Font.PLAIN, iconSize));
     }
 
     /**
