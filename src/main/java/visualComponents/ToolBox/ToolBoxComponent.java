@@ -70,7 +70,7 @@ public class ToolBoxComponent extends JPanel{
 
         //Add header configuration
         addHeaderButton.setText("+");
-        addHeaderButton.setFont(new Font(getFont().getName(), Font.PLAIN, 50));
+        addHeaderButton.setFont(new Font(getFont().getName(), Font.PLAIN, 40));
         addHeaderButton.setForeground(FOREGROUND_COLOR);
         addHeaderButton.setVerticalAlignment(SwingConstants.CENTER);
 

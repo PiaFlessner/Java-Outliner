@@ -7,8 +7,8 @@ import javax.swing.JPanel;
 public class Button extends JButton{
     public Button(Color backgroundColor, Color foregroundColor, JPanel parent){
         this.setFocusPainted(false);
-        this.setBackground(backgroundColor);
         this.setForeground(foregroundColor);
+        this.setBackground(backgroundColor);
         parent.add(this);
     }    
 }
