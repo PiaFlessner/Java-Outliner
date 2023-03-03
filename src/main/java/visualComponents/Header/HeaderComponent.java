@@ -82,38 +82,38 @@ public class HeaderComponent extends JPanel {
         //// Action addition, generates action as well as the contextmenue
         // add header to same level before current
         addingHeaderActions(0, "Add Header on same level before", connectedHeader.getParentElement(),
-        KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, KeyEvent.CTRL_DOWN_MASK), "addSubheaderToParentBefore", true, false);
+        KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, KeyEvent.ALT_DOWN_MASK), "addSubheaderToParentBefore", true, false);
         
         // add subheader at start adding function
         //addingHeaderActions(0, "Add subheader start", connectedHeader,
-        //KeyStroke.getKeyStroke(KeyEvent.VK_UP, KeyEvent.CTRL_DOWN_MASK), "addSubHeaderStart", false, false);
+        //KeyStroke.getKeyStroke(KeyEvent.VK_UP, KeyEvent.ALT_DOWN_MASK), "addSubHeaderStart", false, false);
 
         // add subheader before adding function
         addingHeaderBeforeActions("Add before",
-        KeyStroke.getKeyStroke(KeyEvent.VK_UP, KeyEvent.CTRL_DOWN_MASK), "addSubHeaderBefore", false, false);
+        KeyStroke.getKeyStroke(KeyEvent.VK_UP, KeyEvent.ALT_DOWN_MASK), "addSubHeaderBefore", false, false);
 
         // add subheader at ending adding function
         addingHeaderActions(-1, "Add Subheader", connectedHeader,
-        KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, KeyEvent.CTRL_DOWN_MASK), "addSubHeaderEnd", false, false);
+        KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, KeyEvent.ALT_DOWN_MASK), "addSubHeaderEnd", false, false);
 
         // add header to same level after current
         addingHeaderActions(1, "Add Header on same level after", connectedHeader.getParentElement(),
-                KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, KeyEvent.CTRL_DOWN_MASK), "addSubheaderToParentAfter", false, true);
+                KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, KeyEvent.ALT_DOWN_MASK), "addSubheaderToParentAfter", false, true);
 
 
         shiftHeaderAction(1, "Shift header up",
-                KeyStroke.getKeyStroke(KeyEvent.VK_UP, KeyEvent.ALT_DOWN_MASK),
+                KeyStroke.getKeyStroke(KeyEvent.VK_UP, KeyEvent.SHIFT_DOWN_MASK),
                 "shiftOneUp", false,false,false);
 
         shiftHeaderAction(1, "Shift header down",
-                KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, KeyEvent.ALT_DOWN_MASK),
+                KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, KeyEvent.SHIFT_DOWN_MASK),
                 "shiftOneDown", true, false, false);
 
         shiftTreeLevelUpDownAction("Shift header level up",
-                KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, KeyEvent.ALT_DOWN_MASK), "shiftLevelUp", false, false,false);
+                KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, KeyEvent.SHIFT_DOWN_MASK), "shiftLevelUp", false, false,false);
 
         shiftTreeLevelUpDownAction("Shift header level down",
-                KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, KeyEvent.ALT_DOWN_MASK), "shiftLevelDown", true, false, true);
+                KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, KeyEvent.SHIFT_DOWN_MASK), "shiftLevelDown", true, false, true);
 
         deleteHeaderAction("Delete Header", KeyStroke.getKeyStroke(KeyEvent.VK_BACK_SPACE, KeyEvent.CTRL_DOWN_MASK),
                 "deleteHeader");
