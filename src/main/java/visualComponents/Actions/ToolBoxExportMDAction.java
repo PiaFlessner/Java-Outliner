@@ -26,8 +26,7 @@ public class ToolBoxExportMDAction extends AbstractAction {
             public void approveSelection() {
 
                 File selectedFile = getSelectedFile();
-                File withEnding = new File(HeaderConverter.rightName(selectedFile.getAbsolutePath()));
-                if (withEnding.exists() && getDialogType() == JFileChooser.SAVE_DIALOG)
+                if (selectedFile.exists() && getDialogType() == JFileChooser.SAVE_DIALOG)
                 {
                   int result = JOptionPane.showConfirmDialog(this,
                     "Do you want to overwrite?",
@@ -41,8 +40,6 @@ public class ToolBoxExportMDAction extends AbstractAction {
                 super.approveSelection();
             }
         };
-        FileNameExtensionFilter filter = new FileNameExtensionFilter("MD Files", "md", "MD");
-        fileChooser.setFileFilter(filter);
         fileChooser.setDialogTitle("Specify a file to save");
 
         int userSelection = fileChooser.showSaveDialog(mainFrame.getWindow());

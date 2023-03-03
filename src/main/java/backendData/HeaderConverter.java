@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Collections;
-import java.util.regex.Pattern;
 
 public class HeaderConverter {
 
@@ -78,7 +77,7 @@ public class HeaderConverter {
      * @return true = everything was right, false = something went wrong.
      */
     public boolean saveMD(Header header, int depht, String target) {
-        String targetName = HeaderConverter.rightName(target);
+        String targetName = target;
         boolean isCreated = this.createFile(targetName);
         boolean isSaved = this.saveHeaderInFile(header, targetName, depht);
         return isCreated && isSaved;

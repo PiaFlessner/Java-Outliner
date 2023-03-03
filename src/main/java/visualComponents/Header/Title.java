@@ -34,7 +34,7 @@ public class Title extends JTextField {
         this.setEditable(false);
         this.setCursor(this.NORMAL_CURSOR);
         this.setBackground(parent.backgroundColor);
-        setUpCharacterLimit(80);
+        //setUpCharacterLimit(80);
         addFocusingFunction();
         setUpEditableFunction();
         setUpChangedFunction();
