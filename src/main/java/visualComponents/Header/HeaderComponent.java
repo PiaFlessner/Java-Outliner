@@ -10,6 +10,7 @@ import java.awt.event.FocusEvent;
 import java.awt.event.KeyEvent;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -18,11 +19,10 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.BoxLayout;
 import javax.swing.KeyStroke;
-import javax.swing.event.MenuDragMouseEvent;
-import javax.swing.event.MenuDragMouseListener;
 import javax.swing.event.MouseInputAdapter;
-import javax.swing.event.MouseInputListener;
-import java.awt.Point;
+
+import javafx.scene.layout.Border;
+
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
@@ -32,12 +32,16 @@ import java.awt.dnd.DragGestureListener;
 import java.awt.dnd.DragSource;
 import java.awt.dnd.DropTarget;
 import java.awt.dnd.DropTargetAdapter;
+import java.awt.dnd.DropTargetDragEvent;
 import java.awt.dnd.DropTargetDropEvent;
+import java.awt.dnd.DropTargetEvent;
+import java.awt.dnd.DropTargetListener;
 import java.awt.Cursor;
-
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.TooManyListenersException;
+
 import javax.swing.JPopupMenu;
 
 public class HeaderComponent extends JPanel implements DragGestureListener {
@@ -61,6 +65,8 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
     static final int HEADERCONTAINER_FOLDED_HEIGHT = 40;
     static final int HEADERCONTAINER_UNFOLDED_HEIGHT = 200;
     final Color FOCUS_COLOR = new Color(214, 220, 229);
+    final Color DND_TARGET_HOVERCOLOR = new Color(143,170,220);
+    final Color DND_TARGET_COLOR = new Color(180,199,231);
 
     boolean isOpen;
     Header connectedHeader;
@@ -68,36 +74,12 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
     JPanel parentContainer;
 
     JPanel dropPanel;
+   
     JLabel dropUp;
     JLabel dropDown;
-
-    private void setUpDropElements(){
-        dropPanel = new JPanel();
-        dropPanel.setLayout(new BoxLayout(dropPanel, BoxLayout.Y_AXIS));
-        dropUp = new JLabel();
-        dropDown = new JLabel();
-
-        Color color = new Color(68, 114, 196);
-        dropPanel.setBackground(color);
-
-        Color foregroundColor = new Color(255,255,255);
-        dropUp.setForeground(foregroundColor);
-        dropDown.setForeground(foregroundColor);
-
-        dropUp.setText("︽");
-        dropDown.setText("︾");
-
-        dropPanel.add(dropUp);
-        dropPanel.add(dropDown);
-        dropPanel.setVisible(true);
-
-        new MyDropTargetListener(dropUp, true);
-        new MyDropTargetListener(dropDown, false);
-
-        headerTitle.add(dropPanel);
-
-    }
-
+    JPanel dropUpPanel;
+    JPanel dropDownPanel;
+    
 
     /**
      * Constructor for the HeaderComponent. Displays the whole Container with
@@ -128,7 +110,6 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
         setUpOpenHeaderFunction();
         setUpHoverColorChangeFunction();
         setUpEditTextfieldFunction();
-
         DragSource ds = new DragSource();
         ds.createDefaultDragGestureRecognizer(this, DnDConstants.ACTION_MOVE, this);
         
@@ -233,6 +214,29 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
         displayedHeaderTitle = new Title(this);
         headerTitle.add(displayedHeaderTitle);
         this.add(headerTitle, BorderLayout.NORTH);
+        JPanel self = this;
+
+        DropTarget dt = new DropTarget();
+            try {
+                dt.addDropTargetListener(new DropTargetAdapter() {
+                    @Override
+                    public void dragOver(DropTargetDragEvent dtde) {
+                        self.remove(headerTitle);
+                        self.add(dropPanel, BorderLayout.CENTER);
+                        self.repaint();
+                        self.revalidate();
+                    }
+
+                    @Override
+                    public void drop(DropTargetDropEvent dtde) {
+                        dtde.rejectDrop();
+                    }                
+                });
+            } catch (TooManyListenersException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        headerTitle.setDropTarget(dt);
         
     }
 
@@ -662,6 +666,65 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
         parentContainer.repaint();
     }
 
+    /**
+     * Sets Up the Drag and Drop Target Elements for DnD Actions.
+     */
+    private void setUpDropElements(){
+        dropPanel = new JPanel();
+        dropUpPanel = new JPanel();
+        dropDownPanel = new JPanel();
+
+        dropPanel.setLayout(new BoxLayout(dropPanel, BoxLayout.Y_AXIS));
+        dropUp = new JLabel();
+        dropDown = new JLabel();
+
+        dropUpPanel.setBackground(DND_TARGET_COLOR);
+        dropDownPanel.setBackground(DND_TARGET_COLOR);
+
+        dropUp.setForeground(Color.WHITE);
+        dropDown.setForeground(Color.WHITE);
+
+        dropUp.setText("︽");
+        dropDown.setText("︾");
+
+        dropUp.setFont(new Font(dropUp.getName(), Font.BOLD, 20));
+        dropDown.setFont(new Font(dropDown.getName(), Font.BOLD, 20));
+
+        dropUpPanel.add(dropUp);
+        dropDownPanel.add(dropDown);
+
+        dropPanel.add(dropUpPanel);
+        dropPanel.add(dropDownPanel);
+        
+
+
+        dropUpPanel.addMouseListener(new MouseInputAdapter() {    
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                dropUpPanel.setBackground(DND_TARGET_HOVERCOLOR);
+            }
+            @Override
+            public void mouseExited(MouseEvent e) {
+                dropUpPanel.setBackground(DND_TARGET_COLOR);
+            }
+        });
+
+        dropDownPanel.addMouseListener(new MouseInputAdapter() {    
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                dropDownPanel.setBackground(DND_TARGET_HOVERCOLOR);
+            }
+            @Override
+            public void mouseExited(MouseEvent e) {
+                dropDownPanel.setBackground(DND_TARGET_COLOR);
+            }
+        });
+
+        dropPanel.setVisible(true);
+        new DropTargetListenerHeaderComponents(dropUp, true, this);
+        new DropTargetListenerHeaderComponents(dropDown, false, this);
+    }
+
 
     @Override
     public void dragGestureRecognized(DragGestureEvent dge) {
@@ -674,15 +737,26 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
         dge.startDrag(cursor, new TransferableHeaderComponent(component));
     }
 
-    private class MyDropTargetListener extends DropTargetAdapter {
+    private class DropTargetListenerHeaderComponents extends DropTargetAdapter {
         private DropTarget dropTarget;
         private JLabel target;
         private boolean up;
+        private HeaderComponent self;
+ 
 
-        public MyDropTargetListener(JLabel target, boolean up){
+        public DropTargetListenerHeaderComponents(JLabel target, boolean up, HeaderComponent self){
             this.up = up;
             this.target = target;
+            this.self = self;
+
             dropTarget = new DropTarget(target, DnDConstants.ACTION_MOVE, this, true,null);
+        }
+
+        @Override
+        public void dragExit(DropTargetEvent dtde){
+            System.out.println("out");
+            self.remove(self.dropPanel);
+            self.add(self.headerTitle, BorderLayout.CENTER);
         }
 
         @Override
