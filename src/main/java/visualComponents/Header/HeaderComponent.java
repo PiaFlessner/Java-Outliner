@@ -16,14 +16,31 @@ import java.awt.Component;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.BoxLayout;
 import javax.swing.KeyStroke;
+import javax.swing.event.MenuDragMouseEvent;
+import javax.swing.event.MenuDragMouseListener;
 import javax.swing.event.MouseInputAdapter;
+import javax.swing.event.MouseInputListener;
+import java.awt.Point;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
+import java.awt.datatransfer.UnsupportedFlavorException;
+import java.awt.dnd.DnDConstants;
+import java.awt.dnd.DragGestureEvent;
+import java.awt.dnd.DragGestureListener;
+import java.awt.dnd.DragSource;
+import java.awt.dnd.DropTarget;
+import java.awt.dnd.DropTargetAdapter;
+import java.awt.dnd.DropTargetDropEvent;
+import java.awt.Cursor;
+
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import javax.swing.JPopupMenu;
 
-public class HeaderComponent extends JPanel {
+public class HeaderComponent extends JPanel implements DragGestureListener {
 
     JPanel headerTitle;
     Icon icon;
@@ -50,6 +67,38 @@ public class HeaderComponent extends JPanel {
     static LinkedList<HeaderComponent> allHeaderComponents = new LinkedList<>();
     JPanel parentContainer;
 
+    JPanel dropPanel;
+    JLabel dropUp;
+    JLabel dropDown;
+
+    private void setUpDropElements(){
+        dropPanel = new JPanel();
+        dropPanel.setLayout(new BoxLayout(dropPanel, BoxLayout.Y_AXIS));
+        dropUp = new JLabel();
+        dropDown = new JLabel();
+
+        Color color = new Color(68, 114, 196);
+        dropPanel.setBackground(color);
+
+        Color foregroundColor = new Color(255,255,255);
+        dropUp.setForeground(foregroundColor);
+        dropDown.setForeground(foregroundColor);
+
+        dropUp.setText("︽");
+        dropDown.setText("︾");
+
+        dropPanel.add(dropUp);
+        dropPanel.add(dropDown);
+        dropPanel.setVisible(true);
+
+        new MyDropTargetListener(dropUp, true);
+        new MyDropTargetListener(dropDown, false);
+
+        headerTitle.add(dropPanel);
+
+    }
+
+
     /**
      * Constructor for the HeaderComponent. Displays the whole Container with
      * Numbers, Icon, Title and inherited Text.
@@ -71,22 +120,22 @@ public class HeaderComponent extends JPanel {
         this.popupMenu = new JPopupMenu();
         this.setComponentPopupMenu(popupMenu);
         this.setFocusable(true);
-
+        
         setUpHeaderTitle();
+        setUpDropElements();
         setUpContent();
         addFocusingFunction();
         setUpOpenHeaderFunction();
         setUpHoverColorChangeFunction();
         setUpEditTextfieldFunction();
+
+        DragSource ds = new DragSource();
+        ds.createDefaultDragGestureRecognizer(this, DnDConstants.ACTION_MOVE, this);
         
         //// Action addition, generates action as well as the contextmenue
         // add header to same level before current
         addingHeaderActions(0, "Add Header on same level before", connectedHeader.getParentElement(),
         KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, KeyEvent.ALT_DOWN_MASK), "addSubheaderToParentBefore", true, false);
-        
-        // add subheader at start adding function
-        //addingHeaderActions(0, "Add subheader start", connectedHeader,
-        //KeyStroke.getKeyStroke(KeyEvent.VK_UP, KeyEvent.ALT_DOWN_MASK), "addSubHeaderStart", false, false);
 
         // add subheader before adding function
         addingHeaderBeforeActions("Add before",
@@ -395,34 +444,6 @@ public class HeaderComponent extends JPanel {
         parentContainer.repaint();
     }
 
-    private void shift(int shiftIndex){
-        int displayIndex = parentContainer.getComponentZOrder(this);
-        int newIndex;
-        int newInnerIndex = 0;
-        //If the shift index is negative, therefore it will be shifted up, then the ownNr needs an incrementation
-        if(shiftIndex <0) newInnerIndex = 1;
-
-        // Affected are all, which are subheader to the focused header
-        ArrayList<Component> affectedHeaderComponents = this.getConnectedSubHeaderToComponent(displayIndex);
-
-        //calculate the new index
-        newIndex = this.connectedHeader.getIndex(Header.ROOT) + shiftIndex;
-        Header aimReplaceHeader = this.connectedHeader.getHeaderViaIndex(Header.ROOT, newIndex);
-        //replace the targeted header
-        aimReplaceHeader.getParentElement().insertNewSubheaderInBetween(aimReplaceHeader.getOwnNr()+newInnerIndex, this.connectedHeader);
-
-        //let the frontend execute the shifting
-        //down Addition is needed, since otherwise the elements would be in a wrong order when shifting down.
-        int downAddition = 0;
-        for (int i = affectedHeaderComponents.size() - 1; i >= 0; i--) {
-            if (shiftIndex >= 0) downAddition = i;
-            parentContainer.setComponentZOrder(affectedHeaderComponents.get(i), newIndex + downAddition);
-        }
-        HeaderComponent.refreshNumbers();
-        parentContainer.revalidate();
-        parentContainer.repaint();
-    }
-
     /**
      * Visibly opens the header.
      */
@@ -640,4 +661,88 @@ public class HeaderComponent extends JPanel {
         parentContainer.revalidate();
         parentContainer.repaint();
     }
+
+
+    @Override
+    public void dragGestureRecognized(DragGestureEvent dge) {
+        
+        Cursor cursor = null;
+        HeaderComponent component = (HeaderComponent) dge.getComponent();
+        if(dge.getDragAction() == DnDConstants.ACTION_MOVE){
+            cursor = DragSource.DefaultMoveDrop;
+        }
+        dge.startDrag(cursor, new TransferableHeaderComponent(component));
+    }
+
+    private class MyDropTargetListener extends DropTargetAdapter {
+        private DropTarget dropTarget;
+        private JLabel target;
+        private boolean up;
+
+        public MyDropTargetListener(JLabel target, boolean up){
+            this.up = up;
+            this.target = target;
+            dropTarget = new DropTarget(target, DnDConstants.ACTION_MOVE, this, true,null);
+        }
+
+        @Override
+        public void drop(DropTargetDropEvent dtde) {
+            try {
+                Transferable tr = dtde.getTransferable();
+               HeaderComponent headerComponent = (HeaderComponent) tr.getTransferData(TransferableHeaderComponent.headerComponentFlavor);
+                if (dtde.isDataFlavorSupported(TransferableHeaderComponent.headerComponentFlavor)) {
+                    dtde.acceptDrop(DnDConstants.ACTION_MOVE);
+
+                    //Action which should be followed after drag and drop
+                    System.out.println("Ich wurde gedragged and dropped");
+                    System.out.println("SourceHeader: " + headerComponent.connectedHeader.getLabelNr());
+                    System.out.println("TargetHeader: " + connectedHeader.getLabelNr());
+                    if(up) {
+                        System.out.println("Nach oben");}
+
+                    else{ System.out.println("Nach unten");};
+                  //this.target.setBackground(color);
+                  dtde.dropComplete(true);
+                  return;
+                }
+                dtde.rejectDrop();
+              } catch (Exception e) {
+                e.printStackTrace();
+                dtde.rejectDrop();
+              }
+        }
+        
+    }
 }
+
+class TransferableHeaderComponent implements Transferable {
+    protected static DataFlavor headerComponentFlavor = new DataFlavor(HeaderComponent.class, "A HeaderComponent Object");
+    protected static DataFlavor[] supportedFlavors = { headerComponentFlavor };
+
+    HeaderComponent headerComponent;
+
+    public TransferableHeaderComponent(HeaderComponent headerComponent) {
+      this.headerComponent = headerComponent;
+    }
+  
+    public DataFlavor[] getTransferDataFlavors() {
+      return supportedFlavors;
+    }
+  
+    public boolean isDataFlavorSupported(DataFlavor flavor) {
+      if (flavor.equals(headerComponentFlavor) || flavor.equals(DataFlavor.stringFlavor))
+        return true;
+      return false;
+    }
+  
+    public Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException {
+      if (flavor.equals(headerComponentFlavor))
+        return headerComponent;
+      else if (flavor.equals(DataFlavor.stringFlavor))
+        return headerComponent.toString();
+      else
+        throw new UnsupportedFlavorException(flavor);
+    }
+  }
+
+
