@@ -721,8 +721,8 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
         });
 
         dropPanel.setVisible(true);
-        new DropTargetListenerHeaderComponents(dropUp, true, this);
-        new DropTargetListenerHeaderComponents(dropDown, false, this);
+        new DropTargetListenerHeaderComponents(dropUpPanel, true, this);
+        new DropTargetListenerHeaderComponents(dropDownPanel, false, this);
     }
 
 
@@ -739,12 +739,12 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
 
     private class DropTargetListenerHeaderComponents extends DropTargetAdapter {
         private DropTarget dropTarget;
-        private JLabel target;
+        private JPanel target;
         private boolean up;
         private HeaderComponent self;
  
 
-        public DropTargetListenerHeaderComponents(JLabel target, boolean up, HeaderComponent self){
+        public DropTargetListenerHeaderComponents(JPanel target, boolean up, HeaderComponent self){
             this.up = up;
             this.target = target;
             this.self = self;
@@ -757,6 +757,8 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
             System.out.println("out");
             self.remove(self.dropPanel);
             self.add(self.headerTitle, BorderLayout.CENTER);
+            self.repaint();
+            self.revalidate();
         }
 
         @Override
@@ -775,7 +777,11 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
                         System.out.println("Nach oben");}
 
                     else{ System.out.println("Nach unten");};
-                  //this.target.setBackground(color);
+                self.remove(self.dropPanel);
+                self.add(self.headerTitle, BorderLayout.CENTER);
+                self.repaint();
+                self.revalidate();
+
                   dtde.dropComplete(true);
                   return;
                 }
