@@ -21,8 +21,6 @@ import javax.swing.BoxLayout;
 import javax.swing.KeyStroke;
 import javax.swing.event.MouseInputAdapter;
 
-import javafx.scene.layout.Border;
-
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
@@ -749,7 +747,6 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
         private boolean up;
         private HeaderComponent self;
         private HeaderComponent sourceHeaderComponent;
-        private JPanel parenContainer;
 
         public DropTargetListenerHeaderComponents(JPanel target, boolean up, HeaderComponent self) {
             this.up = up;
@@ -759,10 +756,10 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
         }
 
         private void removeDnDTargetElements() {
-            self.remove(self.dropPanel);
-            self.add(self.headerTitle, BorderLayout.CENTER);
-            self.repaint();
-            self.revalidate();
+            remove(dropPanel);
+            add(headerTitle, BorderLayout.CENTER);
+            repaint();
+            revalidate();
         }
 
         private void replaceHeaderUp(HeaderComponent sourceHeaderComponent){
@@ -784,8 +781,7 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
             }
 
             //remove Component and place it onto the righ place
-            parentContainer.remove(sourceHeaderComponent);
-            parentContainer.add(sourceHeaderComponent, sourceHeaderComponent.connectedHeader.getIndex(Header.ROOT)-1);
+            parentContainer.setComponentZOrder(sourceHeaderComponent, sourceHeaderComponent.connectedHeader.getIndex(Header.ROOT)-1);
             HeaderComponent.refreshNumbers();
             revalidate();
             repaint();
@@ -810,8 +806,7 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
             }
 
             //remove Component and place it onto the righ place
-            parentContainer.remove(sourceHeaderComponent);
-            parentContainer.add(sourceHeaderComponent, sourceHeaderComponent.connectedHeader.getIndex(Header.ROOT)-1);
+            parentContainer.setComponentZOrder(sourceHeaderComponent, sourceHeaderComponent.connectedHeader.getIndex(Header.ROOT)-1);
             HeaderComponent.refreshNumbers();
             revalidate();
             repaint();
@@ -819,10 +814,10 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
 
         @Override
         public void dragExit(DropTargetEvent dtde) {
-            self.remove(self.dropPanel);
-            self.add(self.headerTitle, BorderLayout.CENTER);
-            self.repaint();
-            self.revalidate();
+            remove(dropPanel);
+            add(headerTitle, BorderLayout.CENTER);
+            repaint();
+            revalidate();
         }
 
         @Override
@@ -837,6 +832,7 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
                     // Action which should be followed after drag and drop
                     //System.out.println("SourceHeader: " + headerComponent.connectedHeader.getLabelNr());
                     //System.out.println("TargetHeader: " + connectedHeader.getLabelNr());
+                    boolean test = HeaderComponent.allHeaderComponents.contains(headerComponent);
                     if (up) {
                         replaceHeaderUp(headerComponent);
                     }
@@ -867,8 +863,10 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
 class TransferableHeaderComponent implements Transferable {
 
     // Registration of the DataFlavor Header Component.
-    protected static DataFlavor headerComponentFlavor = new DataFlavor(HeaderComponent.class,
-            "A HeaderComponent Object");
+    //javaJVMLocal... -> Let the VM regocnize the element as the already existing element.
+    //Therefore does not make a copy and does not claim storage
+     protected static DataFlavor headerComponentFlavor = new DataFlavor(DataFlavor.javaJVMLocalObjectMimeType+"; class=\"" +HeaderComponent.class.getCanonicalName()+"\"" ,
+     "A HeaderComponent Object");
     protected static DataFlavor[] supportedFlavors = { headerComponentFlavor };
 
     HeaderComponent headerComponent;
