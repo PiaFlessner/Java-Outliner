@@ -217,7 +217,6 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
         displayedHeaderTitle = new Title(this);
         headerTitle.add(displayedHeaderTitle);
         this.add(headerTitle, BorderLayout.NORTH);
-        JPanel self = this;
 
         // Makes the Headertitle a dropTarget, so that the Real droptargets can appeal,
         // after dragOver is registrated.
@@ -226,25 +225,24 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
             dt.addDropTargetListener(new DropTargetAdapter() {
                 @Override
                 public void dragEnter(DropTargetDragEvent dtde) {
-                    self.setSize(getWidth(), dropPanel.HEIGHT);
-                    self.remove(headerTitle);
-                    self.add(dropPanel, BorderLayout.CENTER);
-                    self.repaint();
-                    self.revalidate();
+                    setSize(getWidth(), dropPanel.HEIGHT);
+                    remove(headerTitle);
+                    add(dropPanel, BorderLayout.CENTER);
+                    repaint();
+                    revalidate();
                 }
 
                 @Override
                 public void dragOver(DropTargetDragEvent dtde) {
-                    self.setSize(getWidth(), dropPanel.HEIGHT);
-                    self.remove(headerTitle);
-                    self.add(dropPanel, BorderLayout.CENTER);
-                    self.repaint();
-                    self.revalidate();
+                    setSize(getWidth(), dropPanel.HEIGHT);
+                    remove(headerTitle);
+                    add(dropPanel, BorderLayout.CENTER);
+                    repaint();
+                    revalidate();
                 }
 
                 @Override
                 public void drop(DropTargetDropEvent dtde) {
-
                     dtde.rejectDrop();
                 }
             });
@@ -252,7 +250,6 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
             e.printStackTrace();
         }
         headerTitle.setDropTarget(dt);
-
     }
 
     /**
@@ -751,6 +748,8 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
         private JPanel target;
         private boolean up;
         private HeaderComponent self;
+        private HeaderComponent sourceHeaderComponent;
+        private JPanel parenContainer;
 
         public DropTargetListenerHeaderComponents(JPanel target, boolean up, HeaderComponent self) {
             this.up = up;
@@ -764,6 +763,58 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
             self.add(self.headerTitle, BorderLayout.CENTER);
             self.repaint();
             self.revalidate();
+        }
+
+        private void replaceHeaderUp(HeaderComponent sourceHeaderComponent){
+            Header targetParent = connectedHeader.getParentElement();
+            Header sourceParent = sourceHeaderComponent.connectedHeader.getParentElement();
+            int newNr = connectedHeader.getOwnNr();
+
+            //Backend
+            //remove from source
+            sourceParent.deleteSubheader(sourceHeaderComponent.connectedHeader);
+
+            //Insert Start
+            if(newNr == 1){
+                targetParent.insertNewSubheaderStart(sourceHeaderComponent.connectedHeader);
+            }
+            //Insert Inbetween
+            else{
+                targetParent.insertNewSubheaderInBetween(newNr, sourceHeaderComponent.connectedHeader);
+            }
+
+            //remove Component and place it onto the righ place
+            parentContainer.remove(sourceHeaderComponent);
+            parentContainer.add(sourceHeaderComponent, sourceHeaderComponent.connectedHeader.getIndex(Header.ROOT)-1);
+            HeaderComponent.refreshNumbers();
+            revalidate();
+            repaint();
+
+        }
+
+        private void replaceHeaderDown(HeaderComponent sourceHeaderComponent){
+            Header targetParent = connectedHeader.getParentElement();
+            Header sourceParent = sourceHeaderComponent.connectedHeader.getParentElement();
+            int newNr = connectedHeader.getOwnNr()+1;
+
+            //remove from source
+            sourceParent.deleteSubheader(sourceHeaderComponent.connectedHeader);
+
+            //Insert at End
+            if(newNr > targetParent.getSubheaderSize()){
+                targetParent.insertNewSubheaderEnd(connectedHeader);
+            }
+            //Insert inBetween
+            else{
+                targetParent.insertNewSubheaderInBetween(newNr, connectedHeader);
+            }
+
+            //remove Component and place it onto the righ place
+            parentContainer.remove(sourceHeaderComponent);
+            parentContainer.add(sourceHeaderComponent, sourceHeaderComponent.connectedHeader.getIndex(Header.ROOT)-1);
+            HeaderComponent.refreshNumbers();
+            revalidate();
+            repaint();
         }
 
         @Override
@@ -784,15 +835,13 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
                     dtde.acceptDrop(DnDConstants.ACTION_MOVE);
 
                     // Action which should be followed after drag and drop
-                    System.out.println("Ich wurde gedragged and dropped");
-                    System.out.println("SourceHeader: " + headerComponent.connectedHeader.getLabelNr());
-                    System.out.println("TargetHeader: " + connectedHeader.getLabelNr());
+                    //System.out.println("SourceHeader: " + headerComponent.connectedHeader.getLabelNr());
+                    //System.out.println("TargetHeader: " + connectedHeader.getLabelNr());
                     if (up) {
-                        System.out.println("Nach oben");
+                        replaceHeaderUp(headerComponent);
                     }
-
                     else {
-                        System.out.println("Nach unten");
+                        replaceHeaderDown(headerComponent);
                     }
 
                     removeDnDTargetElements();
