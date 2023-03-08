@@ -4,6 +4,8 @@ import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+
+import main.java.backendData.AddingDirection;
 import main.java.backendData.Header;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
@@ -11,9 +13,6 @@ import java.awt.event.KeyEvent;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
-
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -23,7 +22,6 @@ import javax.swing.Action;
 import javax.swing.BoxLayout;
 import javax.swing.KeyStroke;
 import javax.swing.event.MouseInputAdapter;
-
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
@@ -36,13 +34,11 @@ import java.awt.dnd.DropTargetAdapter;
 import java.awt.dnd.DropTargetDragEvent;
 import java.awt.dnd.DropTargetDropEvent;
 import java.awt.dnd.DropTargetEvent;
-import java.awt.dnd.DropTargetListener;
 import java.awt.Cursor;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.TooManyListenersException;
-
 import javax.swing.JPopupMenu;
 
 public class HeaderComponent extends JPanel implements DragGestureListener {
@@ -78,8 +74,10 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
 
     JLabel dropUp;
     JLabel dropDown;
+    JLabel dropSub;
     JPanel dropUpPanel;
     JPanel dropDownPanel;
+    JPanel dropSubPanel;
 
     /**
      * Constructor for the HeaderComponent. Displays the whole Container with
@@ -704,8 +702,10 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
         dropPanel = new JPanel();
         dropUpPanel = new JPanel();
         dropDownPanel = new JPanel();
+        dropSubPanel = new JPanel();
         dropUp = new JLabel();
         dropDown = new JLabel();
+        dropSub = new JLabel();
         dropPanel.setLayout(new BoxLayout(dropPanel, BoxLayout.X_AXIS));
 
         dropUpPanel.setBackground(DND_TARGET_COLOR);
@@ -722,12 +722,19 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
         dropDownPanel.add(dropDown);
         dropPanel.add(dropDownPanel);
 
+        dropSubPanel.setBackground(DND_TARGET_COLOR);
+        dropSub.setForeground(Color.WHITE);
+        dropSub.setText("➥");
+        dropSub.setFont(new Font(dropSub.getName(), Font.BOLD, 25));
+        dropSubPanel.add(dropSub);
+        dropPanel.add(dropSubPanel);
+
         dropPanel.setVisible(true);
 
         //Sets the panels as drop Targets
-        new DropTargetListenerHeaderComponents(dropUpPanel, true, this);
-        new DropTargetListenerHeaderComponents(dropDownPanel, false, this);
-
+        new DropTargetListenerHeaderComponents(dropUpPanel, AddingDirection.UP, this);
+        new DropTargetListenerHeaderComponents(dropDownPanel, AddingDirection.DOWN, this);
+        new DropTargetListenerHeaderComponents(dropSubPanel, AddingDirection.SUB, this);
     }
 
     /**
@@ -747,14 +754,13 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
     private class DropTargetListenerHeaderComponents extends DropTargetAdapter {
         private DropTarget dropTarget;
         private JPanel target;
-        private boolean up;
-        private HeaderComponent self;
-        private HeaderComponent sourceHeaderComponent;
+        private AddingDirection direction;
 
-        public DropTargetListenerHeaderComponents(JPanel target, boolean up, HeaderComponent self) {
-            this.up = up;
+
+
+        public DropTargetListenerHeaderComponents(JPanel target, AddingDirection direction, HeaderComponent self) {
+            this.direction = direction;
             this.target = target;
-            this.self = self;
             dropTarget = new DropTarget(target, DnDConstants.ACTION_MOVE, this, true, null);
         }
 
@@ -777,12 +783,12 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
             //Insert Start
             if(newNr == 1){
                 targetParent.insertNewSubheaderStart(sourceHeaderComponent.connectedHeader);
-                assert targetParent.getOwnNr() == 1;
+                assert sourceHeaderComponent.connectedHeader.getOwnNr() == 1;
             }
             //Insert Inbetween
             else{
                 targetParent.insertNewSubheaderInBetween(newNr-1, sourceHeaderComponent.connectedHeader);
-                assert connectedHeader.getOwnNr() == newNr;
+                assert sourceHeaderComponent.connectedHeader.getOwnNr() == newNr;
             }
             assert connectedHeader.getParentElement().equals(targetParent);
 
@@ -805,12 +811,12 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
             //Insert at End
             if(newNr > targetParent.getSubheaderSize()){
                 targetParent.insertNewSubheaderEnd(sourceHeaderComponent.connectedHeader);
-                assert connectedHeader.getOwnNr() == targetParent.getSubheaderSize();
+                assert sourceHeaderComponent.connectedHeader.getOwnNr() == targetParent.getSubheaderSize();
             }
             //Insert inBetween
             else{
                 targetParent.insertNewSubheaderInBetween(newNr, sourceHeaderComponent.connectedHeader);
-                assert connectedHeader.getOwnNr() == newNr+1;
+                assert sourceHeaderComponent.connectedHeader.getOwnNr() == newNr+1;
             }
             assert connectedHeader.getParentElement().equals(targetParent);
 
@@ -821,8 +827,51 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
             repaint();
         }
 
+        private void replaceHeaderSub(HeaderComponent sourceHeaderComponent){
+            ArrayList<Component> affectedHeaderComponents = sourceHeaderComponent.getConnectedSubHeaderToComponent(sourceHeaderComponent.connectedHeader.getIndex(Header.ROOT)-1);
+            Header sourceParent = sourceHeaderComponent.connectedHeader.getParentElement();
+
+            //remove from source, insert in targetparent as first
+            //but only, if the user dont want to create an endless loop
+            //adding a header to itself.
+            if(connectedHeader != sourceHeaderComponent.connectedHeader){
+            sourceParent.deleteSubheader(sourceHeaderComponent.connectedHeader);
+            connectedHeader.insertNewSubheaderStart(sourceHeaderComponent.connectedHeader);
+            assert connectedHeader.getParentElement().equals(connectedHeader);
+            }
+
+            //remove Component and place it onto the righ place
+            //parentContainer.setComponentZOrder(sourceHeaderComponent, sourceHeaderComponent.connectedHeader.getIndex(Header.ROOT)-1);
+            
+            int newIndex = connectedHeader.getIndex(Header.ROOT);
+            System.out.println(newIndex);
+            // #4 shift all affected elements
+            for (int i = affectedHeaderComponents.size() - 1; i >= 0; i--) {
+                parentContainer.setComponentZOrder(affectedHeaderComponents.get(i), newIndex);
+            }
+            
+            HeaderComponent.refreshNumbers();
+            revalidate();
+            repaint();
+
+        }
+
+        @Override
+        public void dragOver(DropTargetDragEvent dtde){
+            target.setBackground(DND_TARGET_HOVERCOLOR);
+            target.repaint();
+        }
+
+
+        @Override
+        public void dragEnter(DropTargetDragEvent dtde){
+            target.setBackground(DND_TARGET_HOVERCOLOR);
+            target.repaint();
+        }
+
         @Override
         public void dragExit(DropTargetEvent dtde) {
+            target.setBackground(DND_TARGET_COLOR);
             remove(dropPanel);
             add(headerTitle, BorderLayout.CENTER);
             repaint();
@@ -840,14 +889,13 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
 
                     // Action which should be followed after drag and drop
                     assert HeaderComponent.allHeaderComponents.contains(headerComponent);
-                    if (up) {
-                        replaceHeaderUp(headerComponent);
-                    }
-                    else {
-                        replaceHeaderDown(headerComponent);
-                    }
 
-                    removeDnDTargetElements();
+                    switch(direction){
+                        case UP: replaceHeaderUp(headerComponent); break;
+                        case DOWN: replaceHeaderDown(headerComponent); break;
+                        case SUB: replaceHeaderSub(headerComponent); break;
+                    }
+                      removeDnDTargetElements();
                     dtde.dropComplete(true);
                     return;
                 }
