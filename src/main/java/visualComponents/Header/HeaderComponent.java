@@ -65,8 +65,8 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
     static final int HEADERCONTAINER_FOLDED_HEIGHT = 40;
     static final int HEADERCONTAINER_UNFOLDED_HEIGHT = 200;
     final Color FOCUS_COLOR = new Color(214, 220, 229);
-    final Color DND_TARGET_HOVERCOLOR = new Color(143,170,220);
-    final Color DND_TARGET_COLOR = new Color(180,199,231);
+    final Color DND_TARGET_HOVERCOLOR = new Color(143, 170, 220);
+    final Color DND_TARGET_COLOR = new Color(180, 199, 231);
 
     boolean isOpen;
     Header connectedHeader;
@@ -74,12 +74,11 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
     JPanel parentContainer;
 
     JPanel dropPanel;
-   
+
     JLabel dropUp;
     JLabel dropDown;
     JPanel dropUpPanel;
     JPanel dropDownPanel;
-    
 
     /**
      * Constructor for the HeaderComponent. Displays the whole Container with
@@ -102,7 +101,7 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
         this.popupMenu = new JPopupMenu();
         this.setComponentPopupMenu(popupMenu);
         this.setFocusable(true);
-        
+
         setUpHeaderTitle();
         setUpDropElements();
         setUpContent();
@@ -110,40 +109,44 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
         setUpOpenHeaderFunction();
         setUpHoverColorChangeFunction();
         setUpEditTextfieldFunction();
+        // Makes Element Draggable
         DragSource ds = new DragSource();
         ds.createDefaultDragGestureRecognizer(this, DnDConstants.ACTION_MOVE, this);
-        
+
         //// Action addition, generates action as well as the contextmenue
         // add header to same level before current
         addingHeaderActions(0, "Add Header on same level before", connectedHeader.getParentElement(),
-        KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, KeyEvent.ALT_DOWN_MASK), "addSubheaderToParentBefore", true, false);
+                KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, KeyEvent.ALT_DOWN_MASK), "addSubheaderToParentBefore", true,
+                false);
 
         // add subheader before adding function
         addingHeaderBeforeActions("Add before",
-        KeyStroke.getKeyStroke(KeyEvent.VK_UP, KeyEvent.ALT_DOWN_MASK), "addSubHeaderBefore", false, false);
+                KeyStroke.getKeyStroke(KeyEvent.VK_UP, KeyEvent.ALT_DOWN_MASK), "addSubHeaderBefore", false, false);
 
         // add subheader at ending adding function
         addingHeaderActions(-1, "Add Subheader", connectedHeader,
-        KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, KeyEvent.ALT_DOWN_MASK), "addSubHeaderEnd", false, false);
+                KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, KeyEvent.ALT_DOWN_MASK), "addSubHeaderEnd", false, false);
 
         // add header to same level after current
         addingHeaderActions(1, "Add Header on same level after", connectedHeader.getParentElement(),
-                KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, KeyEvent.ALT_DOWN_MASK), "addSubheaderToParentAfter", false, true);
-
+                KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, KeyEvent.ALT_DOWN_MASK), "addSubheaderToParentAfter", false,
+                true);
 
         shiftHeaderAction(1, "Shift header up",
                 KeyStroke.getKeyStroke(KeyEvent.VK_UP, KeyEvent.SHIFT_DOWN_MASK),
-                "shiftOneUp", false,false,false);
+                "shiftOneUp", false, false, false);
 
         shiftHeaderAction(1, "Shift header down",
                 KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, KeyEvent.SHIFT_DOWN_MASK),
                 "shiftOneDown", true, false, false);
 
         shiftTreeLevelUpDownAction("Shift header level up",
-                KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, KeyEvent.SHIFT_DOWN_MASK), "shiftLevelUp", false, false,false);
+                KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, KeyEvent.SHIFT_DOWN_MASK), "shiftLevelUp", false, false,
+                false);
 
         shiftTreeLevelUpDownAction("Shift header level down",
-                KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, KeyEvent.SHIFT_DOWN_MASK), "shiftLevelDown", true, false, true);
+                KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, KeyEvent.SHIFT_DOWN_MASK), "shiftLevelDown", true, false,
+                true);
 
         deleteHeaderAction("Delete Header", KeyStroke.getKeyStroke(KeyEvent.VK_BACK_SPACE, KeyEvent.CTRL_DOWN_MASK),
                 "deleteHeader");
@@ -188,7 +191,7 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
     /**
      * Deletes all instances from the allHeaderComponents.
      */
-    public static void deleteAllInstances(){
+    public static void deleteAllInstances() {
         HeaderComponent.allHeaderComponents.clear();
     }
 
@@ -216,28 +219,40 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
         this.add(headerTitle, BorderLayout.NORTH);
         JPanel self = this;
 
+        // Makes the Headertitle a dropTarget, so that the Real droptargets can appeal,
+        // after dragOver is registrated.
         DropTarget dt = new DropTarget();
-            try {
-                dt.addDropTargetListener(new DropTargetAdapter() {
-                    @Override
-                    public void dragOver(DropTargetDragEvent dtde) {
-                        self.remove(headerTitle);
-                        self.add(dropPanel, BorderLayout.CENTER);
-                        self.repaint();
-                        self.revalidate();
-                    }
+        try {
+            dt.addDropTargetListener(new DropTargetAdapter() {
+                @Override
+                public void dragEnter(DropTargetDragEvent dtde) {
+                    self.setSize(getWidth(), dropPanel.HEIGHT);
+                    self.remove(headerTitle);
+                    self.add(dropPanel, BorderLayout.CENTER);
+                    self.repaint();
+                    self.revalidate();
+                }
 
-                    @Override
-                    public void drop(DropTargetDropEvent dtde) {
-                        dtde.rejectDrop();
-                    }                
-                });
-            } catch (TooManyListenersException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
+                @Override
+                public void dragOver(DropTargetDragEvent dtde) {
+                    self.setSize(getWidth(), dropPanel.HEIGHT);
+                    self.remove(headerTitle);
+                    self.add(dropPanel, BorderLayout.CENTER);
+                    self.repaint();
+                    self.revalidate();
+                }
+
+                @Override
+                public void drop(DropTargetDropEvent dtde) {
+
+                    dtde.rejectDrop();
+                }
+            });
+        } catch (TooManyListenersException e) {
+            e.printStackTrace();
+        }
         headerTitle.setDropTarget(dt);
-        
+
     }
 
     /**
@@ -268,10 +283,12 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
         this.add(headerContent, BorderLayout.CENTER);
 
     }
+
     /**
      * Invokes the deleteHeader for the current header.
-     * @param actionText text for the contextmenue
-     * @param keystroke keystroke for invoking the action
+     * 
+     * @param actionText   text for the contextmenue
+     * @param keystroke    keystroke for invoking the action
      * @param actionMapKey unique identifier for invoking action.
      */
     private void deleteHeaderAction(String actionText, KeyStroke keystroke,
@@ -288,7 +305,8 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
     }
 
     /**
-     * deletes a header and the belonging subheader from the frontend and the backend.
+     * deletes a header and the belonging subheader from the frontend and the
+     * backend.
      */
     private void deleteHeader() {
         int displayIndex = parentContainer.getComponentZOrder(this);
@@ -305,20 +323,22 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
         parentContainer.repaint();
     }
 
-    private void addingHeaderBeforeActions(String actionText, KeyStroke keystroke, String actionMapKey, boolean sepBefore, boolean sepAfter){
+    private void addingHeaderBeforeActions(String actionText, KeyStroke keystroke, String actionMapKey,
+            boolean sepBefore, boolean sepAfter) {
         HeaderComponent self = this;
         Action action = new AbstractAction(actionText) {
             @Override
             public void actionPerformed(ActionEvent e) {
-                int insertIndex = self.connectedHeader.getIndex(Header.ROOT) -1;
-                Header beforeHeader = self.connectedHeader.getHeaderViaIndex(Header.ROOT,insertIndex+1);
-                Header h = new Header("Add Title Here", beforeHeader.getOwnNr(), beforeHeader.getParentElement(), false);
+                int insertIndex = self.connectedHeader.getIndex(Header.ROOT) - 1;
+                Header beforeHeader = self.connectedHeader.getHeaderViaIndex(Header.ROOT, insertIndex + 1);
+                Header h = new Header("Add Title Here", beforeHeader.getOwnNr(), beforeHeader.getParentElement(),
+                        false);
                 HeaderComponent hc = new HeaderComponent(backgroundColor, false, h, parentContainer);
-                parentContainer.add(hc, h.getIndex(Header.ROOT)-1);
+                parentContainer.add(hc, h.getIndex(Header.ROOT) - 1);
                 HeaderComponent.refreshNumbers();
                 parentContainer.revalidate();
                 parentContainer.repaint();
-            }            
+            }
         };
         contextMenuAdding(actionText, action, keystroke, actionMapKey, sepBefore, sepAfter);
     }
@@ -328,16 +348,16 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
      */
     private void addingHeaderActions(int addPlace, String actionText, Header parentElement, KeyStroke keystroke,
             String actionMapKey, boolean sepBefore, boolean sepAfter) {
-                HeaderComponent self = this;
+        HeaderComponent self = this;
 
         // Action definition
         Action action = new AbstractAction(actionText) {
             @Override
-            public void actionPerformed(ActionEvent e) {           
+            public void actionPerformed(ActionEvent e) {
                 int indexInParent = self.connectedHeader.getOwnNr() + addPlace;
                 Header h = new Header("Add Title Here", indexInParent, parentElement, false);
                 HeaderComponent hc = new HeaderComponent(backgroundColor, false, h, parentContainer);
-                parentContainer.add(hc, h.getIndex(Header.ROOT)-1);
+                parentContainer.add(hc, h.getIndex(Header.ROOT) - 1);
                 HeaderComponent.refreshNumbers();
                 parentContainer.revalidate();
                 parentContainer.repaint();
@@ -373,8 +393,10 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
      * @param keystroke    Keystroke, which will be used to execute the command.
      * @param actionMapKey actionKeymap for backend orientation.
      * @param down         true= down shift, false= up shift.
-     * @param sepBefore    true = a separator before item will be added in contextmenu
-     * @param sepAfter     true = a separator after item will be added in contextmenu
+     * @param sepBefore    true = a separator before item will be added in
+     *                     contextmenu
+     * @param sepAfter     true = a separator after item will be added in
+     *                     contextmenu
      */
     private void shiftHeaderAction(int shiftIndex, String actionText, KeyStroke keystroke, String actionMapKey,
             boolean down, boolean sepBefore, boolean sepAfter) {
@@ -383,7 +405,6 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
         Action action = new AbstractAction(actionText) {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //self.shift(shiftIndex);
                 self.shiftUpOrDown(shiftIndex, down);
             }
         };
@@ -509,7 +530,7 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
         });
     }
 
-    private void setUpEditTextfieldFunction(){
+    private void setUpEditTextfieldFunction() {
         String actionMapKey = "EditTextfield";
         this.getInputMap().put(KeyStroke.getKeyStroke("ENTER"), actionMapKey);
         this.getActionMap().put(actionMapKey, new AbstractAction() {
@@ -551,6 +572,7 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
             }
         });
     }
+
     /**
      * Adds a contextMenu to the HeaderComponent fast.
      * 
@@ -559,18 +581,23 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
      * @param keystroke    Keystroke to use the action without contextmenu.
      * @param actionMapKey Text to let the Backend identify action, needs to be
      *                     unique in class.
-     * @param sepBefore    true = a separator before item will be added in contextmenu
-     * @param sepAfter     true = a separator after item will be added in contextmenu
+     * @param sepBefore    true = a separator before item will be added in
+     *                     contextmenu
+     * @param sepAfter     true = a separator after item will be added in
+     *                     contextmenu
      */
-    private void contextMenuAdding(String actionText, Action action, KeyStroke keystroke, String actionMapKey, boolean sepBefore, boolean sepAfter) {
+    private void contextMenuAdding(String actionText, Action action, KeyStroke keystroke, String actionMapKey,
+            boolean sepBefore, boolean sepAfter) {
         // Contextmenue Item configuration
         JMenuItem menuItem;
         menuItem = new JMenuItem(actionText);
         menuItem.setAction(action);
         menuItem.setAccelerator(keystroke);
-        if(sepBefore) this.popupMenu.addSeparator();
+        if (sepBefore)
+            this.popupMenu.addSeparator();
         this.popupMenu.add(menuItem);
-        if(sepAfter) this.popupMenu.addSeparator();
+        if (sepAfter)
+            this.popupMenu.addSeparator();
 
         // makes keystroke possible without opening the contextmenue.
         this.getInputMap(this.WHEN_FOCUSED).put(keystroke, actionMapKey);
@@ -579,12 +606,15 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
 
     /**
      * Instantiation of the shift header up or down one level.
-     * @param actionText Text which will be displayed in the contextmenue
-     * @param keystroke Used Keystroke for controlling with keyboard
+     * 
+     * @param actionText   Text which will be displayed in the contextmenue
+     * @param keystroke    Used Keystroke for controlling with keyboard
      * @param actionMapKey backend actionMapKey, which should be unique
-     * @param down true= level down, false = level up.
-     * @param sepBefore true = a separator before item will be added in contextmenu
-     * @param sepAfter true = a separator after item will be added in contextmenu
+     * @param down         true= level down, false = level up.
+     * @param sepBefore    true = a separator before item will be added in
+     *                     contextmenu
+     * @param sepAfter     true = a separator after item will be added in
+     *                     contextmenu
      */
     private void shiftTreeLevelUpDownAction(String actionText, KeyStroke keystroke, String actionMapKey,
             boolean down, boolean sepBefore, boolean sepAfter) {
@@ -601,6 +631,7 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
 
     /**
      * shifting the element actually up or down.
+     * 
      * @param down true= level down, false = level up
      */
     private void shiftTreeLevelUpOrDown(boolean down) {
@@ -618,7 +649,8 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
             if ((neighbour != null && this.connectedHeader.getOwnNr() == 1) ||
                     (beforeNeighbour != null && this.connectedHeader.getOwnNr() > 1)) {
 
-                // #1 if self ownr = 1, then use nextSibling as new Parent (because there is no alternate)
+                // #1 if self ownr = 1, then use nextSibling as new Parent (because there is no
+                // alternate)
                 if (this.connectedHeader.getOwnNr() == 1) {
                     usedParent = neighbour;
                 } else {
@@ -668,70 +700,47 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
 
     /**
      * Sets Up the Drag and Drop Target Elements for DnD Actions.
+     * 
      */
-    private void setUpDropElements(){
+    private void setUpDropElements() {
         dropPanel = new JPanel();
         dropUpPanel = new JPanel();
         dropDownPanel = new JPanel();
-
-        dropPanel.setLayout(new BoxLayout(dropPanel, BoxLayout.Y_AXIS));
         dropUp = new JLabel();
         dropDown = new JLabel();
+        dropPanel.setLayout(new BoxLayout(dropPanel, BoxLayout.X_AXIS));
 
         dropUpPanel.setBackground(DND_TARGET_COLOR);
-        dropDownPanel.setBackground(DND_TARGET_COLOR);
-
         dropUp.setForeground(Color.WHITE);
-        dropDown.setForeground(Color.WHITE);
-
         dropUp.setText("︽");
-        dropDown.setText("︾");
-
-        dropUp.setFont(new Font(dropUp.getName(), Font.BOLD, 20));
-        dropDown.setFont(new Font(dropDown.getName(), Font.BOLD, 20));
-
+        dropUp.setFont(new Font(dropUp.getName(), Font.BOLD, 25));
         dropUpPanel.add(dropUp);
-        dropDownPanel.add(dropDown);
-
         dropPanel.add(dropUpPanel);
+
+        dropDownPanel.setBackground(DND_TARGET_COLOR);
+        dropDown.setForeground(Color.WHITE);
+        dropDown.setText("︾");
+        dropDown.setFont(new Font(dropDown.getName(), Font.BOLD, 25));
+        dropDownPanel.add(dropDown);
         dropPanel.add(dropDownPanel);
-        
-
-
-        dropUpPanel.addMouseListener(new MouseInputAdapter() {    
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                dropUpPanel.setBackground(DND_TARGET_HOVERCOLOR);
-            }
-            @Override
-            public void mouseExited(MouseEvent e) {
-                dropUpPanel.setBackground(DND_TARGET_COLOR);
-            }
-        });
-
-        dropDownPanel.addMouseListener(new MouseInputAdapter() {    
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                dropDownPanel.setBackground(DND_TARGET_HOVERCOLOR);
-            }
-            @Override
-            public void mouseExited(MouseEvent e) {
-                dropDownPanel.setBackground(DND_TARGET_COLOR);
-            }
-        });
 
         dropPanel.setVisible(true);
+
+        //Sets the panels as drop Targets
         new DropTargetListenerHeaderComponents(dropUpPanel, true, this);
         new DropTargetListenerHeaderComponents(dropDownPanel, false, this);
+
     }
 
-
+    /**
+     * Starts Drag Gesture Recognizing
+     */
     @Override
     public void dragGestureRecognized(DragGestureEvent dge) {
-        
+
         Cursor cursor = null;
         HeaderComponent component = (HeaderComponent) dge.getComponent();
-        if(dge.getDragAction() == DnDConstants.ACTION_MOVE){
+        if (dge.getDragAction() == DnDConstants.ACTION_MOVE) {
             cursor = DragSource.DefaultMoveDrop;
         }
         dge.startDrag(cursor, new TransferableHeaderComponent(component));
@@ -742,19 +751,23 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
         private JPanel target;
         private boolean up;
         private HeaderComponent self;
- 
 
-        public DropTargetListenerHeaderComponents(JPanel target, boolean up, HeaderComponent self){
+        public DropTargetListenerHeaderComponents(JPanel target, boolean up, HeaderComponent self) {
             this.up = up;
             this.target = target;
             this.self = self;
+            dropTarget = new DropTarget(target, DnDConstants.ACTION_MOVE, this, true, null);
+        }
 
-            dropTarget = new DropTarget(target, DnDConstants.ACTION_MOVE, this, true,null);
+        private void removeDnDTargetElements() {
+            self.remove(self.dropPanel);
+            self.add(self.headerTitle, BorderLayout.CENTER);
+            self.repaint();
+            self.revalidate();
         }
 
         @Override
-        public void dragExit(DropTargetEvent dtde){
-            System.out.println("out");
+        public void dragExit(DropTargetEvent dtde) {
             self.remove(self.dropPanel);
             self.add(self.headerTitle, BorderLayout.CENTER);
             self.repaint();
@@ -765,64 +778,81 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
         public void drop(DropTargetDropEvent dtde) {
             try {
                 Transferable tr = dtde.getTransferable();
-               HeaderComponent headerComponent = (HeaderComponent) tr.getTransferData(TransferableHeaderComponent.headerComponentFlavor);
+                HeaderComponent headerComponent = (HeaderComponent) tr
+                        .getTransferData(TransferableHeaderComponent.headerComponentFlavor);
                 if (dtde.isDataFlavorSupported(TransferableHeaderComponent.headerComponentFlavor)) {
                     dtde.acceptDrop(DnDConstants.ACTION_MOVE);
 
-                    //Action which should be followed after drag and drop
+                    // Action which should be followed after drag and drop
                     System.out.println("Ich wurde gedragged and dropped");
                     System.out.println("SourceHeader: " + headerComponent.connectedHeader.getLabelNr());
                     System.out.println("TargetHeader: " + connectedHeader.getLabelNr());
-                    if(up) {
-                        System.out.println("Nach oben");}
+                    if (up) {
+                        System.out.println("Nach oben");
+                    }
 
-                    else{ System.out.println("Nach unten");};
-                self.remove(self.dropPanel);
-                self.add(self.headerTitle, BorderLayout.CENTER);
-                self.repaint();
-                self.revalidate();
+                    else {
+                        System.out.println("Nach unten");
+                    }
 
-                  dtde.dropComplete(true);
-                  return;
+                    removeDnDTargetElements();
+                    dtde.dropComplete(true);
+                    return;
                 }
                 dtde.rejectDrop();
-              } catch (Exception e) {
+                removeDnDTargetElements();
+            } catch (Exception e) {
                 e.printStackTrace();
+                removeDnDTargetElements();
                 dtde.rejectDrop();
-              }
+            }
         }
-        
     }
 }
 
+/**
+ * Class for preparing the Transferable with a Drag an Drop. Essential needed,
+ * if someone want to perform a drag and drop Action.
+ * Translates the HeaderComponent to a transferable object.
+ */
 class TransferableHeaderComponent implements Transferable {
-    protected static DataFlavor headerComponentFlavor = new DataFlavor(HeaderComponent.class, "A HeaderComponent Object");
+
+    // Registration of the DataFlavor Header Component.
+    protected static DataFlavor headerComponentFlavor = new DataFlavor(HeaderComponent.class,
+            "A HeaderComponent Object");
     protected static DataFlavor[] supportedFlavors = { headerComponentFlavor };
 
     HeaderComponent headerComponent;
 
     public TransferableHeaderComponent(HeaderComponent headerComponent) {
-      this.headerComponent = headerComponent;
+        this.headerComponent = headerComponent;
     }
-  
+
+    /**
+     * Returns all allowed flavors (properties)
+     */
     public DataFlavor[] getTransferDataFlavors() {
-      return supportedFlavors;
+        return supportedFlavors;
     }
-  
+
+    /**
+     * Checks, if a flavor is allowed.
+     */
     public boolean isDataFlavorSupported(DataFlavor flavor) {
-      if (flavor.equals(headerComponentFlavor) || flavor.equals(DataFlavor.stringFlavor))
-        return true;
-      return false;
+        if (flavor.equals(headerComponentFlavor) || flavor.equals(DataFlavor.stringFlavor))
+            return true;
+        return false;
     }
-  
+
+    /**
+     * returns a flavor and the connected Data element to it.
+     */
     public Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException {
-      if (flavor.equals(headerComponentFlavor))
-        return headerComponent;
-      else if (flavor.equals(DataFlavor.stringFlavor))
-        return headerComponent.toString();
-      else
-        throw new UnsupportedFlavorException(flavor);
+        if (flavor.equals(headerComponentFlavor))
+            return headerComponent;
+        else if (flavor.equals(DataFlavor.stringFlavor))
+            return headerComponent.toString();
+        else
+            throw new UnsupportedFlavorException(flavor);
     }
-  }
-
-
+}
