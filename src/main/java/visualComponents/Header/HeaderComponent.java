@@ -11,6 +11,9 @@ import java.awt.event.KeyEvent;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -765,20 +768,23 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
         private void replaceHeaderUp(HeaderComponent sourceHeaderComponent){
             Header targetParent = connectedHeader.getParentElement();
             Header sourceParent = sourceHeaderComponent.connectedHeader.getParentElement();
-            int newNr = connectedHeader.getOwnNr();
-
+            
             //Backend
             //remove from source
             sourceParent.deleteSubheader(sourceHeaderComponent.connectedHeader);
+            int newNr = connectedHeader.getOwnNr();
 
             //Insert Start
             if(newNr == 1){
                 targetParent.insertNewSubheaderStart(sourceHeaderComponent.connectedHeader);
+                assert targetParent.getOwnNr() == 1;
             }
             //Insert Inbetween
             else{
-                targetParent.insertNewSubheaderInBetween(newNr, sourceHeaderComponent.connectedHeader);
+                targetParent.insertNewSubheaderInBetween(newNr-1, sourceHeaderComponent.connectedHeader);
+                assert connectedHeader.getOwnNr() == newNr;
             }
+            assert connectedHeader.getParentElement().equals(targetParent);
 
             //remove Component and place it onto the righ place
             parentContainer.setComponentZOrder(sourceHeaderComponent, sourceHeaderComponent.connectedHeader.getIndex(Header.ROOT)-1);
@@ -791,19 +797,22 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
         private void replaceHeaderDown(HeaderComponent sourceHeaderComponent){
             Header targetParent = connectedHeader.getParentElement();
             Header sourceParent = sourceHeaderComponent.connectedHeader.getParentElement();
-            int newNr = connectedHeader.getOwnNr()+1;
-
+            
             //remove from source
             sourceParent.deleteSubheader(sourceHeaderComponent.connectedHeader);
+            int newNr = connectedHeader.getOwnNr();
 
             //Insert at End
             if(newNr > targetParent.getSubheaderSize()){
-                targetParent.insertNewSubheaderEnd(connectedHeader);
+                targetParent.insertNewSubheaderEnd(sourceHeaderComponent.connectedHeader);
+                assert connectedHeader.getOwnNr() == targetParent.getSubheaderSize();
             }
             //Insert inBetween
             else{
-                targetParent.insertNewSubheaderInBetween(newNr, connectedHeader);
+                targetParent.insertNewSubheaderInBetween(newNr, sourceHeaderComponent.connectedHeader);
+                assert connectedHeader.getOwnNr() == newNr+1;
             }
+            assert connectedHeader.getParentElement().equals(targetParent);
 
             //remove Component and place it onto the righ place
             parentContainer.setComponentZOrder(sourceHeaderComponent, sourceHeaderComponent.connectedHeader.getIndex(Header.ROOT)-1);
@@ -830,9 +839,7 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
                     dtde.acceptDrop(DnDConstants.ACTION_MOVE);
 
                     // Action which should be followed after drag and drop
-                    //System.out.println("SourceHeader: " + headerComponent.connectedHeader.getLabelNr());
-                    //System.out.println("TargetHeader: " + connectedHeader.getLabelNr());
-                    boolean test = HeaderComponent.allHeaderComponents.contains(headerComponent);
+                    assert HeaderComponent.allHeaderComponents.contains(headerComponent);
                     if (up) {
                         replaceHeaderUp(headerComponent);
                     }
