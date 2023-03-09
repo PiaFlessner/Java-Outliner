@@ -5,11 +5,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.ObjectInput;
 import java.io.ObjectInputStream;
 
 import javax.swing.AbstractAction;
-import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
@@ -61,6 +59,7 @@ public class ToolBoxOpenFileAction extends AbstractAction {
                 objectIn.close();
                 Header newRoot = (Header) obj;
                 parent.setRoot(newRoot);
+                JOptionPane.showMessageDialog(parent.getWindow(), "File successfully loaded." );
             } catch (FileNotFoundException e1) {
                 e1.printStackTrace();
             } catch (ClassNotFoundException e1) {
@@ -71,7 +70,6 @@ public class ToolBoxOpenFileAction extends AbstractAction {
                         "File could not be loaded",
                         JOptionPane.WARNING_MESSAGE);
             }
-            JOptionPane.showMessageDialog(parent.getWindow(), "File successfully loaded." );
         }
     }
 }
