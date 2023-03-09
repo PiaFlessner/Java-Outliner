@@ -810,9 +810,7 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
 
         private void replaceHeaderUp(HeaderComponent sourceHeaderComponent){
             Header targetParent = connectedHeader.getParentElement();
-            Header sourceParent = sourceHeaderComponent.connectedHeader.getParentElement();
-            int oldZOrderIndex = sourceHeaderComponent.connectedHeader.getIndex(Header.ROOT);
-            
+            Header sourceParent = sourceHeaderComponent.connectedHeader.getParentElement();            
             //Backend
             //remove from source
             sourceParent.deleteSubheader(sourceHeaderComponent.connectedHeader);
@@ -835,9 +833,7 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
 
         private void replaceHeaderDown(HeaderComponent sourceHeaderComponent){        
             Header targetParent = connectedHeader.getParentElement();
-            Header sourceParent = sourceHeaderComponent.connectedHeader.getParentElement();
-            int oldZOrderIndex = sourceHeaderComponent.connectedHeader.getIndex(Header.ROOT);
-            
+            Header sourceParent = sourceHeaderComponent.connectedHeader.getParentElement();            
             //remove from source
             sourceParent.deleteSubheader(sourceHeaderComponent.connectedHeader);
             int newNr = connectedHeader.getOwnNr();
@@ -858,8 +854,6 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
 
         private void replaceHeaderSub(HeaderComponent sourceHeaderComponent){
             Header sourceParent = sourceHeaderComponent.connectedHeader.getParentElement();
-            int oldZOrderIndex = sourceHeaderComponent.connectedHeader.getIndex(Header.ROOT);
-
             //remove from source, insert in targetparent as first
             //but only, if the user dont want to create an endless loop
             //adding a header to itself.
@@ -869,10 +863,6 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
                 assert connectedHeader.getParentElement().equals(connectedHeader);
             }
             reloadComponents();
-        }
-
-        private boolean isDirectionDown(int aimIndex, int sourceIndex){
-            return aimIndex < sourceIndex;
         }
 
         @Override
