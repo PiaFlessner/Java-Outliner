@@ -704,10 +704,31 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
     }
 
     private void shiftComponentsInGUIUp(HeaderComponent sourceHeaderComponent, int zOrderIndex){
-        ArrayList<Component> affectedHeaderComponents = sourceHeaderComponent.getConnectedSubHeaderToComponent(sourceHeaderComponent.connectedHeader.getIndex(Header.ROOT)-1);
+        ArrayList<Component> affectedHeaderComponents = sourceHeaderComponent.getConnectedSubHeaderToComponent(sourceHeaderComponent.connectedHeader.getIndex(Header.ROOT));
         for (int i = affectedHeaderComponents.size() - 1; i >= 0; i--) {
-            parentContainer.setComponentZOrder(affectedHeaderComponents.get(i), zOrderIndex);
+            parentContainer.setComponentZOrder(affectedHeaderComponents.get(i), zOrderIndex-2);
         }  
+    }
+
+    private void reloadComponents() {
+        parentContainer.removeAll();
+        HeaderComponent.deleteAllInstances();
+        this.addWholeHeaderTree(Header.ROOT);
+        parentContainer.revalidate();
+        parentContainer.repaint();
+    }
+
+    /**
+     * Recursive methods which adds a whole Header inclusive subheaders to the GUI
+     * 
+     * @param root starting point of adding. Mostly the root.
+     */
+    private void addWholeHeaderTree(Header root) {
+        for (Header header : root.getSubheaders()) {
+            HeaderComponent hc = new HeaderComponent(backgroundColor, false, header, parentContainer);
+            parentContainer.add(hc);
+            addWholeHeaderTree(header);
+        }
     }
 
     /**
@@ -790,6 +811,7 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
         private void replaceHeaderUp(HeaderComponent sourceHeaderComponent){
             Header targetParent = connectedHeader.getParentElement();
             Header sourceParent = sourceHeaderComponent.connectedHeader.getParentElement();
+            int oldZOrderIndex = sourceHeaderComponent.connectedHeader.getIndex(Header.ROOT);
             
             //Backend
             //remove from source
@@ -807,18 +829,14 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
                 assert sourceHeaderComponent.connectedHeader.getOwnNr() == newNr;
             }
             assert connectedHeader.getParentElement().equals(targetParent);
-
-            //remove Component and place it onto the righ place
-            parentContainer.setComponentZOrder(sourceHeaderComponent, sourceHeaderComponent.connectedHeader.getIndex(Header.ROOT)-1);
-            HeaderComponent.refreshNumbers();
-            revalidate();
-            repaint();
+            reloadComponents();        
 
         }
 
-        private void replaceHeaderDown(HeaderComponent sourceHeaderComponent){
+        private void replaceHeaderDown(HeaderComponent sourceHeaderComponent){        
             Header targetParent = connectedHeader.getParentElement();
             Header sourceParent = sourceHeaderComponent.connectedHeader.getParentElement();
+            int oldZOrderIndex = sourceHeaderComponent.connectedHeader.getIndex(Header.ROOT);
             
             //remove from source
             sourceParent.deleteSubheader(sourceHeaderComponent.connectedHeader);
@@ -835,16 +853,10 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
                 assert sourceHeaderComponent.connectedHeader.getOwnNr() == newNr+1;
             }
             assert connectedHeader.getParentElement().equals(targetParent);
-
-            //remove Component and place it onto the righ place
-            parentContainer.setComponentZOrder(sourceHeaderComponent, sourceHeaderComponent.connectedHeader.getIndex(Header.ROOT)-1);
-            HeaderComponent.refreshNumbers();
-            revalidate();
-            repaint();
+            reloadComponents();
         }
 
         private void replaceHeaderSub(HeaderComponent sourceHeaderComponent){
-            ArrayList<Component> affectedHeaderComponents = sourceHeaderComponent.getConnectedSubHeaderToComponent(sourceHeaderComponent.connectedHeader.getIndex(Header.ROOT)-1);
             Header sourceParent = sourceHeaderComponent.connectedHeader.getParentElement();
             int oldZOrderIndex = sourceHeaderComponent.connectedHeader.getIndex(Header.ROOT);
 
@@ -856,17 +868,7 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
                 connectedHeader.insertNewSubheaderStart(sourceHeaderComponent.connectedHeader);
                 assert connectedHeader.getParentElement().equals(connectedHeader);
             }
-            // #4 shift all affected elements 
-            int newZOrderIndex = connectedHeader.getIndex(Header.ROOT);
-            
-            if(isDirectionDown(newZOrderIndex, oldZOrderIndex)){          
-                shiftComponentsInGUIUp(sourceHeaderComponent, newZOrderIndex);
-            }else{
-                shifComponentsInGUIDown(sourceHeaderComponent, newZOrderIndex);         
-            }       
-            HeaderComponent.refreshNumbers();
-            revalidate();
-            repaint();
+            reloadComponents();
         }
 
         private boolean isDirectionDown(int aimIndex, int sourceIndex){
