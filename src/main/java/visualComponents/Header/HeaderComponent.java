@@ -694,6 +694,22 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
         parentContainer.repaint();
     }
 
+    private void shifComponentsInGUIDown(HeaderComponent sourceHeaderComponent, int zOrderIndex){
+        ArrayList<Component> affectedHeaderComponents = sourceHeaderComponent.getConnectedSubHeaderToComponent(sourceHeaderComponent.connectedHeader.getIndex(Header.ROOT)-1);
+        //nach unten schieben
+        for (int i = affectedHeaderComponents.size() - 1; i >= 0; i--) {
+            parentContainer.setComponentZOrder(affectedHeaderComponents.get(i), zOrderIndex + i);
+        }
+
+    }
+
+    private void shiftComponentsInGUIUp(HeaderComponent sourceHeaderComponent, int zOrderIndex){
+        ArrayList<Component> affectedHeaderComponents = sourceHeaderComponent.getConnectedSubHeaderToComponent(sourceHeaderComponent.connectedHeader.getIndex(Header.ROOT)-1);
+        for (int i = affectedHeaderComponents.size() - 1; i >= 0; i--) {
+            parentContainer.setComponentZOrder(affectedHeaderComponents.get(i), zOrderIndex);
+        }  
+    }
+
     /**
      * Sets Up the Drag and Drop Target Elements for DnD Actions.
      * 
@@ -830,7 +846,7 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
         private void replaceHeaderSub(HeaderComponent sourceHeaderComponent){
             ArrayList<Component> affectedHeaderComponents = sourceHeaderComponent.getConnectedSubHeaderToComponent(sourceHeaderComponent.connectedHeader.getIndex(Header.ROOT)-1);
             Header sourceParent = sourceHeaderComponent.connectedHeader.getParentElement();
-            int oldIndex = sourceHeaderComponent.connectedHeader.getIndex(Header.ROOT);
+            int oldZOrderIndex = sourceHeaderComponent.connectedHeader.getIndex(Header.ROOT);
 
             //remove from source, insert in targetparent as first
             //but only, if the user dont want to create an endless loop
@@ -841,24 +857,20 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
                 assert connectedHeader.getParentElement().equals(connectedHeader);
             }
             // #4 shift all affected elements 
-            int newIndex = connectedHeader.getIndex(Header.ROOT);
-            if(newIndex < oldIndex){
-                //nach oben schieben
-                for (int i = affectedHeaderComponents.size() - 1; i >= 0; i--) {
-                    HeaderComponent headerComponent = (HeaderComponent) affectedHeaderComponents.get(i);
-                    parentContainer.setComponentZOrder(headerComponent, newIndex);
-                }  
+            int newZOrderIndex = connectedHeader.getIndex(Header.ROOT);
+            
+            if(isDirectionDown(newZOrderIndex, oldZOrderIndex)){          
+                shiftComponentsInGUIUp(sourceHeaderComponent, newZOrderIndex);
             }else{
-                //nach unten schieben
-                for (int i = affectedHeaderComponents.size() - 1; i >= 0; i--) {
-                    parentContainer.setComponentZOrder(affectedHeaderComponents.get(i), newIndex + i);
-                }
-            }
-          
+                shifComponentsInGUIDown(sourceHeaderComponent, newZOrderIndex);         
+            }       
             HeaderComponent.refreshNumbers();
             revalidate();
             repaint();
+        }
 
+        private boolean isDirectionDown(int aimIndex, int sourceIndex){
+            return aimIndex < sourceIndex;
         }
 
         @Override
