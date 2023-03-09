@@ -107,6 +107,7 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
         addFocusingFunction();
         setUpOpenHeaderFunction();
         setUpHoverColorChangeFunction();
+        setUpArrowHeaderNavigation();
         setUpEditTextfieldFunction();
         // Makes Element Draggable
         DragSource ds = new DragSource();
@@ -509,6 +510,57 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
             openHeader();
         }
     }
+
+    /**
+     * Binds the Focus shifting of Header via arrow keys to the actual keystrokes
+     */
+    private void setUpArrowHeaderNavigation() {
+        // KeyStroke Function open
+        HeaderComponent self = this;
+        String nextHeader = "nextHeader";
+        this.getInputMap().put((KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0)), nextHeader);
+        this.getActionMap().put(nextHeader, new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                self.shifFocusOfHeader(1);
+                
+            }
+        });
+
+        // KeyStroke Function open
+        String beforeHeader = "beforeHeader";
+        this.getInputMap().put((KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0)), beforeHeader);
+        this.getActionMap().put(beforeHeader, new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                self.shifFocusOfHeader(-1);
+            }
+        });
+
+    }
+
+    /**
+     * Implements the actual focus shifting logic for back, forth and looping behavior.
+     * If shifting forth at the end, the focus will be shifted at the start element.
+     * If shifting back at the start, the focus will be shiftet at the end element.
+     * @param shiftAmount amount of shifting. 
+     */
+    private void shifFocusOfHeader(int shiftAmount){
+        int newIndex = parentContainer.getComponentZOrder(this) +shiftAmount;
+
+        //Shift to end, if index is smaller than 0
+        if(newIndex < 0) {
+            parentContainer.getComponent(parentContainer.getComponentCount()-1).requestFocusInWindow();
+        }
+        //Shift to start, if index is gerater than actual component count
+        else if(newIndex > parentContainer.getComponentCount()-1) {
+            parentContainer.getComponent(0).requestFocusInWindow();
+        }
+        //else perform as expected
+        else parentContainer.getComponent(newIndex).requestFocusInWindow();
+
+    }
+
 
     /**
      * Sets up the open Header function via keystrokes and via mouse click.
