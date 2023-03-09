@@ -694,24 +694,9 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
         parentContainer.repaint();
     }
 
-    private void shifComponentsInGUIDown(HeaderComponent sourceHeaderComponent, int zOrderIndex) {
-        ArrayList<Component> affectedHeaderComponents = sourceHeaderComponent
-                .getConnectedSubHeaderToComponent(sourceHeaderComponent.connectedHeader.getIndex(Header.ROOT) - 1);
-        // nach unten schieben
-        for (int i = affectedHeaderComponents.size() - 1; i >= 0; i--) {
-            parentContainer.setComponentZOrder(affectedHeaderComponents.get(i), zOrderIndex + i);
-        }
-
-    }
-
-    private void shiftComponentsInGUIUp(HeaderComponent sourceHeaderComponent, int zOrderIndex) {
-        ArrayList<Component> affectedHeaderComponents = sourceHeaderComponent
-                .getConnectedSubHeaderToComponent(sourceHeaderComponent.connectedHeader.getIndex(Header.ROOT));
-        for (int i = affectedHeaderComponents.size() - 1; i >= 0; i--) {
-            parentContainer.setComponentZOrder(affectedHeaderComponents.get(i), zOrderIndex - 2);
-        }
-    }
-
+    /**
+     * Reload the components
+     */
     private void reloadComponents() {
         parentContainer.removeAll();
         HeaderComponent.deleteAllInstances();
@@ -808,6 +793,12 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
             revalidate();
         }
 
+        /**
+         * Replaces the Header to the before neighbour from the target.
+         * "This" ist the target.
+         * This method is intended to be only used for drag and drop operations.
+         * @param sourceHeaderComponent
+         */
         private void replaceHeaderUp(HeaderComponent sourceHeaderComponent) {
             Header targetParent = connectedHeader.getParentElement();
             Header sourceParent = sourceHeaderComponent.connectedHeader.getParentElement();
