@@ -244,4 +244,12 @@ public class HeaderTest {
         assertFalse(h12.isHeaderInParentHeader(h211));
 
     }
+
+    @Test
+    public void testgetKnotLevel(){
+        assertEquals(0, h0.getKnotLevel(0));
+        assertEquals(1, h1.getKnotLevel(0));
+        assertEquals(1, h2.getKnotLevel(0));
+        assertEquals(2, h11.getKnotLevel(0));
+    }
 }

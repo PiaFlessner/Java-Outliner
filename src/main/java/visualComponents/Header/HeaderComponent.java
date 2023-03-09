@@ -44,6 +44,7 @@ import javax.swing.JPopupMenu;
 public class HeaderComponent extends JPanel implements DragGestureListener {
 
     JPanel headerTitle;
+    JPanel distanceField;
     Icon icon;
 
     JLabel displayedNumber;
@@ -207,6 +208,8 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
         titleContainerFlowLayout.setAlignOnBaseline(true);
         headerTitle.setLayout(titleContainerFlowLayout);
 
+        setUpDistanceField();
+
         // Icon adding
         icon = new Icon();
         headerTitle.add(icon);
@@ -250,6 +253,14 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
             e.printStackTrace();
         }
         headerTitle.setDropTarget(dt);
+    }
+
+    private void setUpDistanceField(){
+        distanceField = new JPanel();
+        int distanceMultiplicator = this.connectedHeader.getKnotLevel(0) -1;
+        Dimension size = new Dimension(25*distanceMultiplicator, distanceField.getHeight());
+        distanceField.setPreferredSize(size);
+        headerTitle.add(distanceField);
     }
 
     /**
@@ -560,7 +571,6 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
         else parentContainer.getComponent(newIndex).requestFocusInWindow();
 
     }
-
 
     /**
      * Sets up the open Header function via keystrokes and via mouse click.

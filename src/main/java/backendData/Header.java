@@ -351,6 +351,17 @@ public class Header implements Serializable{
         if(targetHeader.parentElement == this) return true;
         return this.isHeaderInParentHeader(targetHeader.parentElement);
     }
+
+    /**
+     * Returns the knot level of the Header via recursive climbing. 
+     * In 1 , 1.1, 1.1.1, the knot level of 1.1.1 would be 3.
+     * @param startCounter Starting counter, to start the counting, give 0.
+     * @return The actual knot level.
+     */
+    public int getKnotLevel(int startCounter){
+        if(this.isRoot) return startCounter;
+        return this.parentElement.getKnotLevel(startCounter+1);
+    }
     
     /**
      * Finds out, which overall branch the header is in.
