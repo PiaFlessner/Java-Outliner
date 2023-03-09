@@ -404,7 +404,6 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
                 self.shiftUpOrDown(shiftIndex, down);
             }
         };
-
         contextMenuAdding(actionText, action, keystroke, actionMapKey, sepBefore, sepAfter);
     }
 
@@ -508,12 +507,22 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
      * Sets up the open Header function via keystrokes and via mouse click.
      */
     private void setUpOpenHeaderFunction() {
-        // KeyStroke Function
-        this.getInputMap().put(KeyStroke.getKeyStroke("SPACE"), "OpenCloseHeader");
-        this.getActionMap().put("OpenCloseHeader", new AbstractAction() {
+        // KeyStroke Function open
+        String openMapKey = "openHeader";
+        this.getInputMap().put((KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0)), openMapKey);
+        this.getActionMap().put(openMapKey, new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                openClose();
+                openHeader();
+            }
+        });
+        // KeyStroke Function close
+        String closeMapKey = "closeHeader";
+        this.getInputMap().put((KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0)), closeMapKey);
+        this.getActionMap().put(closeMapKey, new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                closeHeader();
             }
         });
 
