@@ -830,26 +830,31 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
         private void replaceHeaderSub(HeaderComponent sourceHeaderComponent){
             ArrayList<Component> affectedHeaderComponents = sourceHeaderComponent.getConnectedSubHeaderToComponent(sourceHeaderComponent.connectedHeader.getIndex(Header.ROOT)-1);
             Header sourceParent = sourceHeaderComponent.connectedHeader.getParentElement();
+            int oldIndex = sourceHeaderComponent.connectedHeader.getIndex(Header.ROOT);
 
             //remove from source, insert in targetparent as first
             //but only, if the user dont want to create an endless loop
             //adding a header to itself.
             if(connectedHeader != sourceHeaderComponent.connectedHeader){
-            sourceParent.deleteSubheader(sourceHeaderComponent.connectedHeader);
-            connectedHeader.insertNewSubheaderStart(sourceHeaderComponent.connectedHeader);
-            assert connectedHeader.getParentElement().equals(connectedHeader);
+                sourceParent.deleteSubheader(sourceHeaderComponent.connectedHeader);
+                connectedHeader.insertNewSubheaderStart(sourceHeaderComponent.connectedHeader);
+                assert connectedHeader.getParentElement().equals(connectedHeader);
             }
-
-            //remove Component and place it onto the righ place
-            //parentContainer.setComponentZOrder(sourceHeaderComponent, sourceHeaderComponent.connectedHeader.getIndex(Header.ROOT)-1);
-            
+            // #4 shift all affected elements 
             int newIndex = connectedHeader.getIndex(Header.ROOT);
-            System.out.println(newIndex);
-            // #4 shift all affected elements
-            for (int i = affectedHeaderComponents.size() - 1; i >= 0; i--) {
-                parentContainer.setComponentZOrder(affectedHeaderComponents.get(i), newIndex);
+            if(newIndex < oldIndex){
+                //nach oben schieben
+                for (int i = affectedHeaderComponents.size() - 1; i >= 0; i--) {
+                    HeaderComponent headerComponent = (HeaderComponent) affectedHeaderComponents.get(i);
+                    parentContainer.setComponentZOrder(headerComponent, newIndex);
+                }  
+            }else{
+                //nach unten schieben
+                for (int i = affectedHeaderComponents.size() - 1; i >= 0; i--) {
+                    parentContainer.setComponentZOrder(affectedHeaderComponents.get(i), newIndex + i);
+                }
             }
-            
+          
             HeaderComponent.refreshNumbers();
             revalidate();
             repaint();
