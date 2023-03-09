@@ -228,7 +228,7 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
             dt.addDropTargetListener(new DropTargetAdapter() {
                 @Override
                 public void dragEnter(DropTargetDragEvent dtde) {
-                    setSize(getWidth(), dropPanel.HEIGHT);
+                    setSize(getWidth(), dropPanel.getHeight());
                     remove(headerTitle);
                     add(dropPanel, BorderLayout.CENTER);
                     repaint();
@@ -237,7 +237,7 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
 
                 @Override
                 public void dragOver(DropTargetDragEvent dtde) {
-                    setSize(getWidth(), dropPanel.HEIGHT);
+                    setSize(getWidth(), dropPanel.getHeight());
                     remove(headerTitle);
                     add(dropPanel, BorderLayout.CENTER);
                     repaint();
@@ -255,10 +255,10 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
         headerTitle.setDropTarget(dt);
     }
 
-    private void setUpDistanceField(){
+    private void setUpDistanceField() {
         distanceField = new JPanel();
-        int distanceMultiplicator = this.connectedHeader.getKnotLevel(0) -1;
-        Dimension size = new Dimension(25*distanceMultiplicator, distanceField.getHeight());
+        int distanceMultiplicator = this.connectedHeader.getKnotLevel(0) - 1;
+        Dimension size = new Dimension(25 * distanceMultiplicator, distanceField.getHeight());
         distanceField.setPreferredSize(size);
         headerTitle.add(distanceField);
     }
@@ -330,14 +330,18 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
         parentContainer.revalidate();
         parentContainer.repaint();
     }
-/**
- * Adds a Header before the current element
- * @param actionText Action text which is represented in Contextmenu
- * @param keystroke Keystroke which is binded
- * @param actionMapKey ActionMapKey for binding purporses. Needs to be uniqe
- * @param sepBefore Tells, if a separator in the contextmenu beforehand is needed
- * @param sepAfter Tells, if a separator in the contextmenue afterwards is needed
- */
+
+    /**
+     * Adds a Header before the current element
+     * 
+     * @param actionText   Action text which is represented in Contextmenu
+     * @param keystroke    Keystroke which is binded
+     * @param actionMapKey ActionMapKey for binding purporses. Needs to be uniqe
+     * @param sepBefore    Tells, if a separator in the contextmenu beforehand is
+     *                     needed
+     * @param sepAfter     Tells, if a separator in the contextmenue afterwards is
+     *                     needed
+     */
     private void addingHeaderBeforeActions(String actionText, KeyStroke keystroke, String actionMapKey,
             boolean sepBefore, boolean sepAfter) {
         HeaderComponent self = this;
@@ -392,7 +396,8 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
     private ArrayList<Component> getConnectedSubHeaderToComponent(int displayIndex) {
         int rangeOfShiftElements = this.connectedHeader.getTotalSubTreeCount() + 1;
         ArrayList<Component> affectedHeaderComponents = new ArrayList<>();
-        // Get the affected Components (affected are all, which belongs to the header);
+
+        // gets the affected components
         for (int i = displayIndex, j = 0; j < rangeOfShiftElements; i++, j++) {
             affectedHeaderComponents.add(parentContainer.getComponent(i));
         }
@@ -433,54 +438,28 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
      * @param down       true = shifting down, false = shifting up.
      */
     private void shiftUpOrDown(int shiftIndex, boolean down) {
-
-        int displayIndex = parentContainer.getComponentZOrder(this);
-        int newIndex;
-
-        // Affected are all, which are subheader to the focused header
-        ArrayList<Component> affectedHeaderComponents = this.getConnectedSubHeaderToComponent(displayIndex);
-
+        int getFocusIndex;
         // if the direction is up or down, the operations are slightly different
         if (down) {
             // only shift down, if the header is not the last element.
             if (this.connectedHeader.getNextNeigbourHeader() != null) {
-                newIndex = displayIndex + shiftIndex;
-                // The new index is dependend on the subheadercount of all neighbour header
-                for (int i = 0; i < shiftIndex; i++) {
-                    newIndex = newIndex + this.connectedHeader.getNextNeigbourHeader().getTotalSubTreeCount();
-                }
-
-                // refresh backend also.
                 this.connectedHeader.getParentElement()
                         .rearrangeSubHeader(this.connectedHeader.getOwnNr() - 1 + shiftIndex, connectedHeader);
-                // shift all affected elements
-                for (int i = affectedHeaderComponents.size() - 1; i >= 0; i--) {
-                    parentContainer.setComponentZOrder(affectedHeaderComponents.get(i), newIndex + i);
-                }
+                getFocusIndex = connectedHeader.getIndex(Header.ROOT);
+                reloadComponents();
+                parentContainer.getComponent(getFocusIndex - 1).requestFocusInWindow();
             }
 
         } else {
             // only shift up, if the header ist not the first element.
             if (this.connectedHeader.getBeforeNeigbourHeader() != null) {
-                newIndex = displayIndex - shiftIndex;
-                // The new index is dependend on the subheadercount of all neighbour header
-                for (int i = 0; i < shiftIndex; i++) {
-                    newIndex = newIndex - this.connectedHeader.getBeforeNeigbourHeader().getTotalSubTreeCount();
-                }
-
-                // refresh backend also.
                 this.connectedHeader.getParentElement()
                         .rearrangeSubHeader(this.connectedHeader.getOwnNr() - 1 - shiftIndex, connectedHeader);
-
-                // shift all affected elements
-                for (int i = affectedHeaderComponents.size() - 1; i >= 0; i--) {
-                    parentContainer.setComponentZOrder(affectedHeaderComponents.get(i), newIndex);
-                }
+                getFocusIndex = connectedHeader.getIndex(Header.ROOT);
+                reloadComponents();
+                parentContainer.getComponent(getFocusIndex - 1).requestFocusInWindow();
             }
         }
-        HeaderComponent.refreshNumbers();
-        parentContainer.revalidate();
-        parentContainer.repaint();
     }
 
     /**
@@ -533,8 +512,8 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
         this.getActionMap().put(nextHeader, new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                self.shifFocusOfHeader(1);
-                
+                self.shiftFocusOfHeader(1);
+
             }
         });
 
@@ -544,31 +523,34 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
         this.getActionMap().put(beforeHeader, new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                self.shifFocusOfHeader(-1);
+                self.shiftFocusOfHeader(-1);
             }
         });
 
     }
 
     /**
-     * Implements the actual focus shifting logic for back, forth and looping behavior.
+     * Implements the actual focus shifting logic for back, forth and looping
+     * behavior.
      * If shifting forth at the end, the focus will be shifted at the start element.
      * If shifting back at the start, the focus will be shiftet at the end element.
-     * @param shiftAmount amount of shifting. 
+     * 
+     * @param shiftAmount amount of shifting.
      */
-    private void shifFocusOfHeader(int shiftAmount){
-        int newIndex = parentContainer.getComponentZOrder(this) +shiftAmount;
+    private void shiftFocusOfHeader(int shiftAmount) {
+        int newIndex = parentContainer.getComponentZOrder(this) + shiftAmount;
 
-        //Shift to end, if index is smaller than 0
-        if(newIndex < 0) {
-            parentContainer.getComponent(parentContainer.getComponentCount()-1).requestFocusInWindow();
+        // Shift to end, if index is smaller than 0
+        if (newIndex < 0) {
+            parentContainer.getComponent(parentContainer.getComponentCount() - 1).requestFocusInWindow();
         }
-        //Shift to start, if index is gerater than actual component count
-        else if(newIndex > parentContainer.getComponentCount()-1) {
+        // Shift to start, if index is gerater than actual component count
+        else if (newIndex > parentContainer.getComponentCount() - 1) {
             parentContainer.getComponent(0).requestFocusInWindow();
         }
-        //else perform as expected
-        else parentContainer.getComponent(newIndex).requestFocusInWindow();
+        // else perform as expected
+        else
+            parentContainer.getComponent(newIndex).requestFocusInWindow();
 
     }
 
@@ -709,13 +691,8 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
      * @param down true= level down, false = level up
      */
     private void shiftTreeLevelUpOrDown(boolean down) {
-        int displayIndex = parentContainer.getComponentZOrder(this);
-        int newIndex;
-        // Affected are all, which are subheader to the focused header
-        ArrayList<Component> affectedHeaderComponents = this.getConnectedSubHeaderToComponent(displayIndex);
-
+        int getFocusIndex;
         if (down) {
-
             Header neighbour = this.connectedHeader.getNextNeigbourHeader();
             Header beforeNeighbour = this.connectedHeader.getBeforeNeigbourHeader();
             Header usedParent;
@@ -736,15 +713,9 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
 
                 // #3 add self to new Parent
                 usedParent.insertNewSubheaderInBetween(this.connectedHeader.getOwnNr(), this.connectedHeader);
-
-                // #3 validate the new Index
-                newIndex = this.connectedHeader.getIndex(Header.ROOT) - 1;
-
-                // #4 shift all affected elements
-                for (int i = affectedHeaderComponents.size() - 1; i >= 0; i--) {
-                    parentContainer.setComponentZOrder(affectedHeaderComponents.get(i), newIndex + i);
-                }
-
+                getFocusIndex = this.connectedHeader.getIndex(Header.ROOT);
+                reloadComponents();
+                parentContainer.getComponent(getFocusIndex - 1).requestFocusInWindow();
             }
         } else {
             Header parentHeader = this.connectedHeader.getParentElement();
@@ -757,25 +728,21 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
                 // #2 add self to parentparent in ownNrParent
                 parentHeader.getParentElement().insertNewSubheaderInBetween(parentHeader.getOwnNr(),
                         this.connectedHeader);
+                getFocusIndex = this.connectedHeader.getIndex(Header.ROOT);
+                reloadComponents();
+                parentContainer.getComponent(getFocusIndex - 1).requestFocusInWindow();
 
-                // #3 validate the new Index
-                newIndex = this.connectedHeader.getIndex(Header.ROOT) - 1;
-
-                // #4 shift all affected elements
-                for (int i = affectedHeaderComponents.size() - 1; i >= 0; i--) {
-                    parentContainer.setComponentZOrder(affectedHeaderComponents.get(i), newIndex + i);
-                }
             }
         }
-        HeaderComponent.refreshNumbers();
-        parentContainer.revalidate();
-        parentContainer.repaint();
+
     }
 
     /**
      * Reload the components
      */
     private void reloadComponents() {
+        //small hack to prevent strange focus flickering
+        parentContainer.requestFocus();
         parentContainer.removeAll();
         HeaderComponent.deleteAllInstances();
         this.addWholeHeaderTree(Header.ROOT);
@@ -834,9 +801,9 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
         dropPanel.setVisible(true);
 
         // Sets the panels as drop Targets
-        new DropTargetListenerHeaderComponents(dropUpPanel, AddingDirection.UP, this);
-        new DropTargetListenerHeaderComponents(dropDownPanel, AddingDirection.DOWN, this);
-        new DropTargetListenerHeaderComponents(dropSubPanel, AddingDirection.SUB, this);
+        new DropTargetListenerHeaderComponents(dropUpPanel, AddingDirection.UP);
+        new DropTargetListenerHeaderComponents(dropDownPanel, AddingDirection.DOWN);
+        new DropTargetListenerHeaderComponents(dropSubPanel, AddingDirection.SUB);
     }
 
     /**
@@ -857,7 +824,7 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
         private JPanel target;
         private AddingDirection direction;
 
-        public DropTargetListenerHeaderComponents(JPanel target, AddingDirection direction, HeaderComponent self) {
+        public DropTargetListenerHeaderComponents(JPanel target, AddingDirection direction) {
             this.direction = direction;
             this.target = target;
             new DropTarget(target, DnDConstants.ACTION_MOVE, this, true, null);
@@ -874,6 +841,7 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
          * Replaces the Header to the before neighbour from the target.
          * "This" ist the target.
          * This method is intended to be only used for drag and drop operations.
+         * 
          * @param sourceHeaderComponent
          */
         private void replaceHeaderUp(HeaderComponent sourceHeaderComponent) {
@@ -900,11 +868,11 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
             }
 
         }
-
         /**
          * Replaces the Header to the next neighbour from the target.
          * "This" ist the target.
          * This method is intended to be only used for drag and drop operations.
+         * 
          * @param sourceHeaderComponent The dragged source HeaderComponent
          */
         private void replaceHeaderDown(HeaderComponent sourceHeaderComponent) {
@@ -949,9 +917,11 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
         }
 
         /**
-         * checks, whether the target- and sourceheader combination is valid. Its not valid, if the target is a children of the source
+         * checks, whether the target- and sourceheader combination is valid. Its not
+         * valid, if the target is a children of the source
          * or if the target is equal to the source.
          * The "This" element is the target.
+         * 
          * @param sourceHeader The header, which is the source.
          * @return true= shifting allowed | false = shifting is not allowed.
          */
