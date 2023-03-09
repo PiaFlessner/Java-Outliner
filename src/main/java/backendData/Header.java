@@ -340,6 +340,17 @@ public class Header implements Serializable{
         }
         return elementCounter;
     }
+
+    /**
+     * Checks, whether a Header is in any form a parent of a target header
+     * @param targetHeader the occused header, which may is a child of the this element.
+     * @return true means, the this Element is a parent, false means its not a parent.
+     */
+    public boolean isHeaderInParentHeader(Header targetHeader){
+        if(targetHeader.isRoot) return false;
+        if(targetHeader.parentElement == this) return true;
+        return this.isHeaderInParentHeader(targetHeader.parentElement);
+    }
     
     /**
      * Finds out, which overall branch the header is in.

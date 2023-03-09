@@ -1,5 +1,7 @@
 package tests;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.Test;
 import org.junit.jupiter.api.AfterEach;
@@ -221,5 +223,25 @@ public class HeaderTest {
         assertEquals(h3, h0.getHeaderViaIndex(h0,11));
         assertEquals(h4, h0.getHeaderViaIndex(h0,12));
         assertEquals(h41, h0.getHeaderViaIndex(h0,13));
+    }
+
+    @Test
+    public void testIsHeaderInParentHeader(){
+        Header h12 = new Header("1.2", 2,h1,false);
+        Header h121 = new Header("1.2.1", 1,h12,false);
+        Header h122 = new Header("1.2.2", 2,h12,false);
+        Header h21 = new Header("2.1", 1,h2,false);
+        Header h211 = new Header("2.1.1", 1,h21,false);
+        Header h212 = new Header("2.1.2", 2,h21,false);
+        Header h22 = new Header("2.2", 2,h2,false);
+   
+        assertTrue(h2.isHeaderInParentHeader(h22));
+        assertTrue(h21.isHeaderInParentHeader(h212));
+        assertFalse(h22.isHeaderInParentHeader(h212));
+        assertTrue(h2.isHeaderInParentHeader(h212));
+        assertTrue(h12.isHeaderInParentHeader(h121));
+        assertTrue(h12.isHeaderInParentHeader(h122));
+        assertFalse(h12.isHeaderInParentHeader(h211));
+
     }
 }

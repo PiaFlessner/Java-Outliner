@@ -694,20 +694,22 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
         parentContainer.repaint();
     }
 
-    private void shifComponentsInGUIDown(HeaderComponent sourceHeaderComponent, int zOrderIndex){
-        ArrayList<Component> affectedHeaderComponents = sourceHeaderComponent.getConnectedSubHeaderToComponent(sourceHeaderComponent.connectedHeader.getIndex(Header.ROOT)-1);
-        //nach unten schieben
+    private void shifComponentsInGUIDown(HeaderComponent sourceHeaderComponent, int zOrderIndex) {
+        ArrayList<Component> affectedHeaderComponents = sourceHeaderComponent
+                .getConnectedSubHeaderToComponent(sourceHeaderComponent.connectedHeader.getIndex(Header.ROOT) - 1);
+        // nach unten schieben
         for (int i = affectedHeaderComponents.size() - 1; i >= 0; i--) {
             parentContainer.setComponentZOrder(affectedHeaderComponents.get(i), zOrderIndex + i);
         }
 
     }
 
-    private void shiftComponentsInGUIUp(HeaderComponent sourceHeaderComponent, int zOrderIndex){
-        ArrayList<Component> affectedHeaderComponents = sourceHeaderComponent.getConnectedSubHeaderToComponent(sourceHeaderComponent.connectedHeader.getIndex(Header.ROOT));
+    private void shiftComponentsInGUIUp(HeaderComponent sourceHeaderComponent, int zOrderIndex) {
+        ArrayList<Component> affectedHeaderComponents = sourceHeaderComponent
+                .getConnectedSubHeaderToComponent(sourceHeaderComponent.connectedHeader.getIndex(Header.ROOT));
         for (int i = affectedHeaderComponents.size() - 1; i >= 0; i--) {
-            parentContainer.setComponentZOrder(affectedHeaderComponents.get(i), zOrderIndex-2);
-        }  
+            parentContainer.setComponentZOrder(affectedHeaderComponents.get(i), zOrderIndex - 2);
+        }
     }
 
     private void reloadComponents() {
@@ -768,7 +770,7 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
 
         dropPanel.setVisible(true);
 
-        //Sets the panels as drop Targets
+        // Sets the panels as drop Targets
         new DropTargetListenerHeaderComponents(dropUpPanel, AddingDirection.UP, this);
         new DropTargetListenerHeaderComponents(dropDownPanel, AddingDirection.DOWN, this);
         new DropTargetListenerHeaderComponents(dropSubPanel, AddingDirection.SUB, this);
@@ -793,8 +795,6 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
         private JPanel target;
         private AddingDirection direction;
 
-
-
         public DropTargetListenerHeaderComponents(JPanel target, AddingDirection direction, HeaderComponent self) {
             this.direction = direction;
             this.target = target;
@@ -808,72 +808,100 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
             revalidate();
         }
 
-        private void replaceHeaderUp(HeaderComponent sourceHeaderComponent){
+        private void replaceHeaderUp(HeaderComponent sourceHeaderComponent) {
             Header targetParent = connectedHeader.getParentElement();
-            Header sourceParent = sourceHeaderComponent.connectedHeader.getParentElement();            
-            //Backend
-            //remove from source
-            sourceParent.deleteSubheader(sourceHeaderComponent.connectedHeader);
-            int newNr = connectedHeader.getOwnNr();
-
-            //Insert Start
-            if(newNr == 1){
-                targetParent.insertNewSubheaderStart(sourceHeaderComponent.connectedHeader);
-                assert sourceHeaderComponent.connectedHeader.getOwnNr() == 1;
-            }
-            //Insert Inbetween
-            else{
-                targetParent.insertNewSubheaderInBetween(newNr-1, sourceHeaderComponent.connectedHeader);
-                assert sourceHeaderComponent.connectedHeader.getOwnNr() == newNr;
-            }
-            assert connectedHeader.getParentElement().equals(targetParent);
-            reloadComponents();        
-
-        }
-
-        private void replaceHeaderDown(HeaderComponent sourceHeaderComponent){        
-            Header targetParent = connectedHeader.getParentElement();
-            Header sourceParent = sourceHeaderComponent.connectedHeader.getParentElement();            
-            //remove from source
-            sourceParent.deleteSubheader(sourceHeaderComponent.connectedHeader);
-            int newNr = connectedHeader.getOwnNr();
-
-            //Insert at End
-            if(newNr > targetParent.getSubheaderSize()){
-                targetParent.insertNewSubheaderEnd(sourceHeaderComponent.connectedHeader);
-                assert sourceHeaderComponent.connectedHeader.getOwnNr() == targetParent.getSubheaderSize();
-            }
-            //Insert inBetween
-            else{
-                targetParent.insertNewSubheaderInBetween(newNr, sourceHeaderComponent.connectedHeader);
-                assert sourceHeaderComponent.connectedHeader.getOwnNr() == newNr+1;
-            }
-            assert connectedHeader.getParentElement().equals(targetParent);
-            reloadComponents();
-        }
-
-        private void replaceHeaderSub(HeaderComponent sourceHeaderComponent){
             Header sourceParent = sourceHeaderComponent.connectedHeader.getParentElement();
-            //remove from source, insert in targetparent as first
-            //but only, if the user dont want to create an endless loop
-            //adding a header to itself.
-            if(connectedHeader != sourceHeaderComponent.connectedHeader){
+            // Backend
+            // remove from source
+            sourceParent.deleteSubheader(sourceHeaderComponent.connectedHeader);
+            int newNr = connectedHeader.getOwnNr();
+
+            if (isShiftingAllowed(sourceHeaderComponent.connectedHeader)) {
+                // Insert Start
+                if (newNr == 1) {
+                    targetParent.insertNewSubheaderStart(sourceHeaderComponent.connectedHeader);
+                    assert sourceHeaderComponent.connectedHeader.getOwnNr() == 1;
+                }
+                // Insert Inbetween
+                else {
+                    targetParent.insertNewSubheaderInBetween(newNr - 1, sourceHeaderComponent.connectedHeader);
+                    assert sourceHeaderComponent.connectedHeader.getOwnNr() == newNr;
+                }
+                assert connectedHeader.getParentElement().equals(targetParent);
+                reloadComponents();
+            }
+
+        }
+
+        /**
+         * Replaces the Header to the next neighbour from the target.
+         * "This" ist the target.
+         * This method is intended to be only used for drag and drop operations.
+         * @param sourceHeaderComponent The dragged source HeaderComponent
+         */
+        private void replaceHeaderDown(HeaderComponent sourceHeaderComponent) {
+            Header targetParent = connectedHeader.getParentElement();
+            Header sourceParent = sourceHeaderComponent.connectedHeader.getParentElement();
+            // remove from source
+            sourceParent.deleteSubheader(sourceHeaderComponent.connectedHeader);
+            int newNr = connectedHeader.getOwnNr();
+
+            if (isShiftingAllowed(sourceHeaderComponent.connectedHeader)) {
+                // Insert at End
+                if (newNr > targetParent.getSubheaderSize()) {
+                    targetParent.insertNewSubheaderEnd(sourceHeaderComponent.connectedHeader);
+                    assert sourceHeaderComponent.connectedHeader.getOwnNr() == targetParent.getSubheaderSize();
+                }
+                // Insert inBetween
+                else {
+                    targetParent.insertNewSubheaderInBetween(newNr, sourceHeaderComponent.connectedHeader);
+                    assert sourceHeaderComponent.connectedHeader.getOwnNr() == newNr + 1;
+                }
+                assert connectedHeader.getParentElement().equals(targetParent);
+                reloadComponents();
+            }
+        }
+
+        /**
+         * Replaces the Header to the targetHeader children.
+         * "This" ist the target.
+         * This method is intended to be only used for drag and drop operations.
+         * 
+         * @param sourceHeaderComponent The dragged source HeaderComponent
+         */
+        private void replaceHeaderSub(HeaderComponent sourceHeaderComponent) {
+            Header sourceParent = sourceHeaderComponent.connectedHeader.getParentElement();
+
+            if (isShiftingAllowed(sourceHeaderComponent.connectedHeader)) {
                 sourceParent.deleteSubheader(sourceHeaderComponent.connectedHeader);
                 connectedHeader.insertNewSubheaderStart(sourceHeaderComponent.connectedHeader);
                 assert connectedHeader.getParentElement().equals(connectedHeader);
+                reloadComponents();
             }
-            reloadComponents();
+        }
+
+        /**
+         * checks, whether the target- and sourceheader combination is valid. Its not valid, if the target is a children of the source
+         * or if the target is equal to the source.
+         * The "This" element is the target.
+         * @param sourceHeader The header, which is the source.
+         * @return true= shifting allowed | false = shifting is not allowed.
+         */
+        private boolean isShiftingAllowed(Header sourceHeader) {
+            if (connectedHeader == sourceHeader || sourceHeader.isHeaderInParentHeader(connectedHeader))
+                return false;
+            else
+                return true;
         }
 
         @Override
-        public void dragOver(DropTargetDragEvent dtde){
+        public void dragOver(DropTargetDragEvent dtde) {
             target.setBackground(DND_TARGET_HOVERCOLOR);
             target.repaint();
         }
 
-
         @Override
-        public void dragEnter(DropTargetDragEvent dtde){
+        public void dragEnter(DropTargetDragEvent dtde) {
             target.setBackground(DND_TARGET_HOVERCOLOR);
             target.repaint();
         }
@@ -899,12 +927,18 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
                     // Action which should be followed after drag and drop
                     assert HeaderComponent.allHeaderComponents.contains(headerComponent);
 
-                    switch(direction){
-                        case UP: replaceHeaderUp(headerComponent); break;
-                        case DOWN: replaceHeaderDown(headerComponent); break;
-                        case SUB: replaceHeaderSub(headerComponent); break;
+                    switch (direction) {
+                        case UP:
+                            replaceHeaderUp(headerComponent);
+                            break;
+                        case DOWN:
+                            replaceHeaderDown(headerComponent);
+                            break;
+                        case SUB:
+                            replaceHeaderSub(headerComponent);
+                            break;
                     }
-                      removeDnDTargetElements();
+                    removeDnDTargetElements();
                     dtde.dropComplete(true);
                     return;
                 }
@@ -927,10 +961,12 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
 class TransferableHeaderComponent implements Transferable {
 
     // Registration of the DataFlavor Header Component.
-    //javaJVMLocal... -> Let the VM regocnize the element as the already existing element.
-    //Therefore does not make a copy and does not claim storage
-     protected static DataFlavor headerComponentFlavor = new DataFlavor(DataFlavor.javaJVMLocalObjectMimeType+"; class=\"" +HeaderComponent.class.getCanonicalName()+"\"" ,
-     "A HeaderComponent Object");
+    // javaJVMLocal... -> Let the VM regocnize the element as the already existing
+    // element.
+    // Therefore does not make a copy and does not claim storage
+    protected static DataFlavor headerComponentFlavor = new DataFlavor(
+            DataFlavor.javaJVMLocalObjectMimeType + "; class=\"" + HeaderComponent.class.getCanonicalName() + "\"",
+            "A HeaderComponent Object");
     protected static DataFlavor[] supportedFlavors = { headerComponentFlavor };
 
     HeaderComponent headerComponent;
