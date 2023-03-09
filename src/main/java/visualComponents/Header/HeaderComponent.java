@@ -318,7 +318,14 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
         parentContainer.revalidate();
         parentContainer.repaint();
     }
-
+/**
+ * Adds a Header before the current element
+ * @param actionText Action text which is represented in Contextmenu
+ * @param keystroke Keystroke which is binded
+ * @param actionMapKey ActionMapKey for binding purporses. Needs to be uniqe
+ * @param sepBefore Tells, if a separator in the contextmenu beforehand is needed
+ * @param sepAfter Tells, if a separator in the contextmenue afterwards is needed
+ */
     private void addingHeaderBeforeActions(String actionText, KeyStroke keystroke, String actionMapKey,
             boolean sepBefore, boolean sepAfter) {
         HeaderComponent self = this;
@@ -470,7 +477,7 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
     private void openHeader() {
         icon.setArrowOpen();
         this.isOpen = true;
-        this.setMaximumSize(new Dimension(2147483647, this.HEADERCONTAINER_UNFOLDED_HEIGHT));
+        this.setMaximumSize(new Dimension(2147483647, HeaderComponent.HEADERCONTAINER_UNFOLDED_HEIGHT));
         this.textArea.setVisible(true);
         this.headerContent.setVisible(true);
         this.textArea.textArea.setFocusable(true);
@@ -484,7 +491,7 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
     private void closeHeader() {
         icon.setArrowClose();
         this.isOpen = false;
-        this.setMaximumSize(new Dimension(2147483647, this.HEADERCONTAINER_FOLDED_HEIGHT));
+        this.setMaximumSize(new Dimension(2147483647, HeaderComponent.HEADERCONTAINER_FOLDED_HEIGHT));
         this.headerContent.setVisible(false);
         this.textArea.setVisible(false);
         this.textArea.textArea.setFocusable(false);
@@ -605,7 +612,7 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
             this.popupMenu.addSeparator();
 
         // makes keystroke possible without opening the contextmenue.
-        this.getInputMap(this.WHEN_FOCUSED).put(keystroke, actionMapKey);
+        this.getInputMap(HeaderComponent.WHEN_FOCUSED).put(keystroke, actionMapKey);
         this.getActionMap().put(actionMapKey, action);
     }
 
@@ -785,14 +792,13 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
     }
 
     private class DropTargetListenerHeaderComponents extends DropTargetAdapter {
-        private DropTarget dropTarget;
         private JPanel target;
         private AddingDirection direction;
 
         public DropTargetListenerHeaderComponents(JPanel target, AddingDirection direction, HeaderComponent self) {
             this.direction = direction;
             this.target = target;
-            dropTarget = new DropTarget(target, DnDConstants.ACTION_MOVE, this, true, null);
+            new DropTarget(target, DnDConstants.ACTION_MOVE, this, true, null);
         }
 
         private void removeDnDTargetElements() {
