@@ -70,6 +70,10 @@ public class Header implements Serializable{
         return this.subheaders;
     }
 
+    public boolean empty(){
+        return this.subheaders.isEmpty();
+    }
+
     /**
      * Remove self from old Parent element and then insert self into new Parent
      * Element.

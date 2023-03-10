@@ -290,7 +290,7 @@ public class MainFrame {
      */
     private void addWholeHeaderTree(Header root) {
         for (Header header : root.getSubheaders()) {
-            HeaderComponent hc = new HeaderComponent(WINDOW_BACKGROUND_COLOR, false, header, headerElementContainer);
+            HeaderComponent hc = new HeaderComponent(WINDOW_BACKGROUND_COLOR, header, headerElementContainer);
             headerElementContainer.add(hc);
             addWholeHeaderTree(header);
         }

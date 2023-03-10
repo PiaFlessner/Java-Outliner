@@ -17,9 +17,12 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.BoxLayout;
+import javax.swing.JButton;
 import javax.swing.KeyStroke;
 import javax.swing.event.MouseInputAdapter;
 import java.awt.datatransfer.DataFlavor;
@@ -44,6 +47,7 @@ import javax.swing.JPopupMenu;
 public class HeaderComponent extends JPanel implements DragGestureListener {
 
     JPanel headerTitle;
+    JButton openListButton;
     JPanel distanceField;
     Icon icon;
 
@@ -67,6 +71,7 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
     final Color DND_TARGET_COLOR = new Color(180, 199, 231);
 
     boolean isOpen;
+    boolean isContentOpen;
     Header connectedHeader;
     static LinkedList<HeaderComponent> allHeaderComponents = new LinkedList<>();
     JPanel parentContainer;
@@ -92,8 +97,8 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
      * @param parentContainer The ParentContainer, which inherits all
      *                        HeaderComponents.
      */
-    public HeaderComponent(Color backgroundColor, boolean isOpen, Header connectedHeader, JPanel parentContainer) {
-        this.isOpen = isOpen;
+    public HeaderComponent(Color backgroundColor, Header connectedHeader, JPanel parentContainer) {
+        this.isOpen = true;
         this.parentContainer = parentContainer;
         this.connectedHeader = connectedHeader;
         this.backgroundColor = backgroundColor;
@@ -101,15 +106,17 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
         this.popupMenu = new JPopupMenu();
         this.setComponentPopupMenu(popupMenu);
         this.setFocusable(true);
-
+        this.isContentOpen = false;
         setUpHeaderTitle();
         setUpDropElements();
         setUpContent();
         addFocusingFunction();
-        setUpOpenHeaderFunction();
+        setUpOpenChildrenFunction();
         setUpHoverColorChangeFunction();
         setUpArrowHeaderNavigation();
         setUpEditTextfieldFunction();
+
+        this.closeContent();
         // Makes Element Draggable
         DragSource ds = new DragSource();
         ds.createDefaultDragGestureRecognizer(this, DnDConstants.ACTION_MOVE, this);
@@ -151,13 +158,6 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
 
         deleteHeaderAction("Delete Header", KeyStroke.getKeyStroke(KeyEvent.VK_BACK_SPACE, KeyEvent.CTRL_DOWN_MASK),
                 "deleteHeader");
-
-        // adjust open or not open size
-        if (isOpen) {
-            openHeader();
-        } else {
-            closeHeader();
-        }
 
         HeaderComponent.addInstance(this);
     }
@@ -208,11 +208,20 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
         titleContainerFlowLayout.setAlignOnBaseline(true);
         headerTitle.setLayout(titleContainerFlowLayout);
 
+        setUpOpenContextButton();
         setUpDistanceField();
 
         // Icon adding
         icon = new Icon();
         headerTitle.add(icon);
+
+        // Decide the Icon Picture
+        if (this.connectedHeader.empty()) {
+            icon.setArrowDefault();
+        } else if (this.isOpen) {
+            icon.setArrowOpen();
+        } else
+            icon.setArrowClose();
 
         setUpDisplayedNumber();
 
@@ -253,6 +262,30 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
             e.printStackTrace();
         }
         headerTitle.setDropTarget(dt);
+    }
+
+    private void setUpOpenContextButton() {
+        openListButton = new JButton("▤");
+        openListButton.setFocusable(false);
+        headerTitle.add(openListButton);
+        openListButton.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                openCloseContent();
+            }
+        });
+
+        // Keyboard Control
+        // Open via Space
+        String actionMapKey = "openHeader";
+        this.getInputMap().put(KeyStroke.getKeyStroke("SPACE"), actionMapKey);
+        this.getActionMap().put(actionMapKey, new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                openCloseContent();
+            }
+        });
     }
 
     private void setUpDistanceField() {
@@ -317,18 +350,8 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
      * backend.
      */
     private void deleteHeader() {
-        int displayIndex = parentContainer.getComponentZOrder(this);
-        // Affected are all, which are subheader to the focused header
-        ArrayList<Component> affectedHeaderComponents = this.getConnectedSubHeaderToComponent(displayIndex);
         this.connectedHeader.getParentElement().deleteSubheader(this.connectedHeader);
-
-        for (Component hc : affectedHeaderComponents) {
-            parentContainer.remove(hc);
-            HeaderComponent.deleteInstance((HeaderComponent) hc);
-        }
-        HeaderComponent.refreshNumbers();
-        parentContainer.revalidate();
-        parentContainer.repaint();
+        reloadComponents();
     }
 
     /**
@@ -352,7 +375,7 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
                 Header beforeHeader = self.connectedHeader.getHeaderViaIndex(Header.ROOT, insertIndex + 1);
                 Header h = new Header("Add Title Here", beforeHeader.getOwnNr(), beforeHeader.getParentElement(),
                         false);
-                HeaderComponent hc = new HeaderComponent(backgroundColor, false, h, parentContainer);
+                HeaderComponent hc = new HeaderComponent(backgroundColor, h, parentContainer);
                 parentContainer.add(hc, h.getIndex(Header.ROOT) - 1);
                 HeaderComponent.refreshNumbers();
                 parentContainer.revalidate();
@@ -374,34 +397,12 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
             @Override
             public void actionPerformed(ActionEvent e) {
                 int indexInParent = self.connectedHeader.getOwnNr() + addPlace;
-                Header h = new Header("Add Title Here", indexInParent, parentElement, false);
-                HeaderComponent hc = new HeaderComponent(backgroundColor, false, h, parentContainer);
-                parentContainer.add(hc, h.getIndex(Header.ROOT) - 1);
-                HeaderComponent.refreshNumbers();
-                parentContainer.revalidate();
-                parentContainer.repaint();
+                new Header("Add Title Here", indexInParent, parentElement, false);
+                reloadComponents();
+                parentContainer.getComponent(connectedHeader.getIndex(Header.ROOT) - 1).requestFocusInWindow();
             }
         };
         contextMenuAdding(actionText, action, keystroke, actionMapKey, sepBefore, sepAfter);
-    }
-
-    /**
-     * Gets all the Components, which belongs to one Header.
-     * 
-     * @param displayIndex The startIndex in the GUI Container of the Header which
-     *                     is affected
-     * @param hc           The affected HeaderComponent
-     * @return ArrayList of HeaderComponents, which should be also shifted.
-     */
-    private ArrayList<Component> getConnectedSubHeaderToComponent(int displayIndex) {
-        int rangeOfShiftElements = this.connectedHeader.getTotalSubTreeCount() + 1;
-        ArrayList<Component> affectedHeaderComponents = new ArrayList<>();
-
-        // gets the affected components
-        for (int i = displayIndex, j = 0; j < rangeOfShiftElements; i++, j++) {
-            affectedHeaderComponents.add(parentContainer.getComponent(i));
-        }
-        return affectedHeaderComponents;
     }
 
     /**
@@ -463,11 +464,10 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
     }
 
     /**
-     * Visibly opens the header.
+     * Visibly opens the header content.
      */
-    private void openHeader() {
-        icon.setArrowOpen();
-        this.isOpen = true;
+    private void openContent() {
+        this.isContentOpen = true;
         this.setMaximumSize(new Dimension(2147483647, HeaderComponent.HEADERCONTAINER_UNFOLDED_HEIGHT));
         this.textArea.setVisible(true);
         this.headerContent.setVisible(true);
@@ -477,11 +477,10 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
     }
 
     /**
-     * Visibly closes the header.
+     * Visibly closes the header content.
      */
-    private void closeHeader() {
-        icon.setArrowClose();
-        this.isOpen = false;
+    private void closeContent() {
+        this.isContentOpen = false;
         this.setMaximumSize(new Dimension(2147483647, HeaderComponent.HEADERCONTAINER_FOLDED_HEIGHT));
         this.headerContent.setVisible(false);
         this.textArea.setVisible(false);
@@ -493,11 +492,63 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
     /**
      * Inherits the logic to open and close a subeader
      */
-    private void openClose() {
-        if (this.isOpen) {
-            closeHeader();
+    private void openCloseContent() {
+        if (this.isContentOpen) {
+            closeContent();
         } else {
-            openHeader();
+            openContent();
+        }
+    }
+
+    /**
+     * Makes the Children of the Header visible
+     */
+    private void openChildren() {
+        if (!this.connectedHeader.empty()) {
+
+            this.isOpen = true;
+            icon.setArrowOpen();
+            int childrenCount = this.connectedHeader.getTotalSubTreeCount();
+            int ownPosition = parentContainer.getComponentZOrder(this);
+
+            // Make all affected HeaderComponents visible
+            for (int i = ownPosition; i <= childrenCount + ownPosition; i++) {
+                parentContainer.getComponent(i).setVisible(true);
+            }
+
+            revalidate();
+            repaint();
+        }
+    }
+
+    /**
+     * Makes the Children of a Header invisible
+     */
+    private void closeChildren() {
+        if (!connectedHeader.empty()) {
+            this.isOpen = false;
+            icon.setArrowClose();
+            int childrenCount = this.connectedHeader.getTotalSubTreeCount();
+            int ownPosition = parentContainer.getComponentZOrder(this);
+
+            // Make all affected HeaderComponents invisible
+            for (int i = ownPosition + 1; i <= childrenCount + ownPosition; i++) {
+                parentContainer.getComponent(i).setVisible(false);
+            }
+
+            revalidate();
+            repaint();
+        }
+    }
+
+    /**
+     * Inherits the logic to open and close the children to a Header
+     */
+    private void openCloseChildren() {
+        if (this.isOpen) {
+            closeChildren();
+        } else {
+            openChildren();
         }
     }
 
@@ -557,23 +608,23 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
     /**
      * Sets up the open Header function via keystrokes and via mouse click.
      */
-    private void setUpOpenHeaderFunction() {
+    private void setUpOpenChildrenFunction() {
         // KeyStroke Function open
-        String openMapKey = "openHeader";
+        String openMapKey = "openSubHeader";
         this.getInputMap().put((KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, 0)), openMapKey);
         this.getActionMap().put(openMapKey, new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                openHeader();
+                openChildren();
             }
         });
         // KeyStroke Function close
-        String closeMapKey = "closeHeader";
+        String closeMapKey = "closeSubHeader";
         this.getInputMap().put((KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, 0)), closeMapKey);
         this.getActionMap().put(closeMapKey, new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                closeHeader();
+                closeChildren();
             }
         });
 
@@ -581,7 +632,7 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
         this.addMouseListener(new MouseInputAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                openClose();
+                openCloseChildren();
             }
         });
     }
@@ -734,14 +785,13 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
 
             }
         }
-
     }
 
     /**
      * Reload the components
      */
     private void reloadComponents() {
-        //small hack to prevent strange focus flickering
+        // small hack to prevent strange focus flickering
         parentContainer.requestFocus();
         parentContainer.removeAll();
         HeaderComponent.deleteAllInstances();
@@ -757,7 +807,7 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
      */
     private void addWholeHeaderTree(Header root) {
         for (Header header : root.getSubheaders()) {
-            HeaderComponent hc = new HeaderComponent(backgroundColor, false, header, parentContainer);
+            HeaderComponent hc = new HeaderComponent(backgroundColor, header, parentContainer);
             parentContainer.add(hc);
             addWholeHeaderTree(header);
         }
@@ -830,6 +880,9 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
             new DropTarget(target, DnDConstants.ACTION_MOVE, this, true, null);
         }
 
+        /**
+         * Removes the Drag and Drop Target Element, for example when the user is not in the Header anymore
+         */
         private void removeDnDTargetElements() {
             remove(dropPanel);
             add(headerTitle, BorderLayout.CENTER);
@@ -868,6 +921,7 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
             }
 
         }
+
         /**
          * Replaces the Header to the next neighbour from the target.
          * "This" ist the target.

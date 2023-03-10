@@ -21,7 +21,7 @@ public class ToolBoxAddHeaderToRootAction extends AbstractAction{
     @Override
     public void actionPerformed(ActionEvent e) {
         Header h = new Header("Add Title Here", -1,mainFrame.getRoot(),false);
-        HeaderComponent hc = new HeaderComponent(MainFrame.WINDOW_BACKGROUND_COLOR,  false, h, this.parentContainer);
+        HeaderComponent hc = new HeaderComponent(MainFrame.WINDOW_BACKGROUND_COLOR, h, this.parentContainer);
         parentContainer.add(hc); 
         parentContainer.revalidate();
         parentContainer.repaint();

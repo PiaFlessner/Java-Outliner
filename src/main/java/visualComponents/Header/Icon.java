@@ -18,6 +18,10 @@ public class Icon extends JLabel{
         this.setFont(new Font(getFont().getName(), Font.PLAIN, iconSize));
     }
 
+    public void setArrowDefault(){
+        this.setText("•");
+    }
+
     /**
      * Changes the arrow to the open symbol.
      */
