@@ -20,8 +20,6 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
-import javax.lang.model.util.ElementScanner6;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.BoxLayout;
@@ -43,7 +41,6 @@ import java.awt.dnd.DropTargetEvent;
 import java.awt.Cursor;
 import java.awt.event.MouseEvent;
 import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.TooManyListenersException;
 import javax.swing.JPopupMenu;
 
