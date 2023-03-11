@@ -18,6 +18,9 @@ public class Header implements Serializable{
     private static final String DISPLAYDIVIDER = ".";
     private transient Logger log = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
     public static Header ROOT;
+    //Saving for reload components
+    private boolean showSubHeader;
+    private boolean showText;
 
 
     public Header(String title, int ownNr, Header parentElement, boolean isRoot) {
@@ -26,6 +29,9 @@ public class Header implements Serializable{
         subheaders = new LinkedList<>();
         this.setParentElement(parentElement, this.ownNr - 1);
         this.isRoot = isRoot;
+        this.showSubHeader = false;
+        this.showSubHeader = true;
+
     }
 
 
@@ -68,6 +74,22 @@ public class Header implements Serializable{
 
     public List<Header> getSubheaders(){
         return this.subheaders;
+    }
+
+    public boolean isShowSubHeader(){
+        return this.showSubHeader;
+    }
+
+    public boolean isShowText(){
+        return this.showText;
+    }
+
+    public void setShowText(boolean showText){
+        this.showText = showText;
+    }
+
+    public void setShowSubHeader(boolean showSubHeader){
+        this.showSubHeader = showSubHeader;
     }
 
     public boolean empty(){
