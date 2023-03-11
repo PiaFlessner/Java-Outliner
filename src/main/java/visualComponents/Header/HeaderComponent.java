@@ -76,7 +76,7 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
 
     Header connectedHeader;
     static LinkedList<HeaderComponent> allHeaderComponents = new LinkedList<>();
-    static JPanel parentContainer;
+    public static JPanel parentContainer;
 
     JPanel dropPanel;
 
@@ -195,6 +195,10 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
      */
     public static void deleteAllInstances() {
         HeaderComponent.allHeaderComponents.clear();
+    }
+
+    public static void setParentCointainer(JPanel parentContainer){
+        HeaderComponent.parentContainer = parentContainer;
     }
 
     /**

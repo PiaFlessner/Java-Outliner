@@ -156,6 +156,7 @@ public class MainFrame {
         headerElementContainer.setBackground(WINDOW_BACKGROUND_COLOR);
         // inherit contextmenue
         headerElementContainer.setInheritsPopupMenu(true);
+        HeaderComponent.setParentCointainer(headerElementContainer);
 
         // Configure Scroller Element
         headerElementScroller = new JScrollPane();
