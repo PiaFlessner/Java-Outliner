@@ -39,6 +39,7 @@ import java.awt.dnd.DropTargetDropEvent;
 import java.awt.dnd.DropTargetEvent;
 import java.awt.Cursor;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.TooManyListenersException;
 import javax.swing.JPopupMenu;
@@ -62,6 +63,7 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
     JPopupMenu popupMenu;
 
     Color backgroundColor;
+
     final Color EDIT_COLOR = new Color(242, 242, 242);
     static final int HEADERCONTAINER_FOLDED_HEIGHT = 40;
     static final int HEADERCONTAINER_UNFOLDED_HEIGHT = 200;
@@ -87,14 +89,15 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
      * Numbers, Icon, Title and inherited Text.
      * 
      * @param backgroundColor backgroundcolor which should be used.
-     * @param isOpenChildren          Determines, if the Container should be instantiated
+     * @param isOpenChildren  Determines, if the Container should be instantiated
      *                        opened or closed.
      * @param connectedHeader The Backend Header Element which belongs to the
      *                        ComponentHeader.
      * @param parentContainer The ParentContainer, which inherits all
      *                        HeaderComponents.
      */
-    public HeaderComponent(Color backgroundColor, Header connectedHeader, JPanel parentContainer, boolean isChildrenOpen, boolean isContentOpen) {
+    public HeaderComponent(Color backgroundColor, Header connectedHeader, JPanel parentContainer,
+            boolean isChildrenOpen, boolean isContentOpen) {
         this.parentContainer = parentContainer;
         this.connectedHeader = connectedHeader;
         this.backgroundColor = backgroundColor;
@@ -318,8 +321,10 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
 
         this.add(headerContent, BorderLayout.CENTER);
 
-        if(connectedHeader.isShowText()) openContent();
-        else closeContent();
+        if (connectedHeader.isShowText())
+            openContent();
+        else
+            closeContent();
 
     }
 
@@ -373,7 +378,8 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
                 Header beforeHeader = self.connectedHeader.getHeaderViaIndex(Header.ROOT, insertIndex + 1);
                 Header h = new Header("Add Title Here", beforeHeader.getOwnNr(), beforeHeader.getParentElement(),
                         false);
-                HeaderComponent hc = new HeaderComponent(backgroundColor, h, parentContainer, h.isShowSubHeader(), h.isShowText());
+                HeaderComponent hc = new HeaderComponent(backgroundColor, h, parentContainer, h.isShowSubHeader(),
+                        h.isShowText());
                 parentContainer.add(hc, h.getIndex(Header.ROOT) - 1);
                 HeaderComponent.refreshNumbers();
                 parentContainer.revalidate();
@@ -505,18 +511,23 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
         if (!connectedHeader.empty()) {
             connectedHeader.setShowSubHeader(true);
             icon.setArrowOpen();
-            int childrenCount = this.connectedHeader.getTotalSubTreeCount();
-            int ownPosition = parentContainer.getComponentZOrder(this);
 
-            // Make all affected HeaderComponents visible
-            for (int i = ownPosition; i <= childrenCount + ownPosition; i++) {
-                Component trendingComponent = parentContainer.getComponent(i);
-                trendingComponent.setVisible(connectedHeader.isShowSubHeader());
-                trendingComponent.setFocusable(connectedHeader.isShowSubHeader());
+            //Iterate throuh header and change visibility State
+            for (Header header : connectedHeader.getSubheaders()) {
+                int zOrderIndex = header.getIndex(Header.ROOT) - 1;
+                HeaderComponent hc = (HeaderComponent) parentContainer.getComponent(zOrderIndex);
+
+                hc.setVisible(connectedHeader.isShowSubHeader());
+                hc.setFocusable(connectedHeader.isShowSubHeader());
+                
+                //Only show the Subsub header, if the subheader is marked as open
+                if (header.isShowSubHeader()) {
+                    hc.openChildren();
+                }
             }
-            revalidate();
-            repaint();
         }
+        revalidate();
+        repaint();
     }
 
     /**
@@ -526,19 +537,27 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
         if (!connectedHeader.empty()) {
             connectedHeader.setShowSubHeader(false);
             icon.setArrowClose();
-            int childrenCount = this.connectedHeader.getTotalSubTreeCount();
-            int ownPosition = parentContainer.getComponentZOrder(this);
-
-            // Make all affected HeaderComponents invisible
-            for (int i = ownPosition + 1; i <= childrenCount + ownPosition; i++) {
-                Component trendingComponent = parentContainer.getComponent(i);
-                trendingComponent.setVisible(connectedHeader.isShowSubHeader());
-                trendingComponent.setFocusable(connectedHeader.isShowSubHeader());
-            }
-
+            changeHeaderComponentsChildrenDisplaying(connectedHeader.isShowSubHeader());
             revalidate();
             repaint();
         }
+    }
+
+    /**
+     * Changes the visibility of Header, without changing the status of it.
+     * Needed, when Closing a Parent HeaderComponent, but the Subheader are
+     * open. Therfore,  Header.isShowChildren is not allowed to be changed.
+     * @param display true = displaying components | false = hide components
+     */
+    private void changeHeaderComponentsChildrenDisplaying(boolean display) {
+        for (Header header : connectedHeader.getSubheaders()) {
+            int zOrderIndex = header.getIndex(Header.ROOT) - 1;
+            HeaderComponent hc = (HeaderComponent) parentContainer.getComponent(zOrderIndex);
+            hc.setVisible(display);
+            hc.setFocusable(display);
+            hc.changeHeaderComponentsChildrenDisplaying(display);
+        }
+
     }
 
     /**
@@ -796,13 +815,16 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
         parentContainer.removeAll();
         HeaderComponent.deleteAllInstances();
         this.addWholeHeaderTree(Header.ROOT);
-        //Since the Subheader Components are not even existing, when generating a Header Component,
+        // Since the Subheader Components are not even existing, when generating a
+        // Header Component,
         // the open Close Property
-        //of Subheader Components needs to be setted afterward.
+        // of Subheader Components needs to be setted afterward.
         for (HeaderComponent headerComponent : HeaderComponent.allHeaderComponents) {
-            if(headerComponent.connectedHeader.isShowSubHeader()) headerComponent.openChildren();
-            else headerComponent.closeChildren();
-            
+            if (headerComponent.connectedHeader.isShowSubHeader())
+                headerComponent.openChildren();
+            else
+                headerComponent.closeChildren();
+
         }
         parentContainer.revalidate();
         parentContainer.repaint();
@@ -815,7 +837,8 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
      */
     private void addWholeHeaderTree(Header root) {
         for (Header header : root.getSubheaders()) {
-            HeaderComponent hc = new HeaderComponent(backgroundColor, header, parentContainer, header.isShowSubHeader(), header.isShowText());
+            HeaderComponent hc = new HeaderComponent(backgroundColor, header, parentContainer, header.isShowSubHeader(),
+                    header.isShowText());
             parentContainer.add(hc);
             addWholeHeaderTree(header);
         }
@@ -889,7 +912,8 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
         }
 
         /**
-         * Removes the Drag and Drop Target Element, for example when the user is not in the Header anymore
+         * Removes the Drag and Drop Target Element, for example when the user is not in
+         * the Header anymore
          */
         private void removeDnDTargetElements() {
             remove(dropPanel);
