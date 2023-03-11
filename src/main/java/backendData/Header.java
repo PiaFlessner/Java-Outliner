@@ -31,7 +31,6 @@ public class Header implements Serializable{
         this.isRoot = isRoot;
         this.showText = false;
         this.showSubHeader = true;
-
     }
 
 

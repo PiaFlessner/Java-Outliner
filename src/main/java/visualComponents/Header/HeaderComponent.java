@@ -122,25 +122,36 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
         DragSource ds = new DragSource();
         ds.createDefaultDragGestureRecognizer(this, DnDConstants.ACTION_MOVE, this);
 
-        //// Action addition, generates action as well as the contextmenue
+        generateAddingActions();
+        generateShiftingActions();
+        
+        deleteHeaderAction("Delete Header", KeyStroke.getKeyStroke(KeyEvent.VK_BACK_SPACE, KeyEvent.CTRL_DOWN_MASK),
+                "deleteHeader");
+
+        HeaderComponent.addInstance(this);
+    }
+
+    private void generateAddingActions(){
+
         // add header to same level before current
         addingHeaderActions(0, "Add Header on same level before", connectedHeader.getParentElement(),
                 KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, KeyEvent.ALT_DOWN_MASK), "addSubheaderToParentBefore", true,
                 false);
-
         // add subheader before adding function
         addingHeaderBeforeActions("Add before",
-                KeyStroke.getKeyStroke(KeyEvent.VK_UP, KeyEvent.ALT_DOWN_MASK), "addSubHeaderBefore", false, false);
+        KeyStroke.getKeyStroke(KeyEvent.VK_UP, KeyEvent.ALT_DOWN_MASK), "addSubHeaderBefore", false, false);
 
         // add subheader at ending adding function
         addingHeaderActions(-1, "Add Subheader", connectedHeader,
-                KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, KeyEvent.ALT_DOWN_MASK), "addSubHeaderEnd", false, false);
+        KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, KeyEvent.ALT_DOWN_MASK), "addSubHeaderEnd", false, false);
 
         // add header to same level after current
         addingHeaderActions(1, "Add Header on same level after", connectedHeader.getParentElement(),
-                KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, KeyEvent.ALT_DOWN_MASK), "addSubheaderToParentAfter", false,
-                true);
+        KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, KeyEvent.ALT_DOWN_MASK), "addSubheaderToParentAfter", false,
+        true);
+    }
 
+    private void generateShiftingActions(){
         shiftHeaderAction(1, "Shift header up",
                 KeyStroke.getKeyStroke(KeyEvent.VK_UP, KeyEvent.SHIFT_DOWN_MASK),
                 "shiftOneUp", false, false, false);
@@ -156,11 +167,6 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
         shiftTreeLevelUpDownAction("Shift header level down",
                 KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, KeyEvent.SHIFT_DOWN_MASK), "shiftLevelDown", true, false,
                 true);
-
-        deleteHeaderAction("Delete Header", KeyStroke.getKeyStroke(KeyEvent.VK_BACK_SPACE, KeyEvent.CTRL_DOWN_MASK),
-                "deleteHeader");
-
-        HeaderComponent.addInstance(this);
     }
 
     /**
