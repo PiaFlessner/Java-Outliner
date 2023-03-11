@@ -19,6 +19,7 @@ import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.lang.model.util.ElementScanner6;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.BoxLayout;
@@ -114,6 +115,7 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
         setUpHoverColorChangeFunction();
         setUpArrowHeaderNavigation();
         setUpEditTextfieldFunction();
+
         // Makes Element Draggable
         DragSource ds = new DragSource();
         ds.createDefaultDragGestureRecognizer(this, DnDConstants.ACTION_MOVE, this);
@@ -519,7 +521,7 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
 
                 hc.setVisible(connectedHeader.isShowSubHeader());
                 hc.setFocusable(connectedHeader.isShowSubHeader());
-                
+
                 //Only show the Subsub header, if the subheader is marked as open
                 if (header.isShowSubHeader()) {
                     hc.openChildren();
@@ -557,7 +559,6 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
             hc.setFocusable(display);
             hc.changeHeaderComponentsChildrenDisplaying(display);
         }
-
     }
 
     /**
@@ -582,7 +583,7 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
         this.getActionMap().put(nextHeader, new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                self.shiftFocusOfHeader(1);
+                self.newShiftAmountOfHeader(false);
 
             }
         });
@@ -593,35 +594,88 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
         this.getActionMap().put(beforeHeader, new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                self.shiftFocusOfHeader(-1);
+                self.newShiftAmountOfHeader(true);
             }
         });
-
     }
 
     /**
-     * Implements the actual focus shifting logic for back, forth and looping
-     * behavior.
-     * If shifting forth at the end, the focus will be shifted at the start element.
-     * If shifting back at the start, the focus will be shiftet at the end element.
-     * 
-     * @param shiftAmount amount of shifting.
+     * Execudes the actual focus shifting via arrow up and down.#
+     * If the user crosses top and bottom border, it starts at the other end again.
+     * @param isUp true = up action | false = down action
      */
-    private void shiftFocusOfHeader(int shiftAmount) {
-        int newIndex = parentContainer.getComponentZOrder(this) + shiftAmount;
+    private void newShiftAmountOfHeader(boolean isUp){
 
-        // Shift to end, if index is smaller than 0
-        if (newIndex < 0) {
-            parentContainer.getComponent(parentContainer.getComponentCount() - 1).requestFocusInWindow();
-        }
-        // Shift to start, if index is gerater than actual component count
-        else if (newIndex > parentContainer.getComponentCount() - 1) {
-            parentContainer.getComponent(0).requestFocusInWindow();
-        }
-        // else perform as expected
-        else
-            parentContainer.getComponent(newIndex).requestFocusInWindow();
+        int componentIndex = parentContainer.getComponentZOrder(this);
+        int validBorderIndex;
+        int lastVisibleComponentIndex = getLastVisibleComponent();
 
+        //Back navigation (or up navigation)
+        if(isUp){
+            componentIndex--;
+            validBorderIndex = 0;
+            //correct the index, if the user exceeds up Border
+            if(componentIndex < validBorderIndex){
+                componentIndex = lastVisibleComponentIndex;
+            }
+            
+        }
+        //Forth Navigation (or down navigation)
+        else {
+            componentIndex++;
+            validBorderIndex = lastVisibleComponentIndex;
+            //Correct the index, if the user exceeds down border
+            if(componentIndex > validBorderIndex){
+                componentIndex = 0;
+            }
+        }
+        componentIndex = getNextPossibleFocusComponent(isUp,componentIndex,validBorderIndex);
+        Component component = parentContainer.getComponent(componentIndex);
+        component.requestFocusInWindow();
+    }
+
+    /**
+     * Works out the next possible focusable component recursivly
+     * @param isUp focus direction
+     * @param index index which should be checked, if its focusable
+     * @param lastElementIndex last allowed Element Index
+     * @return the nextPossibleComponent for focusing
+     */
+    private int getNextPossibleFocusComponent(boolean isUp, int index, int lastElementIndex){
+        Component component = parentContainer.getComponent(index);
+
+        if(isUp){
+            if(!component.isVisible()){
+                index--;
+                return getNextPossibleFocusComponent(isUp, index,lastElementIndex);
+            }
+            return index;
+        }
+            else{
+                if(!component.isVisible()){
+                    if(index == lastElementIndex) return 0;
+                    index++;
+                    return getNextPossibleFocusComponent(isUp, index,lastElementIndex);
+                }
+                return index;
+            }
+
+        }
+
+    /**
+     * Get the last possible componentZOrder Index.
+     * Possible means, that the component is actual visible.
+     * @return last componentZOrderIndex, which is visible.
+     */
+    private int getLastVisibleComponent(){
+        Component component = parentContainer.getComponent(parentContainer.getComponentCount() - 1);
+
+        int i = 1;
+        while(!component.isVisible()){
+            component = parentContainer.getComponent(parentContainer.getComponentCount() - 1 - i);
+            i++;
+        }
+        return parentContainer.getComponentZOrder(component);
     }
 
     /**
@@ -1076,7 +1130,6 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
         }
     }
 }
-
 /**
  * Class for preparing the Transferable with a Drag an Drop. Essential needed,
  * if someone want to perform a drag and drop Action.
