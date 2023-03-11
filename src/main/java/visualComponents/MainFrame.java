@@ -31,7 +31,6 @@ import main.java.visualComponents.ToolBox.ToolBoxComponent;
 public class MainFrame {
 
     Header headerRoot = new Header("Root", 0, null, true);
-
     JFrame window;
     JPanel headerElementContainer;
     JPanel masterContainer;
