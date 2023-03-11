@@ -42,7 +42,7 @@ import java.awt.dnd.DropTargetDropEvent;
 import java.awt.dnd.DropTargetEvent;
 import java.awt.Cursor;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.TooManyListenersException;
 import javax.swing.JPopupMenu;
@@ -75,7 +75,6 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
     final Color DND_TARGET_COLOR = new Color(180, 199, 231);
 
     Header connectedHeader;
-    static LinkedList<HeaderComponent> allHeaderComponents = new LinkedList<>();
     public static JPanel parentContainer;
 
     JPanel dropPanel;
@@ -127,8 +126,6 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
         
         deleteHeaderAction("Delete Header", KeyStroke.getKeyStroke(KeyEvent.VK_BACK_SPACE, KeyEvent.CTRL_DOWN_MASK),
                 "deleteHeader");
-
-        HeaderComponent.addInstance(this);
     }
 
     private void generateAddingActions(){
@@ -169,39 +166,6 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
                 true);
     }
 
-    /**
-     * adds an HeaderComponent to the allInstances List.
-     * 
-     * @param hc
-     */
-    public static void addInstance(HeaderComponent hc) {
-        allHeaderComponents.add(hc);
-    }
-
-    /**
-     * Deletes an HeaderComponent
-     * 
-     * @param hc
-     */
-    public static void deleteInstance(HeaderComponent hc) {
-        allHeaderComponents.remove(hc);
-    }
-
-    /**
-     * refreshes all displayed Numbers based on the backend information
-     */
-    public static void refreshNumbers() {
-        for (HeaderComponent hc : HeaderComponent.allHeaderComponents) {
-            hc.displayedNumber.setText(hc.connectedHeader.getLabelNr());
-        }
-    }
-
-    /**
-     * Deletes all instances from the allHeaderComponents.
-     */
-    public static void deleteAllInstances() {
-        HeaderComponent.allHeaderComponents.clear();
-    }
 
     public static void setParentCointainer(JPanel parentContainer){
         HeaderComponent.parentContainer = parentContainer;
@@ -395,14 +359,10 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
             public void actionPerformed(ActionEvent e) {
                 int insertIndex = self.connectedHeader.getIndex(Header.ROOT) - 1;
                 Header beforeHeader = self.connectedHeader.getHeaderViaIndex(Header.ROOT, insertIndex + 1);
-                Header h = new Header("Add Title Here", beforeHeader.getOwnNr(), beforeHeader.getParentElement(),
+                new Header("Add Title Here", beforeHeader.getOwnNr(), beforeHeader.getParentElement(),
                         false);
-                HeaderComponent hc = new HeaderComponent(backgroundColor, h, parentContainer, h.isShowSubHeader(),
-                        h.isShowText());
-                parentContainer.add(hc, h.getIndex(Header.ROOT) - 1);
-                HeaderComponent.refreshNumbers();
-                parentContainer.revalidate();
-                parentContainer.repaint();
+                reloadComponents();
+                parentContainer.getComponent(connectedHeader.getIndex(Header.ROOT) - 1).requestFocusInWindow();
             }
         };
         contextMenuAdding(actionText, action, keystroke, actionMapKey, sepBefore, sepAfter);
@@ -884,18 +844,18 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
         // small hack to prevent strange focus flickering
         parentContainer.requestFocus();
         parentContainer.removeAll();
-        HeaderComponent.deleteAllInstances();
         addWholeHeaderTree(Header.ROOT);
+
         // Since the Subheader Components are not even existing, when generating a
         // Header Component,
         // the open Close Property
         // of Subheader Components needs to be setted afterward.
-        for (HeaderComponent headerComponent : HeaderComponent.allHeaderComponents) {
-            if (headerComponent.connectedHeader.isShowSubHeader())
-                headerComponent.openChildren();
+        for (Component component : parentContainer.getComponents()) {
+            HeaderComponent hc = (HeaderComponent) component;
+            if (hc.connectedHeader.isShowSubHeader())
+                hc.openChildren();
             else
-                headerComponent.closeChildren();
-
+                hc.closeChildren();
         }
         parentContainer.revalidate();
         parentContainer.repaint();
@@ -1120,7 +1080,7 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
                     dtde.acceptDrop(DnDConstants.ACTION_MOVE);
 
                     // Action which should be followed after drag and drop
-                    assert HeaderComponent.allHeaderComponents.contains(headerComponent);
+                    assert Arrays.stream(parentContainer.getComponents()).anyMatch(headerComponent::equals);
 
                     switch (direction) {
                         case UP:
