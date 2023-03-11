@@ -7,6 +7,8 @@ import javax.swing.JTextField;
 
 import main.java.backendData.AddingDirection;
 import main.java.backendData.Header;
+import main.java.visualComponents.MainFrame;
+
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.KeyEvent;
@@ -74,7 +76,7 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
 
     Header connectedHeader;
     static LinkedList<HeaderComponent> allHeaderComponents = new LinkedList<>();
-    JPanel parentContainer;
+    static JPanel parentContainer;
 
     JPanel dropPanel;
 
@@ -868,12 +870,12 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
     /**
      * Reload the components
      */
-    private void reloadComponents() {
+    public static void reloadComponents() {
         // small hack to prevent strange focus flickering
         parentContainer.requestFocus();
         parentContainer.removeAll();
         HeaderComponent.deleteAllInstances();
-        this.addWholeHeaderTree(Header.ROOT);
+        addWholeHeaderTree(Header.ROOT);
         // Since the Subheader Components are not even existing, when generating a
         // Header Component,
         // the open Close Property
@@ -894,9 +896,9 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
      * 
      * @param root starting point of adding. Mostly the root.
      */
-    private void addWholeHeaderTree(Header root) {
+    private static void addWholeHeaderTree(Header root) {
         for (Header header : root.getSubheaders()) {
-            HeaderComponent hc = new HeaderComponent(backgroundColor, header, parentContainer, header.isShowSubHeader(),
+            HeaderComponent hc = new HeaderComponent(MainFrame.WINDOW_BACKGROUND_COLOR, header, parentContainer, header.isShowSubHeader(),
                     header.isShowText());
             parentContainer.add(hc);
             addWholeHeaderTree(header);

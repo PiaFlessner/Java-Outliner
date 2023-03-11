@@ -69,7 +69,7 @@ public class MainFrame {
         Header.ROOT = root;
         this.headerRoot = root;
 
-        this.reloadComponents();
+        HeaderComponent.reloadComponents();
     }
 
     public Header getRoot() {
@@ -272,27 +272,5 @@ public class MainFrame {
                 "show or Hide Toolbox");
         masterContainer.getActionMap().put("show or Hide Toolbox", showHideAction);
         showToolbarMenuItem.setAction(showHideAction);
-    }
-
-    private void reloadComponents() {
-
-        headerElementContainer.removeAll();
-        HeaderComponent.deleteAllInstances();
-        this.addWholeHeaderTree(headerRoot);
-        headerElementContainer.revalidate();
-        headerElementContainer.repaint();
-    }
-
-    /**
-     * Recursive methods which adds a whole Header inclusive subheaders to the GUI
-     * 
-     * @param root starting point of adding. Mostly the root.
-     */
-    private void addWholeHeaderTree(Header root) {
-        for (Header header : root.getSubheaders()) {
-            HeaderComponent hc = new HeaderComponent(WINDOW_BACKGROUND_COLOR, header, headerElementContainer, header.isShowSubHeader(), header.isShowText());
-            headerElementContainer.add(hc);
-            addWholeHeaderTree(header);
-        }
     }
 }
