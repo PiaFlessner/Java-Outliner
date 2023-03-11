@@ -355,8 +355,13 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
      * backend.
      */
     private void deleteHeader() {
-        this.connectedHeader.getParentElement().deleteSubheader(this.connectedHeader);
+        int focusIndex =  parentContainer.getComponentZOrder(this);
+        focusIndex--;
+        //correct the index, if its not in the borders anymore;
+        if(focusIndex < 0) focusIndex = 0;
+        connectedHeader.getParentElement().deleteSubheader(this.connectedHeader);
         reloadComponents();
+        parentContainer.getComponent(focusIndex).requestFocusInWindow();
     }
 
     /**
