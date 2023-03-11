@@ -29,7 +29,7 @@ public class Header implements Serializable{
         subheaders = new LinkedList<>();
         this.setParentElement(parentElement, this.ownNr - 1);
         this.isRoot = isRoot;
-        this.showSubHeader = false;
+        this.showText = false;
         this.showSubHeader = true;
 
     }
