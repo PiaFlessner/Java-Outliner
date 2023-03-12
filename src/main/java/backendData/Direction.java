@@ -1,6 +1,6 @@
 package main.java.backendData;
 
-public enum AddingDirection {
+public enum Direction {
     UP,
     DOWN,
     SUB

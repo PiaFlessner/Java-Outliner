@@ -5,7 +5,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import main.java.backendData.AddingDirection;
+import main.java.backendData.Direction;
 import main.java.backendData.Header;
 import main.java.visualComponents.MainFrame;
 
@@ -146,18 +146,18 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
     private void generateShiftingActions(){
         shiftHeaderAction(1, "Shift header up",
                 KeyStroke.getKeyStroke(KeyEvent.VK_UP, KeyEvent.SHIFT_DOWN_MASK),
-                "shiftOneUp", AddingDirection.UP, false, false);
+                "shiftOneUp", Direction.UP, false, false);
 
         shiftHeaderAction(1, "Shift header down",
                 KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, KeyEvent.SHIFT_DOWN_MASK),
-                "shiftOneDown", AddingDirection.DOWN, false, false);
+                "shiftOneDown", Direction.DOWN, false, false);
 
         shiftTreeLevelUpDownAction("Shift header level up",
-                KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, KeyEvent.SHIFT_DOWN_MASK), "shiftLevelUp", AddingDirection.UP, false,
+                KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, KeyEvent.SHIFT_DOWN_MASK), "shiftLevelUp", Direction.UP, false,
                 false);
 
         shiftTreeLevelUpDownAction("Shift header level down",
-                KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, KeyEvent.SHIFT_DOWN_MASK), "shiftLevelDown", AddingDirection.DOWN, false,
+                KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, KeyEvent.SHIFT_DOWN_MASK), "shiftLevelDown", Direction.DOWN, false,
                 true);
     }
 
@@ -398,7 +398,7 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
      *                     contextmenu
      */
     private void shiftHeaderAction(int shiftIndex, String actionText, KeyStroke keystroke, String actionMapKey,
-            AddingDirection direction, boolean sepBefore, boolean sepAfter) {
+            Direction direction, boolean sepBefore, boolean sepAfter) {
 
         HeaderComponent self = this;
         Action action = new AbstractAction(actionText) {
@@ -416,7 +416,7 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
      * @param shiftIndex Index to be shifted (always positive).
      * @param direction       true = shifting down, false = shifting up.
      */
-    private void shiftUpOrDown(int shiftIndex, AddingDirection direction) {
+    private void shiftUpOrDown(int shiftIndex, Direction direction) {
         int getFocusIndex;
         // if the direction is up or down, the operations are slightly different
 
@@ -773,7 +773,7 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
      *                     contextmenu
      */
     private void shiftTreeLevelUpDownAction(String actionText, KeyStroke keystroke, String actionMapKey,
-            AddingDirection direction, boolean sepBefore, boolean sepAfter) {
+            Direction direction, boolean sepBefore, boolean sepAfter) {
 
         HeaderComponent self = this;
         Action action = new AbstractAction(actionText) {
@@ -790,7 +790,7 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
      * 
      * @param down true= level down, false = level up
      */
-    private void shiftTreeLevelUpOrDown(AddingDirection direction) {
+    private void shiftTreeLevelUpOrDown(Direction direction) {
         int getFocusIndex;
         switch(direction){
             case DOWN: {
@@ -915,9 +915,9 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
         dropPanel.setVisible(true);
 
         // Sets the panels as drop Targets
-        new DropTargetListenerHeaderComponents(dropUpPanel, AddingDirection.UP);
-        new DropTargetListenerHeaderComponents(dropDownPanel, AddingDirection.DOWN);
-        new DropTargetListenerHeaderComponents(dropSubPanel, AddingDirection.SUB);
+        new DropTargetListenerHeaderComponents(dropUpPanel, Direction.UP);
+        new DropTargetListenerHeaderComponents(dropDownPanel, Direction.DOWN);
+        new DropTargetListenerHeaderComponents(dropSubPanel, Direction.SUB);
     }
 
     /**
@@ -936,9 +936,9 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
 
     private class DropTargetListenerHeaderComponents extends DropTargetAdapter {
         private JPanel target;
-        private AddingDirection direction;
+        private Direction direction;
 
-        public DropTargetListenerHeaderComponents(JPanel target, AddingDirection direction) {
+        public DropTargetListenerHeaderComponents(JPanel target, Direction direction) {
             this.direction = direction;
             this.target = target;
             new DropTarget(target, DnDConstants.ACTION_MOVE, this, true, null);
