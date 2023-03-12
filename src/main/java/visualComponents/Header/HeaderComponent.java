@@ -559,7 +559,7 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
         this.getActionMap().put(nextHeader, new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                self.shiftFocus(false);
+                self.shiftFocus(Direction.DOWN);
 
             }
         });
@@ -570,7 +570,7 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
         this.getActionMap().put(beforeHeader, new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                self.shiftFocus(true);
+                self.shiftFocus(Direction.UP);
             }
         });
     }
@@ -580,32 +580,33 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
      * If the user crosses top and bottom border, it starts at the other end again.
      * @param isUp true = up action | false = down action
      */
-    private void shiftFocus(boolean isUp){
+    private void shiftFocus(Direction direction){
 
         int componentIndex = parentContainer.getComponentZOrder(this);
-        int validBorderIndex;
+        int validBorderIndex = 0;
         int lastVisibleComponentIndex = getLastVisibleComponent();
 
-        //Back navigation (or up navigation)
-        if(isUp){
-            componentIndex--;
-            validBorderIndex = 0;
-            //correct the index, if the user exceeds up Border
-            if(componentIndex < validBorderIndex){
-                componentIndex = lastVisibleComponentIndex;
+        switch(direction){
+            case UP: {
+                componentIndex--;
+                validBorderIndex = 0;
+                //correct the index, if the user exceeds up Border
+                if(componentIndex < validBorderIndex){
+                    componentIndex = lastVisibleComponentIndex;
+                }
+                break;
             }
-            
-        }
-        //Forth Navigation (or down navigation)
-        else {
-            componentIndex++;
-            validBorderIndex = lastVisibleComponentIndex;
-            //Correct the index, if the user exceeds down border
-            if(componentIndex > validBorderIndex){
-                componentIndex = 0;
+            case DOWN: {
+                componentIndex++;
+                validBorderIndex = lastVisibleComponentIndex;
+                //Correct the index, if the user exceeds down border
+                if(componentIndex > validBorderIndex){
+                    componentIndex = 0;
+                }
+                break;
             }
         }
-        componentIndex = getNextPossibleFocusComponent(isUp,componentIndex,validBorderIndex);
+        componentIndex = getNextPossibleFocusComponent(direction,componentIndex,validBorderIndex);
         Component component = parentContainer.getComponent(componentIndex);
         component.requestFocusInWindow();
     }
@@ -617,26 +618,28 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
      * @param lastElementIndex last allowed Element Index
      * @return the nextPossibleComponent for focusing
      */
-    private int getNextPossibleFocusComponent(boolean isUp, int index, int lastElementIndex){
+    private int getNextPossibleFocusComponent(Direction direction, int index, int lastElementIndex){
         Component component = parentContainer.getComponent(index);
 
-        if(isUp){
-            if(!component.isVisible()){
-                index--;
-                return getNextPossibleFocusComponent(isUp, index,lastElementIndex);
-            }
-            return index;
-        }
-            else{
+        switch(direction){
+            case UP:{
                 if(!component.isVisible()){
-                    if(index == lastElementIndex) return 0;
-                    index++;
-                    return getNextPossibleFocusComponent(isUp, index,lastElementIndex);
+                    index--;
+                    return getNextPossibleFocusComponent(direction, index,lastElementIndex);
                 }
                 return index;
             }
-
+            case DOWN: {
+                if(!component.isVisible()){
+                    if(index == lastElementIndex) return 0;
+                    index++;
+                    return getNextPossibleFocusComponent(direction, index,lastElementIndex);
+                }
+                return index;
+            }
+            default: return 0;
         }
+    }
 
     /**
      * Get the last possible componentZOrder Index.
