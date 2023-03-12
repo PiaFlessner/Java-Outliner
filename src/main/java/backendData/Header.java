@@ -135,26 +135,6 @@ public class Header implements Serializable{
     }
 
     /**
-     * Switches two header with each other.
-     * Header Switching in own branch possible, but unexpected behavior.
-     * 
-     * @param targetHeader Header, with whom the element get switched with.
-     */
-    public void switchHeader(Header targetHeader) {
-        Header targetParent = targetHeader.parentElement;
-        int targetOwnNr = targetHeader.ownNr;
-
-        Header thisParent = this.parentElement;
-        int thisOwnNr = this.ownNr;
-
-        thisParent.deleteSubheader(this);
-        targetParent.deleteSubheader(targetHeader);
-
-        this.setParentElement(targetParent, targetOwnNr - 1);
-        targetHeader.setParentElement(thisParent, thisOwnNr - 1);
-
-    }
-    /**
      * Gets next the neighbour of a header.
      * @return next neighbour (neighbour of 1 would be 2).
      */
@@ -386,17 +366,5 @@ public class Header implements Serializable{
     public int getKnotLevel(int startCounter){
         if(this.isRoot) return startCounter;
         return this.parentElement.getKnotLevel(startCounter+1);
-    }
-    
-    /**
-     * Finds out, which overall branch the header is in.
-     * @return the root branch of the header.
-     */
-    private Header climbToRootAndSaveBranch() {
-        Header desiredKnot = this;
-        if (!this.parentElement.isRoot) {
-            desiredKnot = this.parentElement.climbToRootAndSaveBranch();
-        }
-        return desiredKnot;
     }
 }

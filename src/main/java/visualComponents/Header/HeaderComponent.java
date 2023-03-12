@@ -52,10 +52,8 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
     Icon icon;
 
     JLabel displayedNumber;
-    JTextField displayedNumberEdit;
 
     Title displayedHeaderTitle;
-    JTextField displayedHeaderTitleEdit;
 
     JPanel headerContent;
     TextArea textArea;
@@ -64,14 +62,14 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
 
     Color backgroundColor;
 
-    final Color EDIT_COLOR = new Color(242, 242, 242);
+    static final Color EDIT_COLOR = new Color(242, 242, 242);
     static final int HEADERCONTAINER_FOLDED_HEIGHT = 40;
     static final int HEADERCONTAINER_UNFOLDED_HEIGHT = 200;
-    final Color FOCUS_COLOR = new Color(214, 220, 229);
-    final Color DND_TARGET_HOVERCOLOR = new Color(143, 170, 220);
-    final Color DND_TARGET_COLOR = new Color(180, 199, 231);
+    static final Color FOCUS_COLOR = new Color(214, 220, 229);
+    static final Color DND_TARGET_HOVERCOLOR = new Color(143, 170, 220);
+    static final Color DND_TARGET_COLOR = new Color(180, 199, 231);
 
-    Header connectedHeader;
+    protected  Header connectedHeader;
     public static JPanel parentContainer;
 
     JPanel dropPanel;
