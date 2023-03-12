@@ -146,18 +146,18 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
     private void generateShiftingActions(){
         shiftHeaderAction(1, "Shift header up",
                 KeyStroke.getKeyStroke(KeyEvent.VK_UP, KeyEvent.SHIFT_DOWN_MASK),
-                "shiftOneUp", false, false, false);
+                "shiftOneUp", AddingDirection.UP, false, false);
 
         shiftHeaderAction(1, "Shift header down",
                 KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, KeyEvent.SHIFT_DOWN_MASK),
-                "shiftOneDown", true, false, false);
+                "shiftOneDown", AddingDirection.DOWN, false, false);
 
         shiftTreeLevelUpDownAction("Shift header level up",
-                KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, KeyEvent.SHIFT_DOWN_MASK), "shiftLevelUp", false, false,
+                KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, KeyEvent.SHIFT_DOWN_MASK), "shiftLevelUp", AddingDirection.UP, false,
                 false);
 
         shiftTreeLevelUpDownAction("Shift header level down",
-                KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, KeyEvent.SHIFT_DOWN_MASK), "shiftLevelDown", true, false,
+                KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, KeyEvent.SHIFT_DOWN_MASK), "shiftLevelDown", AddingDirection.DOWN, false,
                 true);
     }
 
@@ -391,20 +391,20 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
      *                     contextmenu.
      * @param keystroke    Keystroke, which will be used to execute the command.
      * @param actionMapKey actionKeymap for backend orientation.
-     * @param down         true= down shift, false= up shift.
+     * @param direction         true= down shift, false= up shift.
      * @param sepBefore    true = a separator before item will be added in
      *                     contextmenu
      * @param sepAfter     true = a separator after item will be added in
      *                     contextmenu
      */
     private void shiftHeaderAction(int shiftIndex, String actionText, KeyStroke keystroke, String actionMapKey,
-            boolean down, boolean sepBefore, boolean sepAfter) {
+            AddingDirection direction, boolean sepBefore, boolean sepAfter) {
 
         HeaderComponent self = this;
         Action action = new AbstractAction(actionText) {
             @Override
             public void actionPerformed(ActionEvent e) {
-                self.shiftUpOrDown(shiftIndex, down);
+                self.shiftUpOrDown(shiftIndex, direction);
             }
         };
         contextMenuAdding(actionText, action, keystroke, actionMapKey, sepBefore, sepAfter);
@@ -414,13 +414,15 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
      * Actual implementaion of HeaderShifting in Gui and Backend.
      * 
      * @param shiftIndex Index to be shifted (always positive).
-     * @param down       true = shifting down, false = shifting up.
+     * @param direction       true = shifting down, false = shifting up.
      */
-    private void shiftUpOrDown(int shiftIndex, boolean down) {
+    private void shiftUpOrDown(int shiftIndex, AddingDirection direction) {
         int getFocusIndex;
         // if the direction is up or down, the operations are slightly different
-        if (down) {
-            // only shift down, if the header is not the last element.
+
+        switch(direction){
+            case DOWN:{
+                 // only shift down, if the header is not the last element.
             if (this.connectedHeader.getNextNeigbourHeader() != null) {
                 this.connectedHeader.getParentElement()
                         .rearrangeSubHeader(this.connectedHeader.getOwnNr() - 1 + shiftIndex, connectedHeader);
@@ -428,18 +430,20 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
                 reloadComponents();
                 parentContainer.getComponent(getFocusIndex - 1).requestFocusInWindow();
             }
-
-        } else {
-            // only shift up, if the header ist not the first element.
-            if (this.connectedHeader.getBeforeNeigbourHeader() != null) {
-                this.connectedHeader.getParentElement()
-                        .rearrangeSubHeader(this.connectedHeader.getOwnNr() - 1 - shiftIndex, connectedHeader);
-                getFocusIndex = connectedHeader.getIndex(Header.ROOT);
-                reloadComponents();
-                parentContainer.getComponent(getFocusIndex - 1).requestFocusInWindow();
+                break;
             }
+            case UP : {
+                if (this.connectedHeader.getBeforeNeigbourHeader() != null) {
+                    this.connectedHeader.getParentElement()
+                            .rearrangeSubHeader(this.connectedHeader.getOwnNr() - 1 - shiftIndex, connectedHeader);
+                    getFocusIndex = connectedHeader.getIndex(Header.ROOT);
+                    reloadComponents();
+                    parentContainer.getComponent(getFocusIndex - 1).requestFocusInWindow();
+                }
+                break;
         }
     }
+}
 
     /**
      * Visibly opens the header content.
@@ -762,20 +766,20 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
      * @param actionText   Text which will be displayed in the contextmenue
      * @param keystroke    Used Keystroke for controlling with keyboard
      * @param actionMapKey backend actionMapKey, which should be unique
-     * @param down         true= level down, false = level up.
+     * @param direction    tells, if the direction is up or down
      * @param sepBefore    true = a separator before item will be added in
      *                     contextmenu
      * @param sepAfter     true = a separator after item will be added in
      *                     contextmenu
      */
     private void shiftTreeLevelUpDownAction(String actionText, KeyStroke keystroke, String actionMapKey,
-            boolean down, boolean sepBefore, boolean sepAfter) {
+            AddingDirection direction, boolean sepBefore, boolean sepAfter) {
 
         HeaderComponent self = this;
         Action action = new AbstractAction(actionText) {
             @Override
             public void actionPerformed(ActionEvent e) {
-                self.shiftTreeLevelUpOrDown(down);
+                self.shiftTreeLevelUpOrDown(direction);
             }
         };
         contextMenuAdding(actionText, action, keystroke, actionMapKey, sepBefore, sepAfter);
@@ -786,35 +790,38 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
      * 
      * @param down true= level down, false = level up
      */
-    private void shiftTreeLevelUpOrDown(boolean down) {
+    private void shiftTreeLevelUpOrDown(AddingDirection direction) {
         int getFocusIndex;
-        if (down) {
-            Header neighbour = this.connectedHeader.getNextNeigbourHeader();
-            Header beforeNeighbour = this.connectedHeader.getBeforeNeigbourHeader();
-            Header usedParent;
-            // Level down is only possible, if header has siblings.
-            if ((neighbour != null && this.connectedHeader.getOwnNr() == 1) ||
-                    (beforeNeighbour != null && this.connectedHeader.getOwnNr() > 1)) {
-
-                // #1 if self ownr = 1, then use nextSibling as new Parent (because there is no
-                // alternate)
-                if (this.connectedHeader.getOwnNr() == 1) {
-                    usedParent = neighbour;
-                } else {
-                    usedParent = beforeNeighbour;
+        switch(direction){
+            case DOWN: {
+                Header neighbour = this.connectedHeader.getNextNeigbourHeader();
+                Header beforeNeighbour = this.connectedHeader.getBeforeNeigbourHeader();
+                Header usedParent;
+                // Level down is only possible, if header has siblings.
+                if ((neighbour != null && this.connectedHeader.getOwnNr() == 1) ||
+                        (beforeNeighbour != null && this.connectedHeader.getOwnNr() > 1)) {
+    
+                    // #1 if self ownr = 1, then use nextSibling as new Parent (because there is no
+                    // alternate)
+                    if (this.connectedHeader.getOwnNr() == 1) {
+                        usedParent = neighbour;
+                    } else {
+                        usedParent = beforeNeighbour;
+                    }
+    
+                    // #2 delete self from current parent
+                    this.connectedHeader.getParentElement().deleteSubheader(this.connectedHeader);
+    
+                    // #3 add self to new Parent
+                    usedParent.insertNewSubheaderInBetween(this.connectedHeader.getOwnNr(), this.connectedHeader);
+                    getFocusIndex = this.connectedHeader.getIndex(Header.ROOT);
+                    reloadComponents();
+                    parentContainer.getComponent(getFocusIndex - 1).requestFocusInWindow();
                 }
-
-                // #2 delete self from current parent
-                this.connectedHeader.getParentElement().deleteSubheader(this.connectedHeader);
-
-                // #3 add self to new Parent
-                usedParent.insertNewSubheaderInBetween(this.connectedHeader.getOwnNr(), this.connectedHeader);
-                getFocusIndex = this.connectedHeader.getIndex(Header.ROOT);
-                reloadComponents();
-                parentContainer.getComponent(getFocusIndex - 1).requestFocusInWindow();
-            }
-        } else {
-            Header parentHeader = this.connectedHeader.getParentElement();
+                break;}
+            case UP : { 
+                
+                Header parentHeader = this.connectedHeader.getParentElement();
             // Level Up only possible, if parent is not root.
             if (!parentHeader.isRoot()) {
 
@@ -827,10 +834,10 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
                 getFocusIndex = this.connectedHeader.getIndex(Header.ROOT);
                 reloadComponents();
                 parentContainer.getComponent(getFocusIndex - 1).requestFocusInWindow();
-
-            }
+                break; }
         }
     }
+}
 
     /**
      * Reload the components
