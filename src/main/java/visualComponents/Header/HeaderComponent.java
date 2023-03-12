@@ -126,19 +126,19 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
     private void generateAddingActions(){
 
         // add header to same level before current
-        addingHeaderActions(0, "Add Header on same level before", connectedHeader.getParentElement(),
+        addingHeaderAction(0, "Add Header on same level before", connectedHeader.getParentElement(),
                 KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, KeyEvent.ALT_DOWN_MASK), "addSubheaderToParentBefore", true,
                 false);
         // add subheader before adding function
-        addingHeaderBeforeActions("Add before",
+        addingHeaderBeforeAction("Add before",
         KeyStroke.getKeyStroke(KeyEvent.VK_UP, KeyEvent.ALT_DOWN_MASK), "addSubHeaderBefore", false, false);
 
         // add subheader at ending adding function
-        addingHeaderActions(-1, "Add Subheader", connectedHeader,
+        addingHeaderAction(-1, "Add Subheader", connectedHeader,
         KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, KeyEvent.ALT_DOWN_MASK), "addSubHeaderEnd", false, false);
 
         // add header to same level after current
-        addingHeaderActions(1, "Add Header on same level after", connectedHeader.getParentElement(),
+        addingHeaderAction(1, "Add Header on same level after", connectedHeader.getParentElement(),
         KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, KeyEvent.ALT_DOWN_MASK), "addSubheaderToParentAfter", false,
         true);
     }
@@ -186,7 +186,7 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
         headerTitle.add(icon);
 
         // Decide the Icon Picture and Load the right children displaying
-        if (this.connectedHeader.empty()) {
+        if (this.connectedHeader.isEmpty()) {
             icon.setArrowDefault();
         } else if (connectedHeader.isShowSubHeader()) {
             icon.setArrowOpen();
@@ -346,7 +346,7 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
      * @param sepAfter     Tells, if a separator in the contextmenue afterwards is
      *                     needed
      */
-    private void addingHeaderBeforeActions(String actionText, KeyStroke keystroke, String actionMapKey,
+    private void addingHeaderBeforeAction(String actionText, KeyStroke keystroke, String actionMapKey,
             boolean sepBefore, boolean sepAfter) {
         HeaderComponent self = this;
         Action action = new AbstractAction(actionText) {
@@ -366,7 +366,7 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
     /**
      * Adds an add Header Action from the Focused Header.
      */
-    private void addingHeaderActions(int addPlace, String actionText, Header parentElement, KeyStroke keystroke,
+    private void addingHeaderAction(int addPlace, String actionText, Header parentElement, KeyStroke keystroke,
             String actionMapKey, boolean sepBefore, boolean sepAfter) {
         HeaderComponent self = this;
 
@@ -482,7 +482,7 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
      * Makes the Children of the Header visible
      */
     private void openChildren() {
-        if (!connectedHeader.empty()) {
+        if (!connectedHeader.isEmpty()) {
             connectedHeader.setShowSubHeader(true);
             icon.setArrowOpen();
 
@@ -508,7 +508,7 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
      * Makes the Children of a Header invisible
      */
     private void closeChildren() {
-        if (!connectedHeader.empty()) {
+        if (!connectedHeader.isEmpty()) {
             connectedHeader.setShowSubHeader(false);
             icon.setArrowClose();
             changeHeaderComponentsChildrenDisplaying(connectedHeader.isShowSubHeader());
@@ -555,7 +555,7 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
         this.getActionMap().put(nextHeader, new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                self.newShiftAmountOfHeader(false);
+                self.shiftFocus(false);
 
             }
         });
@@ -566,7 +566,7 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
         this.getActionMap().put(beforeHeader, new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                self.newShiftAmountOfHeader(true);
+                self.shiftFocus(true);
             }
         });
     }
@@ -576,7 +576,7 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
      * If the user crosses top and bottom border, it starts at the other end again.
      * @param isUp true = up action | false = down action
      */
-    private void newShiftAmountOfHeader(boolean isUp){
+    private void shiftFocus(boolean isUp){
 
         int componentIndex = parentContainer.getComponentZOrder(this);
         int validBorderIndex;
@@ -955,7 +955,7 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
          * 
          * @param sourceHeaderComponent
          */
-        private void replaceHeaderUp(HeaderComponent sourceHeaderComponent) {
+        private void moveHeaderUp(HeaderComponent sourceHeaderComponent) {
             Header targetParent = connectedHeader.getParentElement();
             Header sourceParent = sourceHeaderComponent.connectedHeader.getParentElement();
             // Backend
@@ -987,7 +987,7 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
          * 
          * @param sourceHeaderComponent The dragged source HeaderComponent
          */
-        private void replaceHeaderDown(HeaderComponent sourceHeaderComponent) {
+        private void moveHeaderDown(HeaderComponent sourceHeaderComponent) {
             Header targetParent = connectedHeader.getParentElement();
             Header sourceParent = sourceHeaderComponent.connectedHeader.getParentElement();
             // remove from source
@@ -1017,7 +1017,7 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
          * 
          * @param sourceHeaderComponent The dragged source HeaderComponent
          */
-        private void replaceHeaderSub(HeaderComponent sourceHeaderComponent) {
+        private void moveHeaderSub(HeaderComponent sourceHeaderComponent) {
             Header sourceParent = sourceHeaderComponent.connectedHeader.getParentElement();
 
             if (isShiftingAllowed(sourceHeaderComponent.connectedHeader)) {
@@ -1079,13 +1079,13 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
 
                     switch (direction) {
                         case UP:
-                            replaceHeaderUp(headerComponent);
+                            moveHeaderUp(headerComponent);
                             break;
                         case DOWN:
-                            replaceHeaderDown(headerComponent);
+                            moveHeaderDown(headerComponent);
                             break;
                         case SUB:
-                            replaceHeaderSub(headerComponent);
+                            moveHeaderSub(headerComponent);
                             break;
                     }
                     removeDnDTargetElements();

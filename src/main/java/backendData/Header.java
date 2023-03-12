@@ -54,11 +54,6 @@ public class Header implements Serializable{
         return this.ownNr;
     }
 
-    public void setOwnNr(int ownNr) {
-        this.ownNr = ownNr;
-        this.refreshSubHeaderNumbers();
-    }
-
     public Header getParentElement() {
         return this.parentElement;
     }
@@ -91,7 +86,7 @@ public class Header implements Serializable{
         this.showSubHeader = showSubHeader;
     }
 
-    public boolean empty(){
+    public boolean isEmpty(){
         return this.subheaders.isEmpty();
     }
 
