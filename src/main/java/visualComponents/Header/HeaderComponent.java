@@ -23,6 +23,7 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.KeyStroke;
 import javax.swing.event.MouseInputAdapter;
 import java.awt.datatransfer.DataFlavor;
@@ -42,6 +43,7 @@ import java.awt.event.MouseEvent;
 import java.util.Arrays;
 import java.util.TooManyListenersException;
 import javax.swing.JPopupMenu;
+import java.awt.event.InputEvent;
 
 public class HeaderComponent extends JPanel implements DragGestureListener {
 
@@ -116,7 +118,7 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
         generateAddingActions();
         generateShiftingActions();
         
-        deleteHeaderAction("Delete Header", KeyStroke.getKeyStroke(KeyEvent.VK_BACK_SPACE, KeyEvent.CTRL_DOWN_MASK),
+        deleteHeaderAction("Delete Header", KeyStroke.getKeyStroke(KeyEvent.VK_BACK_SPACE, InputEvent.CTRL_DOWN_MASK),
                 "deleteHeader");
     }
 
@@ -124,36 +126,36 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
 
         // add header to same level before current
         addingHeaderAction(0, "Add Header before", connectedHeader.getParentElement(),
-                KeyStroke.getKeyStroke(KeyEvent.VK_UP, KeyEvent.ALT_DOWN_MASK), "addSubheaderToParentBefore", false,
+                KeyStroke.getKeyStroke(KeyEvent.VK_UP, InputEvent.ALT_DOWN_MASK), "addSubheaderToParentBefore", false,
                 false);
 
         // add header to same level after current
         addingHeaderAction(1, "Add Header after", connectedHeader.getParentElement(),
-        KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, KeyEvent.ALT_DOWN_MASK), "addSubheaderToParentAfter", false,
+        KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, InputEvent.ALT_DOWN_MASK), "addSubheaderToParentAfter", false,
         false);
 
         // add subheader at ending adding function
         addingHeaderAction(-1, "Add Subheader", connectedHeader,
-        KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, KeyEvent.ALT_DOWN_MASK), "addSubHeaderEnd", false, true);
+        KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, InputEvent.ALT_DOWN_MASK), "addSubHeaderEnd", false, true);
 
        
     }
 
     private void generateShiftingActions(){
         shiftHeaderAction(1, "Shift header up",
-                KeyStroke.getKeyStroke(KeyEvent.VK_UP, KeyEvent.SHIFT_DOWN_MASK),
+                KeyStroke.getKeyStroke(KeyEvent.VK_UP, InputEvent.SHIFT_DOWN_MASK),
                 "shiftOneUp", Direction.UP, false, false);
 
         shiftHeaderAction(1, "Shift header down",
-                KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, KeyEvent.SHIFT_DOWN_MASK),
+                KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, InputEvent.SHIFT_DOWN_MASK),
                 "shiftOneDown", Direction.DOWN, false, false);
 
         shiftTreeLevelUpDownAction("Shift header level up",
-                KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, KeyEvent.SHIFT_DOWN_MASK), "shiftLevelUp", Direction.UP, false,
+                KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, InputEvent.SHIFT_DOWN_MASK), "shiftLevelUp", Direction.UP, false,
                 false);
 
         shiftTreeLevelUpDownAction("Shift header level down",
-                KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, KeyEvent.SHIFT_DOWN_MASK), "shiftLevelDown", Direction.DOWN, false,
+                KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, InputEvent.SHIFT_DOWN_MASK), "shiftLevelDown", Direction.DOWN, false,
                 true);
     }
 
@@ -204,15 +206,15 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
             dt.addDropTargetListener(new DropTargetAdapter() {
                 @Override
                 public void dragEnter(DropTargetDragEvent dtde) {
-                    setSize(getWidth(), dropPanel.getHeight());
-                    remove(headerTitle);
-                    add(dropPanel, BorderLayout.CENTER);
-                    repaint();
-                    revalidate();
+                    enterAction();
                 }
 
                 @Override
                 public void dragOver(DropTargetDragEvent dtde) {
+                    enterAction();
+                }
+
+                private void enterAction(){
                     setSize(getWidth(), dropPanel.getHeight());
                     remove(headerTitle);
                     add(dropPanel, BorderLayout.CENTER);
@@ -409,6 +411,8 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
                 }
                 break;
         }
+        default: break;
+
     }
 }
 
@@ -572,6 +576,7 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
                 }
                 break;
             }
+            default: break;
         }
         componentIndex = getNextPossibleFocusComponent(direction,componentIndex,validBorderIndex);
         Component component = parentContainer.getComponent(componentIndex);
@@ -726,7 +731,7 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
             this.popupMenu.addSeparator();
 
         // makes keystroke possible without opening the contextmenue.
-        this.getInputMap(HeaderComponent.WHEN_FOCUSED).put(keystroke, actionMapKey);
+        this.getInputMap(JComponent.WHEN_FOCUSED).put(keystroke, actionMapKey);
         this.getActionMap().put(actionMapKey, action);
     }
 
@@ -791,7 +796,7 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
                 break;}
             case UP : { 
                 
-                Header parentHeader = this.connectedHeader.getParentElement();
+            Header parentHeader = this.connectedHeader.getParentElement();
             // Level Up only possible, if parent is not root.
             if (!parentHeader.isRoot()) {
 
@@ -804,8 +809,10 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
                 getFocusIndex = this.connectedHeader.getIndex(Header.ROOT);
                 reloadComponents();
                 parentContainer.getComponent(getFocusIndex - 1).requestFocusInWindow();
-                break; }
+                 }
+                 break;
         }
+        default:break;
     }
 }
 
@@ -1022,12 +1029,15 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
 
         @Override
         public void dragOver(DropTargetDragEvent dtde) {
-            target.setBackground(DND_TARGET_HOVERCOLOR);
-            target.repaint();
+            setUpHoverColor();
         }
 
         @Override
         public void dragEnter(DropTargetDragEvent dtde) {
+            setUpHoverColor();
+        }
+
+        private void setUpHoverColor(){
             target.setBackground(DND_TARGET_HOVERCOLOR);
             target.repaint();
         }
