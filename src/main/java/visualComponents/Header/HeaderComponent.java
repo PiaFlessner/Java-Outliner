@@ -126,21 +126,20 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
     private void generateAddingActions(){
 
         // add header to same level before current
-        addingHeaderAction(0, "Add Header on same level before", connectedHeader.getParentElement(),
-                KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, KeyEvent.ALT_DOWN_MASK), "addSubheaderToParentBefore", true,
+        addingHeaderAction(0, "Add Header before", connectedHeader.getParentElement(),
+                KeyStroke.getKeyStroke(KeyEvent.VK_UP, KeyEvent.ALT_DOWN_MASK), "addSubheaderToParentBefore", true,
                 false);
-        // add subheader before adding function
-        addingHeaderBeforeAction("Add before",
-        KeyStroke.getKeyStroke(KeyEvent.VK_UP, KeyEvent.ALT_DOWN_MASK), "addSubHeaderBefore", false, false);
+
+        // add header to same level after current
+        addingHeaderAction(1, "Add Header after", connectedHeader.getParentElement(),
+        KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, KeyEvent.ALT_DOWN_MASK), "addSubheaderToParentAfter", false,
+        true);
 
         // add subheader at ending adding function
         addingHeaderAction(-1, "Add Subheader", connectedHeader,
-        KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, KeyEvent.ALT_DOWN_MASK), "addSubHeaderEnd", false, false);
+        KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, KeyEvent.ALT_DOWN_MASK), "addSubHeaderEnd", false, false);
 
-        // add header to same level after current
-        addingHeaderAction(1, "Add Header on same level after", connectedHeader.getParentElement(),
-        KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, KeyEvent.ALT_DOWN_MASK), "addSubheaderToParentAfter", false,
-        true);
+       
     }
 
     private void generateShiftingActions(){
@@ -334,35 +333,6 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
         reloadComponents();
         parentContainer.getComponent(focusIndex).requestFocusInWindow();
     }
-
-    /**
-     * Adds a Header before the current element
-     * 
-     * @param actionText   Action text which is represented in Contextmenu
-     * @param keystroke    Keystroke which is binded
-     * @param actionMapKey ActionMapKey for binding purporses. Needs to be uniqe
-     * @param sepBefore    Tells, if a separator in the contextmenu beforehand is
-     *                     needed
-     * @param sepAfter     Tells, if a separator in the contextmenue afterwards is
-     *                     needed
-     */
-    private void addingHeaderBeforeAction(String actionText, KeyStroke keystroke, String actionMapKey,
-            boolean sepBefore, boolean sepAfter) {
-        HeaderComponent self = this;
-        Action action = new AbstractAction(actionText) {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                int insertIndex = self.connectedHeader.getIndex(Header.ROOT) - 1;
-                Header beforeHeader = self.connectedHeader.getHeaderViaIndex(Header.ROOT, insertIndex + 1);
-                new Header("Add Title Here", beforeHeader.getOwnNr(), beforeHeader.getParentElement(),
-                        false);
-                reloadComponents();
-                parentContainer.getComponent(connectedHeader.getIndex(Header.ROOT) - 1).requestFocusInWindow();
-            }
-        };
-        contextMenuAdding(actionText, action, keystroke, actionMapKey, sepBefore, sepAfter);
-    }
-
     /**
      * Adds an add Header Action from the Focused Header.
      */
