@@ -210,7 +210,7 @@ public class Header implements Serializable{
      * Refreshes all assigned Numbers
      */
     private void refreshSubHeaderNumbers() {
-        // artificial index to spare runtime;
+        //artificial index to spare runtime;
         int listIndex = 0;
         for (Header subheader : this.subheaders) {
             subheader.ownNr = listIndex + 1;
