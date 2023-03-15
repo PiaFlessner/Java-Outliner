@@ -1,6 +1,5 @@
 package main.java.visualComponents.ToolBox;
 
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
@@ -13,10 +12,6 @@ import main.java.visualComponents.Actions.ToolBoxSaveFileAction;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.Image;
-import java.io.File;
-
-
 
 public class ToolBoxComponent extends JPanel{
 
@@ -46,8 +41,7 @@ public class ToolBoxComponent extends JPanel{
 
     }
 
-    //Fill Element with other Elements
-    @SuppressWarnings("unchecked")                       
+    //Fill Element with other Elements                    
     private void initComponents() {
 
         //Create all neccessary Elements of Toolbox
@@ -59,8 +53,7 @@ public class ToolBoxComponent extends JPanel{
         JPanel rightTooltipContainer = new OuterContainer(BACKGROUND_COLOR);
         JButton addHeaderButton = new Button(middleTooltipContainer);
         JButton exportMDButton = new Button( rightTooltipContainer);
-        //JButton detachToolTipButton = new ToolBoxButton("Detach", BACKGROUND_COLOR, FOREGROUND_COLOR, rightTooltipContainer);
-        
+
         //Add Action Listeners
         newFileButton.setAction(newFileAction);
         openFileButton.setAction(openFileAction);
