@@ -279,6 +279,10 @@ public class MainFrame {
         showToolbarMenuItem.setAction(showHideAction);
     }
 
+    /**
+     * Generates the dummy menu buttons of HeaderComponent for the MainContextmenu.
+     * For fulfilling Apple contextmenu best practices.
+     */
     public void setUpDummyHeaderComponentActions(){
 
         contextMenu.addSeparator();
