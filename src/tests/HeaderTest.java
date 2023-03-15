@@ -137,7 +137,6 @@ public class HeaderTest {
     public void testGetOverallIndexComplicatedStructure(){
         Header h111 = new Header("1.1.1", 1,h11,false);
         Header h112 = new Header("1.1.2", 2,h11,false);
-        Header h2 = new Header("2", 2,h0,false);
         Header h21 = new Header("2.1", 1,h2,false);
         Header h22 = new Header("2.2", 2,h2,false);
         Header h3 = new Header("3", 3,h0,false);

@@ -3,7 +3,6 @@ package main.java.visualComponents.ToolBox;
 import javax.swing.JPanel;
 import java.awt.Dimension;
 import java.awt.GridLayout;
-import java.awt.FlowLayout;
 import java.awt.Color;
 
 public class OuterContainer extends JPanel {

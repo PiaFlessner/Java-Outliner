@@ -3,8 +3,6 @@ package tests;
 import static org.junit.Assert.assertEquals;
 
 import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
 
 import org.junit.Test;
 import org.junit.jupiter.api.AfterEach;
