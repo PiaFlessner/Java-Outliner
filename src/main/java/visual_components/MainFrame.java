@@ -2,6 +2,8 @@ package main.java.visual_components;
 
 import java.io.File;
 import java.awt.BorderLayout;
+
+import javax.swing.Action;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
@@ -27,6 +29,7 @@ import main.java.visual_components.actions.ToolBoxNewFileAction;
 import main.java.visual_components.actions.ToolBoxOpenFileAction;
 import main.java.visual_components.actions.ToolBoxSaveFileAction;
 import main.java.visual_components.header.HeaderComponent;
+import main.java.visual_components.header.InteractionMapping;
 import main.java.visual_components.toolbox.ToolBoxComponent;
 
 import java.awt.event.InputEvent;
@@ -106,7 +109,9 @@ public class MainFrame {
                 newFileAction);
         masterContainer.add(toolboxComponent, BorderLayout.NORTH);
 
+        
         setUpShowHideAction();
+        setUpDummyHeaderComponentActions();
 
         
     }
@@ -272,5 +277,65 @@ public class MainFrame {
                 "show or Hide Toolbox");
         masterContainer.getActionMap().put("show or Hide Toolbox", showHideAction);
         showToolbarMenuItem.setAction(showHideAction);
+    }
+
+    public void setUpDummyHeaderComponentActions(){
+
+        contextMenu.addSeparator();
+
+        JMenuItem addBeforeItem = new JMenuItem();
+        addBeforeItem.setText(InteractionMapping.ADD_UP.getActionName());
+        addBeforeItem.setAccelerator(InteractionMapping.ADD_UP.getKeystroke());
+        addBeforeItem.setEnabled(false);
+        contextMenu.add(addBeforeItem);
+
+        JMenuItem addAfterItem = new JMenuItem();
+        addAfterItem.setText(InteractionMapping.ADD_DOWN.getActionName());
+        addAfterItem.setAccelerator(InteractionMapping.ADD_DOWN.getKeystroke());
+        addAfterItem.setEnabled(false);
+        contextMenu.add(addAfterItem);
+
+        JMenuItem addSubItem = new JMenuItem();
+        addSubItem.setText(InteractionMapping.ADD_SUB.getActionName());
+        addSubItem.setAccelerator(InteractionMapping.ADD_SUB.getKeystroke());
+        addSubItem.setEnabled(false);
+        contextMenu.add(addSubItem);
+
+        contextMenu.addSeparator();
+
+        JMenuItem shiftUpItem = new JMenuItem();
+        shiftUpItem.setText(InteractionMapping.SHIFT_UP.getActionName());
+        shiftUpItem.setAccelerator(InteractionMapping.SHIFT_UP.getKeystroke());
+        shiftUpItem.setEnabled(false);
+        contextMenu.add(shiftUpItem);
+
+        JMenuItem shiftDownItem = new JMenuItem();
+        shiftDownItem.setText(InteractionMapping.SHIFT_DOWN.getActionName());
+        shiftDownItem.setAccelerator(InteractionMapping.SHIFT_DOWN.getKeystroke());
+        shiftDownItem.setEnabled(false);
+        contextMenu.add(shiftDownItem);
+
+        JMenuItem shiftLevelUpItem = new JMenuItem();
+        shiftLevelUpItem.setText(InteractionMapping.SHIFT_LEVEL_UP.getActionName());
+        shiftLevelUpItem.setAccelerator(InteractionMapping.SHIFT_LEVEL_UP.getKeystroke());
+        shiftLevelUpItem.setEnabled(false);
+        contextMenu.add(shiftLevelUpItem);
+
+        JMenuItem shiftLevelDownItem = new JMenuItem();
+        shiftLevelDownItem.setText(InteractionMapping.SHIFT_LEVEL_DOWN.getActionName());
+        shiftLevelDownItem.setAccelerator(InteractionMapping.SHIFT_LEVEL_DOWN.getKeystroke());
+        shiftLevelDownItem.setEnabled(false);
+        contextMenu.add(shiftLevelDownItem);
+
+        contextMenu.addSeparator();
+
+        JMenuItem deleteItem = new JMenuItem();
+        deleteItem.setText(InteractionMapping.DELETE.getActionName());
+        deleteItem.setAccelerator(InteractionMapping.DELETE.getKeystroke());
+        deleteItem.setEnabled(false);
+        contextMenu.add(deleteItem);
+        
+
+
     }
 }
