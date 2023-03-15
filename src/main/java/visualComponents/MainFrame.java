@@ -27,6 +27,7 @@ import main.java.visualComponents.Actions.ToolBoxOpenFileAction;
 import main.java.visualComponents.Actions.ToolBoxSaveFileAction;
 import main.java.visualComponents.Header.HeaderComponent;
 import main.java.visualComponents.ToolBox.ToolBoxComponent;
+import java.awt.event.InputEvent;
 
 public class MainFrame {
 
@@ -38,12 +39,12 @@ public class MainFrame {
     ToolBoxComponent toolboxComponent;
     JRadioButtonMenuItem showToolbarMenuItem;
     JScrollPane headerElementScroller;
-    KeyStroke keyStrokeForNewFile = KeyStroke.getKeyStroke(KeyEvent.VK_N, KeyEvent.CTRL_DOWN_MASK);
-    KeyStroke keyStrokeForToolbarVisibility = KeyStroke.getKeyStroke(KeyEvent.VK_V, KeyEvent.CTRL_DOWN_MASK);
-    KeyStroke keyStrokeForMDExport = KeyStroke.getKeyStroke(KeyEvent.VK_E, KeyEvent.CTRL_DOWN_MASK);
-    KeyStroke keyStrokeForSave = KeyStroke.getKeyStroke(KeyEvent.VK_S, KeyEvent.CTRL_DOWN_MASK);
-    KeyStroke keyStrokeForOpen = KeyStroke.getKeyStroke(KeyEvent.VK_O, KeyEvent.CTRL_DOWN_MASK);
-    KeyStroke keyStrokeForAddHeaderRoot = KeyStroke.getKeyStroke(KeyEvent.VK_A, KeyEvent.CTRL_DOWN_MASK);
+    KeyStroke keyStrokeForNewFile = KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.CTRL_DOWN_MASK);
+    KeyStroke keyStrokeForToolbarVisibility = KeyStroke.getKeyStroke(KeyEvent.VK_V, InputEvent.CTRL_DOWN_MASK);
+    KeyStroke keyStrokeForMDExport = KeyStroke.getKeyStroke(KeyEvent.VK_E, InputEvent.CTRL_DOWN_MASK);
+    KeyStroke keyStrokeForSave = KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK);
+    KeyStroke keyStrokeForOpen = KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_DOWN_MASK);
+    KeyStroke keyStrokeForAddHeaderRoot = KeyStroke.getKeyStroke(KeyEvent.VK_A, InputEvent.CTRL_DOWN_MASK);
     JPanel headerContainer;
     JPanel columnContainer;
     JLabel topicLabel;

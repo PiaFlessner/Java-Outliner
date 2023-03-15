@@ -3,12 +3,12 @@ package main.java.visualComponents.Header;
 import javax.swing.JTextField;
 
 import javax.swing.KeyStroke;
+import javax.swing.SwingConstants;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.MouseInputAdapter;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
-import java.awt.event.KeyAdapter;
 import javax.swing.AbstractAction;
 import java.awt.Color;
 import javax.swing.BorderFactory;
@@ -17,15 +17,15 @@ import java.awt.Cursor;
 
 public class Title extends JTextField {
     boolean isEditable;
-    HeaderComponent parent;
+    HeaderComponent parentComponent;
     Cursor NORMAL_CURSOR = new Cursor(Cursor.DEFAULT_CURSOR);
     Cursor EDIT_CURSOR = new Cursor(Cursor.TEXT_CURSOR);
 
-    public Title(HeaderComponent parent) {
-        this.parent = parent;
+    public Title(HeaderComponent parentComponent) {
+        this.parentComponent = parentComponent;
 
-        this.setHorizontalAlignment(JTextField.LEFT);
-        this.setText(parent.connectedHeader.getTitle());
+        this.setHorizontalAlignment(SwingConstants.LEFT);
+        this.setText(parentComponent.connectedHeader.getTitle());
         this.setBorder(null);
         this.setMaximumSize(new Dimension(500, 16));
         this.setMinimumSize(new Dimension(500, 16));
@@ -33,8 +33,7 @@ public class Title extends JTextField {
         this.setFocusable(false);
         this.setEditable(false);
         this.setCursor(this.NORMAL_CURSOR);
-        this.setBackground(parent.backgroundColor);
-        //setUpCharacterLimit(80);
+        this.setBackground(parentComponent.backgroundColor);
         addFocusingFunction();
         setUpEditableFunction();
         setUpChangedFunction();
@@ -92,40 +91,21 @@ public class Title extends JTextField {
 
             @Override
             public void insertUpdate(DocumentEvent e) {
-                parent.connectedHeader.setTitle(getText());
+                parentComponent.connectedHeader.setTitle(getText());
             }
 
             @Override
             public void removeUpdate(DocumentEvent e) {
-                parent.connectedHeader.setTitle(getText());
+                parentComponent.connectedHeader.setTitle(getText());
             }
 
             @Override
             public void changedUpdate(DocumentEvent e) {
-                parent.connectedHeader.setTitle(getText());
+                parentComponent.connectedHeader.setTitle(getText());
             }
 
         });
     }
-
-    /**
-     * Sets Up the character limit of the component to the in limit specified count.
-     * 
-     * @param limit applied limit.
-     */
-    private void setUpCharacterLimit(int limit) {
-        this.addKeyListener(new KeyAdapter() {
-
-            @Override
-            public void keyTyped(java.awt.event.KeyEvent e) {
-                if (getText().length() > limit) {
-                    getToolkit().beep();
-                    e.consume();
-                }
-            }
-        });
-    }
-
     /**
      * Changes the editablity
      */
@@ -136,7 +116,7 @@ public class Title extends JTextField {
             this.setEditable(false);
             this.isEditable = false;
             this.setFocusable(false);
-            this.setBackground(parent.backgroundColor);
+            this.setBackground(parentComponent.backgroundColor);
             this.setCursor(this.NORMAL_CURSOR);
             this.transferFocusBackward();
 
@@ -144,7 +124,7 @@ public class Title extends JTextField {
             // change to editable
             this.setEditable(true);
             this.isEditable = true;
-            this.setBackground(parent.EDIT_COLOR);
+            this.setBackground(HeaderComponent.EDIT_COLOR);
             this.setCursor(this.EDIT_CURSOR);
             this.setFocusable(true);
             this.requestFocus();
