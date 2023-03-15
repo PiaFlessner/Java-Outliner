@@ -3,7 +3,6 @@ package main.java.visualComponents.Header;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 
 import main.java.backendData.Direction;
 import main.java.backendData.Header;
@@ -93,9 +92,7 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
      * @param parentContainer The ParentContainer, which inherits all
      *                        HeaderComponents.
      */
-    public HeaderComponent(Color backgroundColor, Header connectedHeader, JPanel parentContainer,
-            boolean isChildrenOpen, boolean isContentOpen) {
-        this.parentContainer = parentContainer;
+    public HeaderComponent(Color backgroundColor, Header connectedHeader, JPanel parentContainer) {
         this.connectedHeader = connectedHeader;
         this.backgroundColor = backgroundColor;
         this.setLayout(new BorderLayout());
@@ -127,17 +124,17 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
 
         // add header to same level before current
         addingHeaderAction(0, "Add Header before", connectedHeader.getParentElement(),
-                KeyStroke.getKeyStroke(KeyEvent.VK_UP, KeyEvent.ALT_DOWN_MASK), "addSubheaderToParentBefore", true,
+                KeyStroke.getKeyStroke(KeyEvent.VK_UP, KeyEvent.ALT_DOWN_MASK), "addSubheaderToParentBefore", false,
                 false);
 
         // add header to same level after current
         addingHeaderAction(1, "Add Header after", connectedHeader.getParentElement(),
         KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, KeyEvent.ALT_DOWN_MASK), "addSubheaderToParentAfter", false,
-        true);
+        false);
 
         // add subheader at ending adding function
         addingHeaderAction(-1, "Add Subheader", connectedHeader,
-        KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, KeyEvent.ALT_DOWN_MASK), "addSubHeaderEnd", false, false);
+        KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, KeyEvent.ALT_DOWN_MASK), "addSubHeaderEnd", false, true);
 
        
     }
@@ -843,8 +840,7 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
      */
     private static void addWholeHeaderTree(Header root) {
         for (Header header : root.getSubheaders()) {
-            HeaderComponent hc = new HeaderComponent(MainFrame.WINDOW_BACKGROUND_COLOR, header, parentContainer, header.isShowSubHeader(),
-                    header.isShowText());
+            HeaderComponent hc = new HeaderComponent(MainFrame.WINDOW_BACKGROUND_COLOR, header, parentContainer);
             parentContainer.add(hc);
             addWholeHeaderTree(header);
         }

@@ -5,7 +5,6 @@ import javax.swing.AbstractAction;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import main.java.backendData.HeaderConverter;
 import main.java.visualComponents.MainFrame;
 
@@ -42,12 +41,12 @@ public class ToolBoxExportMDAction extends AbstractAction {
         };
         fileChooser.setDialogTitle("Specify a file to save");
 
-        int userSelection = fileChooser.showSaveDialog(mainFrame.getWindow());
+        int userSelection = fileChooser.showSaveDialog(this.mainFrame.getWindow());
 
         if(userSelection ==JFileChooser.APPROVE_OPTION){
             File fileToSave = fileChooser.getSelectedFile();            
             HeaderConverter converter = new HeaderConverter();
-            converter.saveMD(mainFrame.getRoot(), 0, fileToSave.getAbsolutePath());
+            converter.saveMD(this.mainFrame.getRoot(), 0, fileToSave.getAbsolutePath());
         }
     }    
 }
