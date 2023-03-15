@@ -16,7 +16,6 @@ import java.awt.Font;
 public class ToolBoxComponent extends JPanel{
 
      private static final Color BACKGROUND_COLOR = new Color(165, 165, 165);
-     private static final Color FOREGROUND_COLOR = new Color(255 , 255, 255);
      private static final Dimension MAXIMUM_SIZE = (new Dimension(32767, 60));
      private static final Dimension MINIMUM_SIZE = (new Dimension(100, 10));
      private static final Dimension PREFERRED_SIZE= (new Dimension(636, 60));
@@ -49,7 +48,7 @@ public class ToolBoxComponent extends JPanel{
         JButton newFileButton = new Button(leftTooltipContainer);
         JButton openFileButton = new Button( leftTooltipContainer);
         JButton saveFileButton = new Button(leftTooltipContainer);
-        JPanel middleTooltipContainer = new InnerContainer(BACKGROUND_COLOR, FOREGROUND_COLOR);
+        JPanel middleTooltipContainer = new InnerContainer(BACKGROUND_COLOR);
         JPanel rightTooltipContainer = new OuterContainer(BACKGROUND_COLOR);
         JButton addHeaderButton = new Button(middleTooltipContainer);
         JButton exportMDButton = new Button( rightTooltipContainer);

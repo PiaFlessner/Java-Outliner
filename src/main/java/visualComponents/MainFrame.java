@@ -4,6 +4,7 @@ import java.io.File;
 import java.awt.BorderLayout;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
@@ -200,7 +201,7 @@ public class MainFrame {
         // Export OpenFile Action
         String actionMapNewFile = "newFile";
         newFileAction = new ToolBoxNewFileAction(this, "New File", keyStrokeForNewFile);
-        masterContainer.getInputMap(masterContainer.WHEN_IN_FOCUSED_WINDOW).put(keyStrokeForNewFile, actionMapNewFile);
+        masterContainer.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(keyStrokeForNewFile, actionMapNewFile);
         masterContainer.getActionMap().put(actionMapNewFile, newFileAction);
         //// Add Contextmenu option
         JMenuItem newFileItem = new JMenuItem();
@@ -210,7 +211,7 @@ public class MainFrame {
         // Export OpenFile Action
         String actionMapKeyOpen = "openFile";
         openFileAction = new ToolBoxOpenFileAction(this, "Open File", keyStrokeForOpen);
-        masterContainer.getInputMap(masterContainer.WHEN_IN_FOCUSED_WINDOW).put(keyStrokeForOpen, actionMapKeyOpen);
+        masterContainer.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(keyStrokeForOpen, actionMapKeyOpen);
         masterContainer.getActionMap().put(actionMapKeyOpen, openFileAction);
         //// Add Contextmenu option
         JMenuItem openFileItem = new JMenuItem();
@@ -220,7 +221,7 @@ public class MainFrame {
         // Save FileAction
         String actionMapKeySaveFile = "saveFile";
         saveFileAction = new ToolBoxSaveFileAction(this, "Save", keyStrokeForSave);
-        masterContainer.getInputMap(masterContainer.WHEN_IN_FOCUSED_WINDOW).put(keyStrokeForSave, actionMapKeySaveFile);
+        masterContainer.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(keyStrokeForSave, actionMapKeySaveFile);
         masterContainer.getActionMap().put(actionMapKeySaveFile, saveFileAction);
         //// Add Contextmenu option
         JMenuItem saveFileItem = new JMenuItem();
@@ -231,7 +232,7 @@ public class MainFrame {
         String actionMapKeyAddHeaderRoot = "addHeaderToRoot";
         addHeaderAction = new ToolBoxAddHeaderToRootAction(this, headerElementContainer, "Add to first level",
                 keyStrokeForAddHeaderRoot);
-        masterContainer.getInputMap(masterContainer.WHEN_IN_FOCUSED_WINDOW).put(keyStrokeForAddHeaderRoot,
+        masterContainer.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(keyStrokeForAddHeaderRoot,
                 actionMapKeyAddHeaderRoot);
         masterContainer.getActionMap().put(actionMapKeyAddHeaderRoot, addHeaderAction);
         //// Add Contextmenu option
@@ -244,7 +245,7 @@ public class MainFrame {
         // Export MD Action
         String actionMapKeyExportMD = "exportToMarkdown";
         exportAction = new ToolBoxExportMDAction(this, "Export to Markdown", keyStrokeForMDExport);
-        masterContainer.getInputMap(masterContainer.WHEN_IN_FOCUSED_WINDOW).put(keyStrokeForMDExport,
+        masterContainer.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(keyStrokeForMDExport,
                 actionMapKeyExportMD);
         masterContainer.getActionMap().put(actionMapKeyExportMD, exportAction);
         //// Add Contextmenu option
@@ -269,7 +270,7 @@ public class MainFrame {
         //// Show Hide Toolbar
         ShowHideToolBarAction showHideAction = new ShowHideToolBarAction(toolboxComponent, showToolbarMenuItem,
                 "Show Toolbox", keyStrokeForToolbarVisibility);
-        masterContainer.getInputMap(masterContainer.WHEN_IN_FOCUSED_WINDOW).put(keyStrokeForToolbarVisibility,
+        masterContainer.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(keyStrokeForToolbarVisibility,
                 "show or Hide Toolbox");
         masterContainer.getActionMap().put("show or Hide Toolbox", showHideAction);
         showToolbarMenuItem.setAction(showHideAction);
