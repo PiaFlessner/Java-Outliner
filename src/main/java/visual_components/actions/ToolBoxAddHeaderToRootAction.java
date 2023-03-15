@@ -1,11 +1,11 @@
-package main.java.visualComponents.Actions;
+package main.java.visual_components.actions;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
-import main.java.backendData.Header;
-import main.java.visualComponents.MainFrame;
-import main.java.visualComponents.Header.HeaderComponent;
+import main.java.backend_data.Header;
+import main.java.visual_components.MainFrame;
+import main.java.visual_components.header.HeaderComponent;
 
 public class ToolBoxAddHeaderToRootAction extends AbstractAction{
     MainFrame mainFrame;

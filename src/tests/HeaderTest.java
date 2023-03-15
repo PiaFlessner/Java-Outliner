@@ -7,9 +7,13 @@ import org.junit.Test;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 
-import main.java.backendData.Header;
+import main.java.backend_data.Header;
 
 public class HeaderTest {
+
+    private static final String TEST2 = "Test2";
+    private static final String TEST3 = "Test3";
+    private static final String TEST = "Test";
 
     Header h0 = new Header("Root",0,null, true);
     Header h1 = new Header("second",1,h0, false);
@@ -45,7 +49,7 @@ public class HeaderTest {
 
     @Test
     public void testGetOwnNrAfterChange() {
-        Header newH11 = new Header("test",1,h1,false);
+        Header newH11 = new Header(TEST,1,h1,false);
         assertEquals("1.2", h11.getLabelNr());
         assertEquals("1.1", newH11.getLabelNr());
     }
@@ -58,9 +62,9 @@ public class HeaderTest {
     @Test
     public void testInsertNewSubheaderEnd() {
 
-        Header h12 = new Header("test",1,null,false);
-        Header h21 = new Header("test",1,null,false);
-        Header h22 = new Header("test",1,null,false);
+        Header h12 = new Header(TEST,1,null,false);
+        Header h21 = new Header(TEST,1,null,false);
+        Header h22 = new Header(TEST,1,null,false);
 
         h1.insertNewSubheaderEnd(h12);
         assertEquals("1.2", h12.getLabelNr());
@@ -83,8 +87,8 @@ public class HeaderTest {
 
     @Test
     public void testInsertNewSubheaderInBetween() {
-        Header h13 = new Header("test3",-1,h1,false);
-        Header h12 = new Header("test2",1,null,false);
+        Header h13 = new Header(TEST3,-1,h1,false);
+        Header h12 = new Header(TEST2,1,null,false);
 
         h1.insertNewSubheaderInBetween(1, h12);
         assertEquals("1.2", h12.getLabelNr());
@@ -94,8 +98,8 @@ public class HeaderTest {
 
     @Test
     public void testInsertNewSubheaderStart() {
-        Header newH11 = new Header("test3",1,null,false);
-        Header nenewH11 = new Header("test2",1,null,false);
+        Header newH11 = new Header(TEST3,1,null,false);
+        Header nenewH11 = new Header(TEST2 ,1,null,false);
 
         h1.insertNewSubheaderStart(newH11);
         assertEquals("1.1", newH11.getLabelNr());
@@ -103,13 +107,13 @@ public class HeaderTest {
 
         h1.insertNewSubheaderStart(nenewH11);
         assertEquals("1.1", nenewH11.getLabelNr());
-        assertEquals(h1, nenewH11.getParentElement());;
+        assertEquals(h1, nenewH11.getParentElement());
     }
 
     @Test
     public void testRearrangeSubHeader() {
-        Header h12 = new Header("test2",-1,h1,false);
-        Header h13 = new Header("test3",-1,h1,false);
+        Header h12 = new Header(TEST2, -1,h1,false);
+        Header h13 = new Header(TEST3, -1,h1,false);
 
         h1.rearrangeSubHeader(2, h11);
 
@@ -121,7 +125,7 @@ public class HeaderTest {
 
     @Test
     public void testSetParentElement() {
-        Header h12 = new Header("test2",-1,null,false);
+        Header h12 = new Header(TEST2,-1,null,false);
         h12.setParentElement(h1, -1);
         assertEquals(h1, h12.getParentElement());
     }

@@ -1,14 +1,15 @@
-package main.java.visualComponents.ToolBox;
+package main.java.visual_components.toolbox;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
-import main.java.visualComponents.Actions.ToolBoxAddHeaderToRootAction;
-import main.java.visualComponents.Actions.ToolBoxExportMDAction;
-import main.java.visualComponents.Actions.ToolBoxNewFileAction;
-import main.java.visualComponents.Actions.ToolBoxOpenFileAction;
-import main.java.visualComponents.Actions.ToolBoxSaveFileAction;
+import main.java.visual_components.actions.ToolBoxAddHeaderToRootAction;
+import main.java.visual_components.actions.ToolBoxExportMDAction;
+import main.java.visual_components.actions.ToolBoxNewFileAction;
+import main.java.visual_components.actions.ToolBoxOpenFileAction;
+import main.java.visual_components.actions.ToolBoxSaveFileAction;
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;

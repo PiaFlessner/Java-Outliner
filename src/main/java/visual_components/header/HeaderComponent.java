@@ -1,12 +1,12 @@
-package main.java.visualComponents.Header;
+package main.java.visual_components.header;
 
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 
-import main.java.backendData.Direction;
-import main.java.backendData.Header;
-import main.java.visualComponents.MainFrame;
+import main.java.backend_data.Direction;
+import main.java.backend_data.Header;
+import main.java.visual_components.MainFrame;
 
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
@@ -346,7 +346,7 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
                 int indexInParent = self.connectedHeader.getOwnNr() + addPlace;
                 new Header("Add Title Here", indexInParent, parentElement, false);
                 reloadComponents();
-                parentContainer.getComponent(connectedHeader.getIndex(Header.ROOT) - 1).requestFocusInWindow();
+                parentContainer.getComponent(connectedHeader.getIndex(Header.getRoot()) - 1).requestFocusInWindow();
             }
         };
         contextMenuAdding(actionText, action, keystroke, actionMapKey, sepBefore, sepAfter);
@@ -395,7 +395,7 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
             if (this.connectedHeader.getNextNeigbourHeader() != null) {
                 this.connectedHeader.getParentElement()
                         .rearrangeSubHeader(this.connectedHeader.getOwnNr() - 1 + shiftIndex, connectedHeader);
-                getFocusIndex = connectedHeader.getIndex(Header.ROOT);
+                getFocusIndex = connectedHeader.getIndex(Header.getRoot());
                 reloadComponents();
                 parentContainer.getComponent(getFocusIndex - 1).requestFocusInWindow();
             }
@@ -405,7 +405,7 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
                 if (this.connectedHeader.getBeforeNeigbourHeader() != null) {
                     this.connectedHeader.getParentElement()
                             .rearrangeSubHeader(this.connectedHeader.getOwnNr() - 1 - shiftIndex, connectedHeader);
-                    getFocusIndex = connectedHeader.getIndex(Header.ROOT);
+                    getFocusIndex = connectedHeader.getIndex(Header.getRoot());
                     reloadComponents();
                     parentContainer.getComponent(getFocusIndex - 1).requestFocusInWindow();
                 }
@@ -463,7 +463,7 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
 
             //Iterate throuh header and change visibility State
             for (Header header : connectedHeader.getSubheaders()) {
-                int zOrderIndex = header.getIndex(Header.ROOT) - 1;
+                int zOrderIndex = header.getIndex(Header.getRoot()) - 1;
                 HeaderComponent hc = (HeaderComponent) parentContainer.getComponent(zOrderIndex);
 
                 hc.setVisible(connectedHeader.isShowSubHeader());
@@ -500,7 +500,7 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
      */
     private void changeHeaderComponentsChildrenDisplaying(boolean display) {
         for (Header header : connectedHeader.getSubheaders()) {
-            int zOrderIndex = header.getIndex(Header.ROOT) - 1;
+            int zOrderIndex = header.getIndex(Header.getRoot()) - 1;
             HeaderComponent hc = (HeaderComponent) parentContainer.getComponent(zOrderIndex);
             hc.setVisible(display);
             hc.setFocusable(display);
@@ -789,7 +789,7 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
     
                     // #3 add self to new Parent
                     usedParent.insertNewSubheaderInBetween(this.connectedHeader.getOwnNr(), this.connectedHeader);
-                    getFocusIndex = this.connectedHeader.getIndex(Header.ROOT);
+                    getFocusIndex = this.connectedHeader.getIndex(Header.getRoot());
                     reloadComponents();
                     parentContainer.getComponent(getFocusIndex - 1).requestFocusInWindow();
                 }
@@ -806,7 +806,7 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
                 // #2 add self to parentparent in ownNrParent
                 parentHeader.getParentElement().insertNewSubheaderInBetween(parentHeader.getOwnNr(),
                         this.connectedHeader);
-                getFocusIndex = this.connectedHeader.getIndex(Header.ROOT);
+                getFocusIndex = this.connectedHeader.getIndex(Header.getRoot());
                 reloadComponents();
                 parentContainer.getComponent(getFocusIndex - 1).requestFocusInWindow();
                  }
@@ -823,7 +823,7 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
         // small hack to prevent strange focus flickering
         parentContainer.requestFocus();
         parentContainer.removeAll();
-        addWholeHeaderTree(Header.ROOT);
+        addWholeHeaderTree(Header.getRoot());
 
         // Since the Subheader Components are not even existing, when generating a
         // Header Component,
@@ -1121,9 +1121,11 @@ class TransferableHeaderComponent implements Transferable {
      * Checks, if a flavor is allowed.
      */
     public boolean isDataFlavorSupported(DataFlavor flavor) {
-        if (flavor.equals(headerComponentFlavor) || flavor.equals(DataFlavor.stringFlavor))
-            return true;
-        return false;
+        boolean answer = false;
+        if(flavor.equals(headerComponentFlavor) || flavor.equals(DataFlavor.stringFlavor))
+            answer = true;
+        
+        return answer;
     }
 
     /**

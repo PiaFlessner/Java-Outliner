@@ -1,4 +1,4 @@
-package main.java.visualComponents.ToolBox;
+package main.java.visual_components.toolbox;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;

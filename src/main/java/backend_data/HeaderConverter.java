@@ -1,4 +1,4 @@
-package main.java.backendData;
+package main.java.backend_data;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -7,8 +7,8 @@ import java.util.Collections;
 
 public class HeaderConverter {
 
-    public static String HEADERSYMBOL = "#";
-    public static String SPACESYMBOL = " ";
+    public static final String HEADERSYMBOL = "#";
+    public static final String SPACESYMBOL = " ";
 
     /**
      * converts the content of a header into a MD String representation recursevly.
@@ -91,11 +91,8 @@ public class HeaderConverter {
      */
     private boolean createFile(String target) {
         File newFile = new File(target);
-        newFile.setExecutable(false);
         try {
-            if (newFile.exists())
-                return true;
-            if (newFile.createNewFile())
+            if (newFile.exists() || newFile.createNewFile())
                 return true;
             return false;
         } catch (IOException e) {
@@ -113,7 +110,7 @@ public class HeaderConverter {
      * @return is everyting was ok.
      */
     private boolean saveHeaderInFile(Header header, String target, int depht) {
-        try {
+        try{
             FileWriter writer = new FileWriter(target);
             writer.write(this.convertHeaderToMD(header, depht));
             writer.close();

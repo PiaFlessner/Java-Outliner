@@ -1,6 +1,7 @@
 
 import javax.swing.*;
-import main.java.visualComponents.MainFrame;
+
+import main.java.visual_components.MainFrame;
 
 
 public class App {

@@ -7,8 +7,8 @@ import java.io.File;
 import org.junit.Test;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import main.java.backendData.Header;
-import main.java.backendData.HeaderConverter;
+import main.java.backend_data.Header;
+import main.java.backend_data.HeaderConverter;
 
 public class HeaderConverterTest {
 

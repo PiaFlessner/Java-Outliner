@@ -1,4 +1,4 @@
-package main.java.visualComponents.Actions;
+package main.java.visual_components.actions;
 
 import java.awt.event.ActionEvent;
 import java.io.File;
@@ -12,8 +12,8 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
 
-import main.java.backendData.Header;
-import main.java.visualComponents.MainFrame;
+import main.java.backend_data.Header;
+import main.java.visual_components.MainFrame;
 
 public class ToolBoxOpenFileAction extends AbstractAction {
 

@@ -1,4 +1,4 @@
-package main.java.visualComponents.Header;
+package main.java.visual_components.header;
 
 import javax.swing.JLabel;
 import java.awt.Dimension;

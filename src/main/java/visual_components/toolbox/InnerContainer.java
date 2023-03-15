@@ -1,4 +1,4 @@
-package main.java.visualComponents.ToolBox;
+package main.java.visual_components.toolbox;
 import java.awt.Color;
 import javax.swing.JPanel;
 import java.awt.BorderLayout;

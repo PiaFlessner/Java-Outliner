@@ -1,4 +1,4 @@
-package main.java.backendData;
+package main.java.backend_data;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.logging.Logger;
 
 public class Header implements Serializable{
-
     private static final long serialVersionUID = 1L;
     private String title;
     private String text;
@@ -17,7 +16,7 @@ public class Header implements Serializable{
     private final boolean isRoot;
     private static final String DISPLAYDIVIDER = ".";
     private transient Logger log = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
-    public static Header ROOT;
+    private static Header root;
     //Saving for reload components
     private boolean showSubHeader;
     private boolean showText;
@@ -33,6 +32,14 @@ public class Header implements Serializable{
         this.showSubHeader = true;
     }
 
+
+    public static void setRoot(Header root){
+        Header.root = root;
+    }
+
+    public static Header getRoot(){
+        return Header.root;
+    }
 
     public String getTitle() {
         return title;
@@ -330,7 +337,7 @@ public class Header implements Serializable{
      */
     public int getTotalSubTreeCount() {
         int elementCounter = 0;
-        if (this.subheaders.size() == 0)
+        if (this.isEmpty())
             return elementCounter;
         else {
             elementCounter = elementCounter + this.subheaders.size();

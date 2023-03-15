@@ -1,4 +1,4 @@
-package main.java.visualComponents;
+package main.java.visual_components;
 
 import java.io.File;
 import java.awt.BorderLayout;
@@ -19,15 +19,16 @@ import java.awt.event.*;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Color;
-import main.java.backendData.Header;
-import main.java.visualComponents.Actions.ShowHideToolBarAction;
-import main.java.visualComponents.Actions.ToolBoxAddHeaderToRootAction;
-import main.java.visualComponents.Actions.ToolBoxExportMDAction;
-import main.java.visualComponents.Actions.ToolBoxNewFileAction;
-import main.java.visualComponents.Actions.ToolBoxOpenFileAction;
-import main.java.visualComponents.Actions.ToolBoxSaveFileAction;
-import main.java.visualComponents.Header.HeaderComponent;
-import main.java.visualComponents.ToolBox.ToolBoxComponent;
+import main.java.backend_data.Header;
+import main.java.visual_components.actions.ShowHideToolBarAction;
+import main.java.visual_components.actions.ToolBoxAddHeaderToRootAction;
+import main.java.visual_components.actions.ToolBoxExportMDAction;
+import main.java.visual_components.actions.ToolBoxNewFileAction;
+import main.java.visual_components.actions.ToolBoxOpenFileAction;
+import main.java.visual_components.actions.ToolBoxSaveFileAction;
+import main.java.visual_components.header.HeaderComponent;
+import main.java.visual_components.toolbox.ToolBoxComponent;
+
 import java.awt.event.InputEvent;
 
 public class MainFrame {
@@ -52,7 +53,7 @@ public class MainFrame {
     JMenuItem addNewHeaderItem;
     public static final Color WINDOW_BACKGROUND_COLOR = new Color(255, 255, 255);
     public static final Color BUTTON_BACKGROUND_COLOR = new Color(165, 165, 165);
-    final String ICONPATH = "src" + File.separator + "main" + File.separator + "resources" + File.separator
+    static final String ICONPATH = "src" + File.separator + "main" + File.separator + "resources" + File.separator
             + "appIcon.png";
 
     ToolBoxNewFileAction newFileAction;
@@ -62,12 +63,12 @@ public class MainFrame {
     ToolBoxExportMDAction exportAction;
 
     public MainFrame() {
-        Header.ROOT = headerRoot;
+        Header.setRoot(headerRoot);
         initComponents();
     }
 
     public void setRoot(Header root) {
-        Header.ROOT = root;
+        Header.setRoot(root);
         this.headerRoot = root;
 
         HeaderComponent.reloadComponents();
@@ -87,13 +88,10 @@ public class MainFrame {
             // Set System L&F
             UIManager.setLookAndFeel(
                 UIManager.getSystemLookAndFeelClassName());
-            } catch (UnsupportedLookAndFeelException e) {
-                java.util.logging.Logger.getLogger(MainFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, e);
-            } catch (ClassNotFoundException e) {
-                java.util.logging.Logger.getLogger(MainFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, e);
-            } catch (InstantiationException e) {
-                java.util.logging.Logger.getLogger(MainFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, e);
-            } catch (IllegalAccessException e) {
+            } catch (UnsupportedLookAndFeelException | 
+            ClassNotFoundException | 
+            InstantiationException | 
+            IllegalAccessException e) {
                 java.util.logging.Logger.getLogger(MainFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, e);
             }
         
