@@ -15,7 +15,6 @@ public class Header implements Serializable{
     private Header parentElement;
     private final boolean isRoot;
     private static final String DISPLAYDIVIDER = ".";
-    private transient Logger log = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
     private static Header root;
     //Saving for reload components
     private boolean showSubHeader;
@@ -204,10 +203,6 @@ public class Header implements Serializable{
                 head.parentElement = this;
                 this.refreshSubHeaderNumbers();
             }
-        } catch (UnsupportedOperationException | ClassCastException | NullPointerException
-                | IllegalArgumentException e) {
-            log.warning("Unexpected Error in insertNewSubheaderInBetween");
-
         } catch (IndexOutOfBoundsException e) {
             this.insertNewSubheaderEnd(head);
         }

@@ -86,14 +86,12 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
      * Numbers, Icon, Title and inherited Text.
      * 
      * @param backgroundColor backgroundcolor which should be used.
-     * @param isOpenChildren  Determines, if the Container should be instantiated
-     *                        opened or closed.
      * @param connectedHeader The Backend Header Element which belongs to the
      *                        ComponentHeader.
      * @param parentContainer The ParentContainer, which inherits all
      *                        HeaderComponents.
      */
-    public HeaderComponent(Color backgroundColor, Header connectedHeader, JPanel parentContainer) {
+    public HeaderComponent(Color backgroundColor, Header connectedHeader) {
         this.connectedHeader = connectedHeader;
         this.backgroundColor = backgroundColor;
         this.setLayout(new BorderLayout());
@@ -859,7 +857,7 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
      */
     private static void addWholeHeaderTree(Header root) {
         for (Header header : root.getSubheaders()) {
-            HeaderComponent hc = new HeaderComponent(MainFrame.WINDOW_BACKGROUND_COLOR, header, parentContainer);
+            HeaderComponent hc = new HeaderComponent(MainFrame.WINDOW_BACKGROUND_COLOR, header);
             parentContainer.add(hc);
             addWholeHeaderTree(header);
         }
