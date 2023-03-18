@@ -27,25 +27,25 @@ By the way, this README was created with this program =)
 ## 3.1 MacOS/Linux
 
 Execute the following commands from the Java-Outliner directory:
-'''
+```
 chmod +x install_MacOS_Linux.bash
 bash install_MacOS_Linux.bash
-'''
+```
 
 ## 3.2 Windows
 
 Execute the following commands from the Java-Outliner directory:
-'''
+```
 install_Windows.sh
-'''
+```
 
 
 # 4 Execution
 
 Execute the generated jar file with the following command:
-'''
+```
 java -jar Java-Outliner.jar
-'''
+```
 
 Or double click on the jar icon.
 
