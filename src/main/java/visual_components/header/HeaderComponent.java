@@ -667,6 +667,14 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
                 openCloseChildren();
             }
         });
+
+        //add this action for the icon label also.
+        icon.addMouseListener(new MouseInputAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                openCloseChildren();
+            }
+        });
     }
 
     private void setUpEditTextfieldFunction() {
