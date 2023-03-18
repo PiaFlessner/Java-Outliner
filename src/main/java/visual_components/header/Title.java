@@ -128,6 +128,7 @@ public class Title extends JTextField {
             this.setCursor(this.EDIT_CURSOR);
             this.setFocusable(true);
             this.requestFocus();
+            this.selectAll();
         }
 
     }
