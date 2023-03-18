@@ -1,9 +1,6 @@
 package main.java.backend_data;
-
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
@@ -120,10 +117,7 @@ public class HeaderConverter {
             writer = new OutputStreamWriter(new FileOutputStream(target), StandardCharsets.UTF_8);
             writer.write(this.convertHeaderToMD(header, depht));
             writer.close();
-            //FileWriter writer = new FileWriter(target);
-            //
-            //writer.write(this.convertHeaderToMD(header, depht));
-            //writer.close();
+
             return true;
         } catch (IOException e) {
             e.printStackTrace();
