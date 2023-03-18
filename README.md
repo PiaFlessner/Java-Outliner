@@ -29,6 +29,9 @@ To install the program, you need to download and run the Java-Outliner.jar.
 To deploy the project you can choose the preferred deployment method, for example via IDE and Visual Studio Code.
 The specified libraries should be included in the deploy process.
 
+Or if you want to build it manually, then use the Oracle documentation:
+https://docs.oracle.com/javase/tutorial/deployment/jar/build.html
+
 # 5 Execution
 
  
