@@ -114,7 +114,7 @@ By context menu the following options exist:
 
 To delete a header, you can do this using the context menu or the keyboard shortcut CTRL+BACK.
 
-## 5.4 Uninstall
+# 6 Uninstall
 
 To uninstall the program, you can simply delete Java-Outliner.jar.
 
