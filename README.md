@@ -15,24 +15,41 @@ By the way, this README was created with this program =)
 1. MacOS (v. 10) or Linux (tested on Ubuntu 22.04 and Fedora v. 37) or Windows (tested on Win 10).
 2. Java 8
 
-## 2.2 Deployment
+## 2.2 Build
 
 1. Java SE Development Kit 8u202 
 2. Favorite Java Deployment Tool
 
-# 3 Install
+# 3 Build / Install
 
-To install the program, you need to download and run the Java-Outliner.jar. 
 
-# 4 Deploy
 
-To deploy the project you can choose the preferred deployment method, for example via IDE and Visual Studio Code.
-The specified libraries should be included in the deploy process.
+## 3.1 MacOS/Linux
 
-Or if you want to build it manually, then use the Oracle documentation:
-https://docs.oracle.com/javase/tutorial/deployment/jar/build.html
+Execute the following commands from the Java-Outliner directory:
+'''
+chmod +x install_MacOS_Linux.bash
+bash install_MacOS_Linux.bash
+'''
 
-# 5 Execution
+## 3.2 Windows
+
+Execute the following commands from the Java-Outliner directory:
+'''
+install_Windows.sh
+'''
+
+
+# 4 Execution
+
+Execute the generated jar file with the following command:
+'''
+java -jar Java-Outliner.jar
+'''
+
+Or double click on the jar icon.
+
+# 5 Get to Work
 
  
 
@@ -117,7 +134,7 @@ By context menu the following options exist:
 
 To delete a header, you can do this using the context menu or the keyboard shortcut CTRL+BACK.
 
-# 6 Uninstall
+## 5.4 Uninstall
 
 To uninstall the program, you can simply delete Java-Outliner.jar.
 
