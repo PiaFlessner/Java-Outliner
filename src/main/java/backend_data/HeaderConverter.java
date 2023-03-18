@@ -1,8 +1,13 @@
 package main.java.backend_data;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 
 public class HeaderConverter {
@@ -110,10 +115,15 @@ public class HeaderConverter {
      * @return is everyting was ok.
      */
     private boolean saveHeaderInFile(Header header, String target, int depht) {
-        try{
-            FileWriter writer = new FileWriter(target);
+        try{ 
+            Writer writer;
+            writer = new OutputStreamWriter(new FileOutputStream(target), StandardCharsets.UTF_8);
             writer.write(this.convertHeaderToMD(header, depht));
             writer.close();
+            //FileWriter writer = new FileWriter(target);
+            //
+            //writer.write(this.convertHeaderToMD(header, depht));
+            //writer.close();
             return true;
         } catch (IOException e) {
             e.printStackTrace();
