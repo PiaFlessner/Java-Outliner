@@ -1,92 +1,120 @@
-# Java Outliner
+# 1 Outliner
+
+The application enables the quick creation of outlines. This includes adding, editing, moving and deleting headings, and subheadings. In addition, the application provides saving and loading of created files as well as exporting to Markdown.
+All functionalities are provided by drag-and-drop, context menu and/or keyboard operation.
+Java 8 was used as the programming language and the Swing library was used. The development was predominantly object-oriented.
+
+By the way, this README was created with this program =)
+
+# 2 Minimum Requirements
 
 
 
-## Getting started
+## 2.1 Execution
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+1. MacOS (v. 10) or Linux (tested on Ubuntu 22.04 and Fedora v. 37) or Windows (tested on Win 10).
+2. Java 8
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+## 2.2 Deployment
 
-## Add your files
+1. Java SE Development Kit 8u202 
+2. Favorite Java Deployment Tool
 
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
+# 3 Install
 
-```
-cd existing_repo
-git remote add origin https://gitlab.gwdg.de/pia.flessner/java-outliner.git
-git branch -M main
-git push -uf origin main
-```
+To install the program, you need to download and run the Java-Outliner.jar. 
 
-## Integrate with your tools
+# 4 Deploy
 
-- [ ] [Set up project integrations](https://gitlab.gwdg.de/pia.flessner/java-outliner/-/settings/integrations)
+To deploy the project you can choose the preferred deployment method, for example via IDE and Visual Studio Code.
+The specified libraries should be included in the deploy process.
 
-## Collaborate with your team
+# 5 Execution
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Automatically merge when pipeline succeeds](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
+ 
 
-## Test and Deploy
+## 5.1 Create first Header
 
-Use the built-in continuous integration in GitLab.
+To create the first header, click on the big plus button, or press CTRL-A.
 
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing(SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+## 5.2 ToolBox
 
-***
+The toolbox is located at the top of the window and can be made visible or invisible by pressing CTRL+V.
 
-# Editing this README
+### 5.2.1 New File
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thank you to [makeareadme.com](https://www.makeareadme.com/) for this template.
+To reset the current file, you can click the "New File" button or CTRL+N.
 
-## Suggestions for a good README
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+This action will delete all the headers already created at once.
 
-## Name
-Choose a self-explaining name for your project.
+### 5.2.2 Open File
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+To open an already saved file, you can click the "Open File" button or use the CTRL-O keyboard shortcut.
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
+### 5.2.3 Save
 
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+To save a created file, the "Save" button can be clicked or CTRL-S can be pressed.
 
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+### 5.2.4 +
 
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+Inserts a new header at the first level.
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+### 5.2.5 Export to Markdown
 
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+Exports a created outline to a Markdown file. Each header forms a separate heading with subheadings and the content.
 
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
+## 5.3 Header
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
+ 
 
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
+### 5.3.1 Navigation
 
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
+The down and up arrow buttons can be used to quickly navigate through the created headers by focus. Alternatively, the usual tab navigation is also available.
 
-## License
-For open source projects, say how it is licensed.
+Of course, you can also navigate over the headers using the mouse.
 
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+### 5.3.2 Title
+
+To edit the title, you can press Enter while focusing, or double-click on the text box.
+The way out of the edit mode is the same.
+
+### 5.3.3 Content
+
+To access the content of a header, you can click the button to the left of the header or alternatively press the space bar while focusing. The content can be closed again in the same way.
+The content can be used like a common text field.
+
+### 5.3.4 Child-Header
+
+The child headers can be opened by mouse-right and closed by mouse-left during focus. With the mouse this can be realized with a simple click on the header.
+
+### 5.3.5 Operations
+
+ 
+
+#### 5.3.5.1 Adding
+
+To insert a header between the existing headers, you can right-click on a header and perform the Add operations there.
+These include:
+1. "Add header before"- inserts a header before the current header. (keyboard shortcut: CTRL+UP)
+2. add header after" - adds a header after the current header. (keyboard shortcut: CTRL+DOWN).
+3. add header sub - adds a header as a child header to the header. (Keyboard shortcut: CTRL+RIGHT)
+
+#### 5.3.5.2 Shifting
+
+To move a header, this can be accomplished via context menu, drag-and-drop, and keyboard shortcuts.
+
+The drag-and-drop functions appear when you drag one header onto another. The first button from the left adds the dragged header above the target header, the second below and the third as a child header.
+By context menu the following options exist:
+1. "Shift header up"-shifts a header up by one index, as far as possible. (Keyboard shortcut: SHIFT+UP).
+2. "Shift header down" - shifts a header one index down, if possible. (keyboard shortcut: SHIFT+DOWN).
+3. "Shift header level up" - shifts a header one level up, if possible. (Keyboard shortcut: SHIFT+LEFT)
+4. "Shift header level down" - shifts a header one level down, if possible. (Keyboard shortcut: SHIFT+RIGHT)
+
+#### 5.3.5.3 Deleting
+
+To delete a header, you can do this using the context menu or the keyboard shortcut CTRL+BACK.
+
+## 5.4 Uninstall
+
+To uninstall the program, you can simply delete Java-Outliner.jar.
+
