@@ -1,4 +1,6 @@
 #!/bin/bash
+#mkdir
+mkdir bin
 #compile
 javac -cp src -d bin src\App.java -encoding UTF-8
 #build
