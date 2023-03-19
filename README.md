@@ -1,4 +1,4 @@
-# 1 Outliner
+# 1 Java-Outliner
 
 The application enables the quick creation of outlines. This includes adding, editing, moving and deleting headings, and subheadings. In addition, the application provides saving and loading of created files as well as exporting to Markdown.
 All functionalities are provided by drag-and-drop, context menu and/or keyboard operation.
