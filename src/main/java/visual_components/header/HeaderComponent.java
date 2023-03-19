@@ -2,6 +2,7 @@ package main.java.visual_components.header;
 
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import main.java.backend_data.Direction;
@@ -959,12 +960,13 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
         private void moveHeaderUp(HeaderComponent sourceHeaderComponent) {
             Header targetParent = connectedHeader.getParentElement();
             Header sourceParent = sourceHeaderComponent.connectedHeader.getParentElement();
-            // Backend
-            // remove from source
-            sourceParent.deleteSubheader(sourceHeaderComponent.connectedHeader);
-            int newNr = connectedHeader.getOwnNr();
 
+            
             if (isShiftingAllowed(sourceHeaderComponent.connectedHeader)) {
+                // Backend
+                // remove from source
+                sourceParent.deleteSubheader(sourceHeaderComponent.connectedHeader);
+                int newNr = connectedHeader.getOwnNr();
                 // Insert Start
                 if (newNr == 1) {
                     targetParent.insertNewSubheaderStart(sourceHeaderComponent.connectedHeader);
@@ -976,8 +978,8 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
                     assert sourceHeaderComponent.connectedHeader.getOwnNr() == newNr;
                 }
                 assert connectedHeader.getParentElement().equals(targetParent);
-                reloadComponents();
             }
+            reloadComponents();
 
         }
 
@@ -991,11 +993,12 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
         private void moveHeaderDown(HeaderComponent sourceHeaderComponent) {
             Header targetParent = connectedHeader.getParentElement();
             Header sourceParent = sourceHeaderComponent.connectedHeader.getParentElement();
-            // remove from source
-            sourceParent.deleteSubheader(sourceHeaderComponent.connectedHeader);
-            int newNr = connectedHeader.getOwnNr();
+            
 
             if (isShiftingAllowed(sourceHeaderComponent.connectedHeader)) {
+                // remove from source
+                sourceParent.deleteSubheader(sourceHeaderComponent.connectedHeader);
+                int newNr = connectedHeader.getOwnNr();
                 // Insert at End
                 if (newNr > targetParent.getSubheaderSize()) {
                     targetParent.insertNewSubheaderEnd(sourceHeaderComponent.connectedHeader);
@@ -1007,8 +1010,8 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
                     assert sourceHeaderComponent.connectedHeader.getOwnNr() == newNr + 1;
                 }
                 assert connectedHeader.getParentElement().equals(targetParent);
-                reloadComponents();
             }
+            reloadComponents();
         }
 
         /**
@@ -1024,9 +1027,9 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
             if (isShiftingAllowed(sourceHeaderComponent.connectedHeader)) {
                 sourceParent.deleteSubheader(sourceHeaderComponent.connectedHeader);
                 connectedHeader.insertNewSubheaderStart(sourceHeaderComponent.connectedHeader);
-                assert connectedHeader.getParentElement().equals(connectedHeader);
-                reloadComponents();
+                assert connectedHeader.getParentElement().equals(connectedHeader);    
             }
+            reloadComponents();
         }
 
         /**
@@ -1039,8 +1042,10 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
          * @return true= shifting allowed | false = shifting is not allowed.
          */
         private boolean isShiftingAllowed(Header sourceHeader) {
-            if (connectedHeader == sourceHeader || sourceHeader.isHeaderInParentHeader(connectedHeader))
+            if (connectedHeader == sourceHeader || sourceHeader.isHeaderInParentHeader(connectedHeader)) {
+                JOptionPane.showMessageDialog(null,"Actions from header to subheader are not allowed.");
                 return false;
+            }
             else
                 return true;
         }

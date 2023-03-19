@@ -349,7 +349,8 @@ public class Header implements Serializable{
      * @return true means, the this Element is a parent, false means its not a parent.
      */
     public boolean isHeaderInParentHeader(Header targetHeader){
-        if(targetHeader.isRoot) return false;
+        if(targetHeader.parentElement == null) return false;
+        if(targetHeader.parentElement.isRoot) return false;
         if(targetHeader.parentElement == this) return true;
         return this.isHeaderInParentHeader(targetHeader.parentElement);
     }
