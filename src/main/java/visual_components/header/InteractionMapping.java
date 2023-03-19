@@ -12,7 +12,13 @@ public enum InteractionMapping {
     SHIFT_LEVEL_DOWN("shift header level down", KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, InputEvent.SHIFT_DOWN_MASK), "shiftLevelDown"),
     ADD_UP("Add header before", KeyStroke.getKeyStroke(KeyEvent.VK_UP, InputEvent.ALT_DOWN_MASK), "addBefore"),
     ADD_DOWN("Add header after", KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, InputEvent.ALT_DOWN_MASK), "addAfter"),
-    ADD_SUB("Add subheader", KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, InputEvent.ALT_DOWN_MASK), "addSub");
+    ADD_SUB("Add subheader", KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, InputEvent.ALT_DOWN_MASK), "addSub"),
+    TOOLBOX_SHOW_HIDE("Show Toolbox", KeyStroke.getKeyStroke(KeyEvent.VK_V, InputEvent.CTRL_DOWN_MASK), "showHideToolbar"),
+    OPEN_FILE("Open File", KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_DOWN_MASK), "openFile"),
+    SAVE_FILE("Save File", KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK), "saveFile"),
+    ADD_HEADER_ROOT("Add header to root", KeyStroke.getKeyStroke(KeyEvent.VK_A, InputEvent.CTRL_DOWN_MASK), "addHeaderToRoot"),
+    EXPORT_MD("Export to Markdown", KeyStroke.getKeyStroke(KeyEvent.VK_E, InputEvent.CTRL_DOWN_MASK), "exportToMarkdown"),
+    NEW_FILE("New File", KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.CTRL_DOWN_MASK), "newFile");
  
 
     private final String actionName;
