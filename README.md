@@ -13,12 +13,12 @@ By the way, this README was created with this program =)
 ## 2.1 Execution
 
 1. MacOS (v. 10) or Linux (tested on Ubuntu 22.04 and Fedora v. 37) or Windows (tested on Win 10).
-2. Java 8
+2. Java 8 RE
 
 ## 2.2 Build
 
 1. Java SE Development Kit 8u202 
-2. Favorite Java Deployment Tool
+2. Favorite Java Build Tool (if install script is not used)
 
 # 3 Build / Install
 
@@ -28,9 +28,10 @@ By the way, this README was created with this program =)
 
 Execute the following commands from the Java-Outliner directory:
 ```
-chmod +x install_MacOS_Linux.bash
-bash install_MacOS_Linux.bash
+chmod +x install_MacOS_Linux.sh
+bash install_MacOS_Linux.sh
 ```
+INFO: Java needs to be set in the PATH environment variable.
 
 ## 3.2 Windows
 
@@ -38,7 +39,7 @@ Execute the following commands from the Java-Outliner directory:
 ```
 install_Windows.sh
 ```
-
+INFO: Java needs to be set in the PATH environment variable.
 
 # 4 Execution
 

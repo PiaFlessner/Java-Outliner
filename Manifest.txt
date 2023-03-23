@@ -1,2 +1,3 @@
 Main-Class: App
 Class-Path: lib\junit-platform-console-standalone-1.7.0-M1.jar
+Name: Java-Outliner
