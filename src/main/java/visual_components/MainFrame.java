@@ -45,7 +45,7 @@ public class MainFrame {
     JMenuItem addNewHeaderItem;
     public static final Color WINDOW_BACKGROUND_COLOR = new Color(255, 255, 255);
     public static final Color BUTTON_BACKGROUND_COLOR = new Color(165, 165, 165);
-    static final String ICONPATH = "src" + File.separator + "main" + File.separator + "resources" + File.separator
+    public static final String ICONPATH = "src" + File.separator + "main" + File.separator + "resources" + File.separator
             + "appIcon.png";
 
     ToolBoxNewFileAction newFileAction;
@@ -75,6 +75,8 @@ public class MainFrame {
     }
 
     private void initComponents() {
+
+
 
         try {
             // Set System L&F
@@ -176,7 +178,7 @@ public class MainFrame {
      * Setup the Window
      */
     private void setUpWindow() {
-        window = new JFrame("Outliner");
+        window = new JFrame("Java-Outliner");
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         window.setSize(800, 400);
         window.setVisible(true);
@@ -322,8 +324,5 @@ public class MainFrame {
         deleteItem.setAccelerator(InteractionMapping.DELETE.getKeystroke());
         deleteItem.setEnabled(false);
         contextMenu.add(deleteItem);
-        
-
-
     }
 }
