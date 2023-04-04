@@ -34,6 +34,8 @@ import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DragGestureEvent;
 import java.awt.dnd.DragGestureListener;
 import java.awt.dnd.DragSource;
+import java.awt.dnd.DragSourceAdapter;
+import java.awt.dnd.DragSourceDropEvent;
 import java.awt.dnd.DropTarget;
 import java.awt.dnd.DropTargetAdapter;
 import java.awt.dnd.DropTargetDragEvent;
@@ -53,12 +55,12 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
     Icon icon;
 
     JLabel displayedNumber;
-
+    
     Title displayedHeaderTitle;
-
+    
     JPanel headerContent;
     TextArea textArea;
-
+    
     JPopupMenu popupMenu;
 
     Color backgroundColor;
@@ -69,18 +71,22 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
     static final Color FOCUS_COLOR = new Color(214, 220, 229);
     static final Color DND_TARGET_HOVERCOLOR = new Color(143, 170, 220);
     static final Color DND_TARGET_COLOR = new Color(180, 199, 231);
-
+    
     protected Header connectedHeader;
     public static JPanel parentContainer;
 
     JPanel dropPanel;
-
+    
+    static volatile DropTargetListenerHeaderComponents lastDropTarget = null;
     JLabel dropUp;
     JLabel dropDown;
     JLabel dropSub;
     JPanel dropUpPanel;
     JPanel dropDownPanel;
     JPanel dropSubPanel;
+    DropTargetListenerHeaderComponents dropUpTarget;
+    DropTargetListenerHeaderComponents dropDownTarget;
+    DropTargetListenerHeaderComponents dropSubTarget;
 
     /**
      * Constructor for the HeaderComponent. Displays the whole Container with
@@ -112,6 +118,10 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
         // Makes Element Draggable
         DragSource ds = new DragSource();
         ds.createDefaultDragGestureRecognizer(this, DnDConstants.ACTION_MOVE, this);
+
+        HeaderComponentDragSourceAdapter dragSourceAdapter = new HeaderComponentDragSourceAdapter();
+        ds.addDragSourceMotionListener(dragSourceAdapter);
+        ds.addDragSourceListener(dragSourceAdapter);
 
         generateAddingActions();
         generateShiftingActions();
@@ -211,12 +221,16 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
                     enterAction();
                 }
 
-                private void enterAction() {
+                private void enterAction() { 
+                    //remove the DnDTargetElements from last HoveredElement.
+                    //and now set the current to the lastDropTarget.
+                    if(lastDropTarget != null) { lastDropTarget.removeDnDTargetElements();}
+                    lastDropTarget = dropUpTarget;
                     setSize(getWidth(), dropPanel.getHeight());
                     remove(headerTitle);
                     add(dropPanel, BorderLayout.CENTER);
                     repaint();
-                    revalidate();
+                    revalidate();        
                 }
 
                 @Override
@@ -910,9 +924,9 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
         dropPanel.setVisible(true);
 
         // Sets the panels as drop Targets
-        new DropTargetListenerHeaderComponents(dropUpPanel, Direction.UP);
-        new DropTargetListenerHeaderComponents(dropDownPanel, Direction.DOWN);
-        new DropTargetListenerHeaderComponents(dropSubPanel, Direction.SUB);
+        dropUpTarget = new DropTargetListenerHeaderComponents(dropUpPanel, Direction.UP);
+        dropDownTarget = new DropTargetListenerHeaderComponents(dropDownPanel, Direction.DOWN);
+        dropSubTarget = new DropTargetListenerHeaderComponents(dropSubPanel, Direction.SUB);
     }
 
     /**
@@ -929,6 +943,15 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
         dge.startDrag(cursor, new TransferableHeaderComponent(component));
     }
 
+    private class HeaderComponentDragSourceAdapter extends DragSourceAdapter {
+        @Override
+        public void dragDropEnd(DragSourceDropEvent dsde) {
+            //CleanUp, if the user dropped wrong and the dropTargets Were not removed yet.
+            if(!dsde.getDropSuccess() && lastDropTarget != null){
+                lastDropTarget.removeDnDTargetElements();
+            }
+        }
+    }
     private class DropTargetListenerHeaderComponents extends DropTargetAdapter {
         private JPanel target;
         private Direction direction;
@@ -943,7 +966,7 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
          * Removes the Drag and Drop Target Element, for example when the user is not in
          * the Header anymore
          */
-        private void removeDnDTargetElements() {
+        protected void removeDnDTargetElements() {
             remove(dropPanel);
             add(headerTitle, BorderLayout.CENTER);
             repaint();
@@ -1056,7 +1079,7 @@ public class HeaderComponent extends JPanel implements DragGestureListener {
         }
 
         @Override
-        public void dragEnter(DropTargetDragEvent dtde) {
+        public void dragEnter(DropTargetDragEvent dtde) {   
             setUpHoverColor();
         }
 
@@ -1164,3 +1187,4 @@ class TransferableHeaderComponent implements Transferable {
             throw new UnsupportedFlavorException(flavor);
     }
 }
+
