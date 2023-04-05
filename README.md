@@ -106,7 +106,7 @@ The content can be used like a common text field.
 
 ### 5.3.4 Child-Header
 
-The child headers can be opened by mouse-right and closed by mouse-left during focus. With the mouse this can be realized with a simple click on the header.
+The child headers can be opened by arrow-right and closed by arrow-left during focus. With the mouse this can be realized with a simple click on the header.
 
 ### 5.3.5 Operations
 
@@ -117,8 +117,8 @@ The child headers can be opened by mouse-right and closed by mouse-left during f
 To insert a header between the existing headers, you can right-click on a header and perform the Add operations there.
 These include:
 1. "Add header before"- inserts a header before the current header. (keyboard shortcut: CTRL+UP)
-2. add header after" - adds a header after the current header. (keyboard shortcut: CTRL+DOWN).
-3. add header sub - adds a header as a child header to the header. (Keyboard shortcut: CTRL+RIGHT)
+2. "add header after" - adds a header after the current header. (keyboard shortcut: CTRL+DOWN).
+3. "add header sub" - adds a header as a child header to the header. (Keyboard shortcut: CTRL+RIGHT)
 
 #### 5.3.5.2 Shifting
 
